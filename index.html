@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Digital Tecnologia | Celulares e Tecnologia em Capelinha</title>
+<meta name="description" content="Digital Tecnologia em Capelinha - MG. Celulares, manutenção e acessórios com atendimento de qualidade.">
+<meta property="og:title" content="Digital Tecnologia | Celulares e Tecnologia em Capelinha">
+<meta property="og:description" content="Digital Tecnologia em Capelinha - MG. Celulares, manutenção e acessórios com atendimento de qualidade.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#07090A">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%2307090A'/%3E%3Crect x='32' y='18' width='36' height='64' rx='10' fill='none' stroke='%2320D94A' stroke-width='6'/%3E%3Ccircle cx='50' cy='72' r='3.4' fill='%2320D94A'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black: #07090A;
+    --panel: #111416;
+    --panel-2: #171B1D;
+    --grey: #202428;
+    --grey-line: #2A2F33;
+    --green: #20D94A;
+    --green-neon: #39FF14;
+    --white: #FFFFFF;
+    --grey-light: #A7ADB2;
+    --grey-muted: #7B8186;
+    --radius: 14px;
+    --radius-sm: 9px;
+    --maxw: 1220px;
+    --ease: cubic-bezier(.22,.8,.32,1);
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  html,body{ overflow-x:hidden; max-width:100%; }
+
+  body{
+    background:var(--black);
+    color:var(--white);
+    font-family:'Inter', system-ui, sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+
+  img{ max-width:100%; display:block; }
+
+  a{ color:inherit; text-decoration:none; }
+
+  h1,h2,h3,h4{
+    font-family:'Space Grotesk', 'Inter', sans-serif;
+    font-weight:600;
+    line-height:1.08;
+    letter-spacing:-0.01em;
+  }
+
+  ::selection{ background:var(--green); color:var(--black); }
+
+  :focus-visible{
+    outline: 2px solid var(--green);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  .wrap{
+    max-width:var(--maxw);
+    margin:0 auto;
+    padding:0 32px;
+  }
+
+  @media (max-width:640px){
+    .wrap{ padding:0 20px; }
+  }
+
+  .eyebrow-num{
+    font-family:'Space Grotesk', sans-serif;
+    color:var(--green);
+    font-size:14px;
+    font-weight:600;
+  }
+
+  section{ position:relative; }
+
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:15px 26px;
+    border-radius:100px;
+    font-family:'Inter', sans-serif;
+    font-weight:600;
+    font-size:15px;
+    cursor:pointer;
+    border:1px solid transparent;
+    transition: transform .35s var(--ease), background .3s ease, border-color .3s ease, color .3s ease;
+    white-space:nowrap;
+  }
+  .btn:active{ transform: scale(.97); }
+
+  .btn-solid{
+    background:var(--green);
+    color:#04140A;
+  }
+  .btn-solid:hover{ background:#2FEF5B; transform:translateY(-2px); }
+
+  .btn-outline{
+    background:transparent;
+    border-color:var(--grey-line);
+    color:var(--white);
+  }
+  .btn-outline:hover{ border-color:var(--green); color:var(--green); transform:translateY(-2px); }
+
+  .btn-dark{
+    background:var(--panel-2);
+    border-color:var(--grey-line);
+    color:var(--white);
+  }
+  .btn-dark:hover{ border-color:var(--green); transform:translateY(-2px); }
+
+  /* reveal on scroll */
+  .reveal{
+    opacity:0;
+    transform:translateY(22px);
+    transition:opacity .8s var(--ease), transform .8s var(--ease);
+  }
+  .reveal.is-visible{ opacity:1; transform:none; }
+
+  @media (prefers-reduced-motion: reduce){
+    .reveal{ opacity:1; transform:none; transition:none; }
+    *{ scroll-behavior:auto !important; animation-duration:.001ms !important; transition-duration:.001ms !important; }
+  }
+
+  /* ===================== INTRO ===================== */
+  #intro{
+    position:fixed;
+    inset:0;
+    z-index:999;
+    background:var(--black);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    transition:opacity .7s var(--ease), visibility .7s var(--ease);
+  }
+  #intro.hide{ opacity:0; visibility:hidden; pointer-events:none; }
+
+  .intro-mark{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:clamp(34px,7vw,58px);
+    letter-spacing:-0.01em;
+  }
+  .intro-mark span{
+    display:inline-block;
+    opacity:0;
+    transform:translateY(10px);
+  }
+  .intro-mark .d1{ color:var(--white); animation: introUp .5s var(--ease) .05s forwards; }
+  .intro-mark .d2{ color:var(--green); animation: introUp .5s var(--ease) .32s forwards; font-size:.42em; align-self:center; font-weight:600; letter-spacing:0.14em; }
+
+  @keyframes introUp{ to{ opacity:1; transform:translateY(0); } }
+
+  .intro-line{
+    margin-top:18px;
+    height:2px;
+    width:64px;
+    background:var(--green);
+    transform:scaleX(0);
+    transform-origin:left;
+    animation: introLine .5s var(--ease) .55s forwards;
+  }
+  @keyframes introLine{ to{ transform:scaleX(1); } }
+
+  .intro-tag{
+    margin-top:22px;
+    font-size:14px;
+    color:var(--grey-light);
+    opacity:0;
+    text-align:center;
+    animation: introFade .6s ease .75s forwards;
+  }
+  @keyframes introFade{ to{ opacity:1; } }
+
+  /* ===================== HEADER ===================== */
+  header{
+    position:fixed;
+    top:0; left:0; right:0;
+    z-index:100;
+    background:rgba(7,9,10,0.72);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid rgba(255,255,255,0.06);
+    transition: transform .5s var(--ease);
+  }
+  header.hide-nav{ transform:translateY(-100%); }
+
+  .nav-inner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    height:78px;
+  }
+
+  .logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:19px;
+    letter-spacing:-0.01em;
+  }
+  .logo-icon{
+    width:30px; height:30px;
+    flex-shrink:0;
+  }
+  .logo small{
+    display:block;
+    font-family:'Inter', sans-serif;
+    font-weight:500;
+    font-size:9px;
+    letter-spacing:0.22em;
+    color:var(--grey-light);
+    margin-top:1px;
+  }
+
+  nav ul{
+    list-style:none;
+    display:flex;
+    gap:36px;
+  }
+  nav a{
+    font-size:14.5px;
+    font-weight:500;
+    color:var(--grey-light);
+    position:relative;
+    padding:4px 0;
+    transition:color .25s ease;
+  }
+  nav a:hover{ color:var(--white); }
+  nav a::after{
+    content:'';
+    position:absolute;
+    left:0; bottom:-2px;
+    width:0; height:1.5px;
+    background:var(--green);
+    transition:width .3s var(--ease);
+  }
+  nav a:hover::after{ width:100%; }
+
+  .nav-right{ display:flex; align-items:center; gap:18px; }
+  .nav-cta{ display:flex; }
+
+  .hamburger{
+    display:none;
+    width:38px; height:38px;
+    border:none;
+    background:transparent;
+    cursor:pointer;
+    position:relative;
+    z-index:120;
+  }
+  .hamburger span{
+    display:block;
+    position:absolute;
+    left:8px; right:8px;
+    height:2px;
+    background:var(--white);
+    border-radius:2px;
+    transition: transform .4s var(--ease), opacity .3s ease, top .4s var(--ease);
+  }
+  .hamburger span:nth-child(1){ top:14px; }
+  .hamburger span:nth-child(2){ top:22px; }
+  .hamburger span:nth-child(3){ top:30px; }
+  .hamburger.open span:nth-child(1){ top:22px; transform:rotate(45deg); }
+  .hamburger.open span:nth-child(2){ opacity:0; }
+  .hamburger.open span:nth-child(3){ top:22px; transform:rotate(-45deg); }
+
+  .mobile-menu{
+    position:fixed;
+    inset:0;
+    background:var(--black);
+    z-index:110;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:0 32px;
+    transform:translateX(100%);
+    transition:transform .5s var(--ease);
+  }
+  .mobile-menu.open{ transform:translateX(0); }
+  .mobile-menu ul{ list-style:none; display:flex; flex-direction:column; gap:6px; margin-bottom:40px; }
+  .mobile-menu a{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:30px;
+    font-weight:600;
+    padding:12px 0;
+    border-bottom:1px solid var(--grey-line);
+    display:block;
+  }
+  .mobile-menu .btn{ width:100%; justify-content:center; }
+
+  /* ===================== HERO ===================== */
+  .hero{
+    padding:168px 0 60px;
+    position:relative;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1.05fr 0.95fr;
+    gap:56px;
+    align-items:center;
+  }
+
+  .hero h1{
+    font-size:clamp(42px, 5.4vw, 74px);
+    color:var(--white);
+  }
+  .hero h1 .line2{ color:var(--white); }
+
+  .hero-sub{
+    margin-top:24px;
+    max-width:460px;
+    font-size:17px;
+    color:var(--grey-light);
+    line-height:1.6;
+  }
+
+  .hero-actions{
+    margin-top:36px;
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
+  }
+
+  .hero-social{
+    margin-top:40px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+  }
+  .stars{ color:var(--green); font-size:16px; letter-spacing:2px; }
+  .hero-social-text b{ display:block; font-size:14.5px; }
+  .hero-social-text span{ font-size:13px; color:var(--grey-muted); }
+
+  /* hero visual composition */
+  .hero-visual{
+    position:relative;
+    aspect-ratio:1/1.05;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .hv-glow{
+    position:absolute;
+    width:70%; height:70%;
+    background:radial-gradient(circle, rgba(32,217,74,0.24), rgba(32,217,74,0) 68%);
+    filter:blur(10px);
+    z-index:0;
+  }
+  .hv-frame{
+    position:relative;
+    width:100%; height:100%;
+    z-index:1;
+  }
+  .hv-card{
+    position:absolute;
+    border-radius:18px;
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,0.08);
+    box-shadow:0 30px 60px -20px rgba(0,0,0,0.6);
+  }
+  .hv-card img{ width:100%; height:100%; object-fit:cover; }
+  .hv-1{ width:64%; top:4%; left:0; aspect-ratio:3/3.9; z-index:3; }
+  .hv-2{ width:46%; bottom:6%; right:0; aspect-ratio:4/3.3; z-index:2; }
+  .hv-tag{
+    position:absolute;
+    left:50%; bottom:-2%;
+    transform:translateX(-50%);
+    background:rgba(17,20,22,0.9);
+    backdrop-filter:blur(10px);
+    border:1px solid var(--grey-line);
+    padding:10px 18px;
+    border-radius:100px;
+    font-size:12.5px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    z-index:4;
+    white-space:nowrap;
+  }
+  .hv-dot{ width:7px; height:7px; border-radius:50%; background:var(--green); box-shadow:0 0 12px var(--green); flex-shrink:0; }
+  .hv-line{
+    position:absolute;
+    top:14%; right:8%;
+    width:1px; height:30%;
+    background:linear-gradient(var(--green), transparent);
+    opacity:.5;
+    z-index:2;
+  }
+
+  @media (max-width:980px){
+    .hero{ padding-top:140px; }
+    .hero-grid{ grid-template-columns:1fr; gap:52px; }
+    .hero-visual{ max-width:420px; margin:0 auto; aspect-ratio:1/1; }
+  }
+
+  /* ===================== TRUST STRIP ===================== */
+  .trust{
+    border-top:1px solid var(--grey-line);
+    border-bottom:1px solid var(--grey-line);
+    background:var(--panel);
+  }
+  .trust-inner{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+  }
+  .trust-item{
+    padding:26px 20px;
+    text-align:center;
+    border-right:1px solid var(--grey-line);
+  }
+  .trust-item:last-child{ border-right:none; }
+  .trust-item b{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:26px;
+    display:block;
+    color:var(--white);
+  }
+  .trust-item b .accent{ color:var(--green); }
+  .trust-item span{
+    font-size:12.5px;
+    color:var(--grey-muted);
+    letter-spacing:0.02em;
+  }
+  @media (max-width:700px){
+    .trust-inner{ grid-template-columns:repeat(2,1fr); }
+    .trust-item{ border-bottom:1px solid var(--grey-line); }
+    .trust-item:nth-child(2n){ border-right:none; }
+  }
+
+  /* ===================== SECTION HEADS ===================== */
+  .sec{ padding:110px 0; }
+  .sec-tight{ padding:96px 0; }
+  .sec-head{
+    max-width:600px;
+    margin-bottom:56px;
+  }
+  .sec-head h2{
+    font-size:clamp(30px,4vw,44px);
+  }
+  .sec-head p{
+    margin-top:16px;
+    color:var(--grey-light);
+    font-size:16px;
+    max-width:480px;
+  }
+  .sec-head.center{ margin-left:auto; margin-right:auto; text-align:center; }
+
+  /* ===================== PRODUCTS ===================== */
+  .prod-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+  }
+  .prod-card{
+    background:var(--panel);
+    border:1px solid var(--grey-line);
+    border-radius:var(--radius);
+    padding:30px 26px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    min-height:270px;
+    transition: border-color .35s ease, transform .35s var(--ease);
+  }
+  .prod-card:hover{ border-color:rgba(32,217,74,0.45); transform:translateY(-4px); }
+  .prod-icon{
+    width:42px; height:42px;
+    display:flex; align-items:center; justify-content:center;
+    border-radius:10px;
+    background:var(--grey);
+    margin-bottom:26px;
+  }
+  .prod-icon svg{ width:20px; height:20px; }
+  .prod-card h3{
+    font-size:19px;
+    margin-bottom:8px;
+  }
+  .prod-card p{
+    font-size:14.5px;
+    color:var(--grey-light);
+    line-height:1.55;
+  }
+  .prod-link{
+    margin-top:22px;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-size:13.5px;
+    font-weight:600;
+    color:var(--green);
+  }
+  .prod-link svg{ width:14px; height:14px; transition:transform .3s var(--ease); }
+  .prod-card:hover .prod-link svg{ transform:translateX(3px); }
+
+  @media (max-width:980px){
+    .prod-grid{ grid-template-columns:1fr 1fr; }
+  }
+  @media (max-width:560px){
+    .prod-grid{ grid-template-columns:1fr; }
+  }
+
+  /* ===================== SERVICES ===================== */
+  .services{ background:var(--panel); border-top:1px solid var(--grey-line); border-bottom:1px solid var(--grey-line); }
+  .serv-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1px;
+    background:var(--grey-line);
+    border:1px solid var(--grey-line);
+    border-radius:var(--radius);
+    overflow:hidden;
+  }
+  .serv-card{
+    background:var(--black);
+    padding:44px 34px;
+  }
+  .serv-num{
+    font-family:'Space Grotesk', sans-serif;
+    color:var(--green);
+    font-size:14px;
+    font-weight:600;
+    margin-bottom:34px;
+  }
+  .serv-card h3{
+    font-size:23px;
+    margin-bottom:12px;
+  }
+  .serv-card p{
+    color:var(--grey-light);
+    font-size:14.5px;
+    line-height:1.6;
+  }
+  @media (max-width:820px){
+    .serv-grid{ grid-template-columns:1fr; }
+  }
+
+  /* ===================== DIFERENCIAIS ===================== */
+  .diff-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+  }
+  .diff-card{
+    padding:8px 4px;
+  }
+  .diff-icon{
+    width:46px; height:46px;
+    border:1px solid var(--grey-line);
+    border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom:22px;
+  }
+  .diff-icon svg{ width:22px; height:22px; stroke:var(--green); }
+  .diff-card h3{ font-size:17px; margin-bottom:8px; }
+  .diff-card p{ font-size:14px; color:var(--grey-light); line-height:1.55; }
+  @media (max-width:900px){ .diff-grid{ grid-template-columns:1fr 1fr; gap:34px 20px; } }
+  @media (max-width:520px){ .diff-grid{ grid-template-columns:1fr; } }
+
+  /* ===================== GALLERY ===================== */
+  .gallery{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    grid-auto-rows:130px;
+    gap:14px;
+  }
+  .g-item{
+    border-radius:var(--radius-sm);
+    overflow:hidden;
+    position:relative;
+    border:1px solid var(--grey-line);
+  }
+  .g-item img{
+    width:100%; height:100%; object-fit:cover;
+    transition:transform .7s var(--ease);
+  }
+  .g-item:hover img{ transform:scale(1.06); }
+  .g-item::after{
+    content:'';
+    position:absolute; inset:0;
+    background:linear-gradient(180deg, transparent 55%, rgba(0,0,0,0.55));
+    opacity:0;
+    transition:opacity .35s ease;
+  }
+  .g-item:hover::after{ opacity:1; }
+  .g1{ grid-column:span 2; grid-row:span 3; }
+  .g2{ grid-column:span 2; grid-row:span 2; }
+  .g3{ grid-column:span 1; grid-row:span 2; }
+  .g4{ grid-column:span 1; grid-row:span 2; }
+  .g5{ grid-column:span 2; grid-row:span 2; }
+
+  @media (max-width:900px){
+    .gallery{ grid-template-columns:repeat(2,1fr); grid-auto-rows:120px; }
+    .g1{ grid-column:span 2; grid-row:span 3; }
+    .g2{ grid-column:span 1; grid-row:span 2; }
+    .g3{ grid-column:span 1; grid-row:span 2; }
+    .g4{ grid-column:span 1; grid-row:span 2; }
+    .g5{ grid-column:span 1; grid-row:span 2; }
+  }
+
+  .gallery-foot{
+    margin-top:34px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:18px;
+  }
+  .ig-handle{ color:var(--grey-light); font-size:14.5px; }
+  .ig-handle b{ color:var(--white); }
+
+  /* ===================== SOBRE ===================== */
+  .about{
+    display:grid;
+    grid-template-columns:0.9fr 1.1fr;
+    gap:64px;
+    align-items:center;
+  }
+  .about-media{
+    position:relative;
+    border-radius:var(--radius);
+    overflow:hidden;
+    border:1px solid var(--grey-line);
+    aspect-ratio:4/4.6;
+  }
+  .about-media img{ width:100%; height:100%; object-fit:cover; }
+  .about-text h2{
+    font-size:clamp(28px,3.6vw,40px);
+    margin-bottom:22px;
+  }
+  .about-text p{
+    color:var(--grey-light);
+    font-size:16.5px;
+    line-height:1.75;
+    max-width:520px;
+  }
+  .about-list{
+    margin-top:32px;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+  }
+  .about-list-item{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    font-size:14.5px;
+    color:var(--grey-light);
+  }
+  .about-list-item svg{ width:16px; height:16px; flex-shrink:0; margin-top:2px; stroke:var(--green); }
+
+  @media (max-width:900px){
+    .about{ grid-template-columns:1fr; }
+    .about-media{ max-width:420px; margin:0 auto; }
+  }
+
+  /* ===================== REVIEWS ===================== */
+  .reviews-top{
+    display:flex;
+    align-items:center;
+    gap:24px;
+    margin-bottom:48px;
+    flex-wrap:wrap;
+  }
+  .rev-score{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:56px;
+    font-weight:700;
+  }
+  .rev-meta{ display:flex; flex-direction:column; gap:4px; }
+  .rev-meta .stars{ font-size:18px; }
+  .rev-meta span{ font-size:13.5px; color:var(--grey-muted); }
+
+  .rev-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+  }
+  .rev-card{
+    background:var(--panel);
+    border:1px solid var(--grey-line);
+    border-radius:var(--radius);
+    padding:30px;
+  }
+  .rev-card .stars{ display:block; margin-bottom:18px; font-size:14px; }
+  .rev-card p{
+    font-size:15px;
+    color:#D7DADC;
+    line-height:1.65;
+    margin-bottom:22px;
+  }
+  .rev-src{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:13px;
+    color:var(--grey-muted);
+  }
+  .rev-src svg{ width:16px; height:16px; }
+
+  @media (max-width:900px){ .rev-grid{ grid-template-columns:1fr; } }
+
+  /* ===================== LOCATION ===================== */
+  .loc{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:0;
+    background:var(--panel);
+    border:1px solid var(--grey-line);
+    border-radius:var(--radius);
+    overflow:hidden;
+  }
+  .loc-info{ padding:56px; }
+  .loc-info h2{ font-size:clamp(26px,3.4vw,36px); margin-bottom:22px; }
+  .loc-row{
+    display:flex;
+    gap:14px;
+    margin-bottom:20px;
+  }
+  .loc-row svg{ width:19px; height:19px; stroke:var(--green); flex-shrink:0; margin-top:2px; }
+  .loc-row div b{ display:block; font-size:15px; margin-bottom:2px; }
+  .loc-row div span{ font-size:14px; color:var(--grey-light); }
+  .loc-status{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:28px;
+    font-size:13.5px;
+    color:var(--green);
+    background:rgba(32,217,74,0.1);
+    padding:8px 14px;
+    border-radius:100px;
+  }
+  .loc-status .dot{ width:7px; height:7px; border-radius:50%; background:var(--green); }
+  .loc-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top:30px; }
+  .loc-map{
+    position:relative;
+    min-height:340px;
+  }
+  .loc-map img{ width:100%; height:100%; object-fit:cover; }
+  .loc-map-pin{
+    position:absolute;
+    top:50%; left:50%;
+    transform:translate(-50%,-100%);
+  }
+  @media (max-width:900px){
+    .loc{ grid-template-columns:1fr; }
+    .loc-info{ padding:40px 28px; }
+    .loc-map{ min-height:260px; order:-1; }
+  }
+
+  /* ===================== FAQ ===================== */
+  .faq-list{ max-width:760px; }
+  .faq-item{
+    border-bottom:1px solid var(--grey-line);
+  }
+  .faq-q{
+    width:100%;
+    background:none;
+    border:none;
+    color:var(--white);
+    text-align:left;
+    padding:26px 0;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+    cursor:pointer;
+    font-family:'Space Grotesk', sans-serif;
+    font-size:17px;
+    font-weight:500;
+  }
+  .faq-plus{
+    width:26px; height:26px;
+    flex-shrink:0;
+    position:relative;
+  }
+  .faq-plus::before, .faq-plus::after{
+    content:'';
+    position:absolute;
+    background:var(--grey-light);
+    transition:transform .35s var(--ease), background .3s ease;
+  }
+  .faq-plus::before{ top:50%; left:2px; right:2px; height:1.5px; transform:translateY(-50%); }
+  .faq-plus::after{ left:50%; top:2px; bottom:2px; width:1.5px; transform:translateX(-50%); }
+  .faq-item.open .faq-plus::after{ transform:translateX(-50%) rotate(90deg); opacity:0; }
+  .faq-item.open .faq-plus::before{ background:var(--green); }
+
+  .faq-a{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .45s var(--ease);
+  }
+  .faq-a p{
+    padding-bottom:26px;
+    color:var(--grey-light);
+    font-size:15px;
+    line-height:1.65;
+    max-width:600px;
+  }
+
+  /* ===================== CTA FINAL ===================== */
+  .cta-final{
+    background:var(--black);
+    border-top:1px solid var(--grey-line);
+    position:relative;
+    overflow:hidden;
+  }
+  .cta-glow{
+    position:absolute;
+    top:-20%; right:-10%;
+    width:560px; height:560px;
+    background:radial-gradient(circle, rgba(32,217,74,0.16), transparent 68%);
+    pointer-events:none;
+  }
+  .cta-inner{
+    display:grid;
+    grid-template-columns:1.1fr 0.9fr;
+    align-items:center;
+    gap:50px;
+    position:relative;
+    z-index:1;
+  }
+  .cta-inner h2{
+    font-size:clamp(34px,5vw,56px);
+  }
+  .cta-inner p{
+    margin-top:20px;
+    color:var(--grey-light);
+    font-size:17px;
+    max-width:420px;
+  }
+  .cta-inner .btn{ margin-top:36px; padding:18px 32px; font-size:16px; }
+  .cta-visual{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+  }
+  .cta-phone{
+    width:180px;
+    height:370px;
+    border-radius:34px;
+    background:linear-gradient(160deg, var(--panel-2), var(--black));
+    border:1px solid var(--grey-line);
+    position:relative;
+    box-shadow:0 40px 80px -30px rgba(32,217,74,0.25);
+  }
+  .cta-phone::before{
+    content:'';
+    position:absolute;
+    inset:10px;
+    border-radius:26px;
+    background:linear-gradient(200deg, rgba(32,217,74,0.16), transparent 60%);
+    border:1px solid var(--grey-line);
+  }
+  .cta-phone::after{
+    content:'';
+    position:absolute;
+    top:22px; left:50%;
+    transform:translateX(-50%);
+    width:44px; height:5px;
+    border-radius:4px;
+    background:var(--grey-line);
+  }
+  .cta-ring{
+    position:absolute;
+    width:280px; height:280px;
+    border:1px solid rgba(32,217,74,0.3);
+    border-radius:50%;
+    animation: ctaSpin 18s linear infinite;
+  }
+  @keyframes ctaSpin{ to{ transform:rotate(360deg); } }
+  @media (max-width:900px){
+    .cta-inner{ grid-template-columns:1fr; text-align:left; }
+    .cta-visual{ display:none; }
+  }
+
+  /* ===================== FOOTER ===================== */
+  footer{
+    background:var(--panel);
+    border-top:1px solid var(--grey-line);
+    padding:64px 0 30px;
+  }
+  .foot-top{
+    display:grid;
+    grid-template-columns:1.4fr 1fr 1fr;
+    gap:40px;
+    padding-bottom:44px;
+    border-bottom:1px solid var(--grey-line);
+  }
+  .foot-brand p{
+    margin-top:14px;
+    color:var(--grey-light);
+    font-size:14.5px;
+    max-width:280px;
+    line-height:1.6;
+  }
+  .foot-col h4{
+    font-family:'Inter', sans-serif;
+    font-size:13px;
+    color:var(--grey-muted);
+    margin-bottom:18px;
+    font-weight:600;
+  }
+  .foot-col ul{ list-style:none; display:flex; flex-direction:column; gap:12px; }
+  .foot-col a{ font-size:14.5px; color:var(--grey-light); transition:color .25s ease; }
+  .foot-col a:hover{ color:var(--green); }
+  .foot-bottom{
+    padding-top:26px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+  .foot-bottom span{ font-size:13px; color:var(--grey-muted); }
+  .foot-social{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:13px;
+    color:var(--grey-muted);
+  }
+  @media (max-width:760px){
+    .foot-top{ grid-template-columns:1fr; gap:34px; }
+  }
+
+  /* ===================== WHATSAPP FLOAT ===================== */
+  .wa-float{
+    position:fixed;
+    right:22px;
+    bottom:22px;
+    z-index:90;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .wa-btn{
+    width:58px; height:58px;
+    border-radius:50%;
+    background:var(--green);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 10px 30px -6px rgba(32,217,74,0.55);
+    animation: waIn .6s var(--ease) 1.4s backwards, waPulse 2.6s ease-in-out 2.4s infinite;
+    position:relative;
+  }
+  .wa-btn svg{ width:27px; height:27px; }
+  @keyframes waIn{ from{ transform:scale(0); opacity:0; } to{ transform:scale(1); opacity:1; } }
+  @keyframes waPulse{
+    0%,100%{ box-shadow:0 10px 30px -6px rgba(32,217,74,0.55); }
+    50%{ box-shadow:0 10px 30px -6px rgba(32,217,74,0.55), 0 0 0 10px rgba(32,217,74,0.08); }
+  }
+  .wa-tip{
+    background:var(--panel-2);
+    border:1px solid var(--grey-line);
+    padding:9px 16px;
+    border-radius:100px;
+    font-size:13px;
+    white-space:nowrap;
+    opacity:0;
+    transform:translateX(6px);
+    transition:opacity .3s ease, transform .3s ease;
+    pointer-events:none;
+  }
+  .wa-float:hover .wa-tip{ opacity:1; transform:none; }
+  @media (max-width:640px){ .wa-tip{ display:none; } .wa-float{ right:16px; bottom:16px; } }
+
+  /* header/nav visibility helpers */
+  .desktop-only{ display:flex; }
+  @media (max-width:900px){
+    .desktop-only{ display:none; }
+    .hamburger{ display:block; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== INTRO ===================== -->
+<div id="intro" aria-hidden="true">
+  <div class="intro-mark">
+    <span class="d1">DIGITAL</span><span class="d2">TECNOLOGIA</span>
+  </div>
+  <div class="intro-line"></div>
+  <p class="intro-tag">Mais que o essencial.<br>Você encontra na Digital.</p>
+</div>
+
+<!-- ===================== HEADER ===================== -->
+<header id="site-header">
+  <div class="wrap nav-inner">
+    <a href="#inicio" class="logo" aria-label="Digital Tecnologia - início">
+      __LOGO_ICON__
+      <span>DIGITAL<small>TECNOLOGIA</small></span>
+    </a>
+
+    <nav class="desktop-only" aria-label="Navegação principal">
+      <ul>
+        <li><a href="#inicio">Início</a></li>
+        <li><a href="#produtos">Produtos</a></li>
+        <li><a href="#servicos">Serviços</a></li>
+        <li><a href="#sobre">Sobre</a></li>
+        <li><a href="#avaliacoes">Avaliações</a></li>
+        <li><a href="#contato">Contato</a></li>
+      </ul>
+    </nav>
+
+    <div class="nav-right">
+      <a class="btn btn-solid nav-cta desktop-only" href="https://wa.me/5533991795060?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Digital%20Tecnologia%20e%20gostaria%20de%20saber%20mais%20sobre%20os%20produtos%20dispon%C3%ADveis." target="_blank" rel="noopener" aria-label="Falar no WhatsApp com a Digital Tecnologia">
+        __WA_ICON_SMALL__ WhatsApp
+      </a>
+      <button class="hamburger" id="hamburger" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+  <ul>
+    <li><a href="#inicio">Início</a></li>
+    <li><a href="#produtos">Produtos</a></li>
+    <li><a href="#servicos">Serviços</a></li>
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#avaliacoes">Avaliações</a></li>
+    <li><a href="#contato">Contato</a></li>
+  </ul>
+  <a class="btn btn-solid" href="https://wa.me/5533991795060?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Digital%20Tecnologia%20e%20gostaria%20de%20saber%20mais%20sobre%20os%20produtos%20dispon%C3%ADveis." target="_blank" rel="noopener">
+    __WA_ICON_SMALL__ Falar no WhatsApp
+  </a>
+</div>
+
+<main>
+<!-- ===================== HERO ===================== -->
+<section class="hero" id="inicio">
+  <div class="wrap hero-grid">
+    <div class="hero-copy reveal">
+      <h1>Tecnologia<br><span class="line2">do seu jeito.</span></h1>
+      <p class="hero-sub">Celulares, acessórios e soluções para você ficar sempre conectado.</p>
+      <div class="hero-actions">
+        <a class="btn btn-solid" href="#produtos">Ver produtos</a>
+        <a class="btn btn-outline" href="https://wa.me/5533991795060?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Digital%20Tecnologia%20e%20gostaria%20de%20saber%20mais%20sobre%20os%20produtos%20dispon%C3%ADveis." target="_blank" rel="noopener">
+          Falar no WhatsApp
+        </a>
+      </div>
+      <div class="hero-social">
+        <span class="stars">★★★★★</span>
+        <div class="hero-social-text">
+          <b>5,0 no Google</b>
+          <span>113 avaliações</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual reveal">
+      <div class="hv-glow"></div>
+      <div class="hv-frame">
+        <div class="hv-line"></div>
+        <div class="hv-card hv-1"><img src="__IMG_STOREFRONT__" alt="Fachada da loja Digital Tecnologia em Capelinha - MG" loading="eager"></div>
+        <div class="hv-card hv-2"><img src="__IMG_JBL__" alt="Caixa de som exibida na Digital Tecnologia" loading="eager"></div>
+        <div class="hv-tag">__DOT__ Loja física em Capelinha - MG</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== TRUST STRIP ===================== -->
+<div class="trust">
+  <div class="wrap trust-inner">
+    <div class="trust-item"><b>5,0</b><span>Google</span></div>
+    <div class="trust-item"><b><span class="accent">113</span></b><span>avaliações</span></div>
+    <div class="trust-item"><b>Entrega</b><span>disponível</span></div>
+    <div class="trust-item"><b>Atendimento</b><span>de qualidade</span></div>
+  </div>
+</div>
+
+<!-- ===================== PRODUTOS ===================== -->
+<section class="sec" id="produtos">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <h2>Tudo para ficar conectado.</h2>
+      <p>Encontre celulares, acessórios e produtos de tecnologia na Digital.</p>
+    </div>
+
+    <div class="prod-grid">
+      <div class="prod-card reveal">
+        <div>
+          <div class="prod-icon">__ICON_PHONE__</div>
+          <h3>Smartphones</h3>
+          <p>Seu próximo celular pode estar aqui.</p>
+        </div>
+        <a class="prod-link" href="https://wa.me/5533991795060?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Digital%20Tecnologia%20e%20gostaria%20de%20saber%20mais%20sobre%20os%20produtos%20dispon%C3%ADveis." target="_blank" rel="noopener">Consultar disponibilidade __ARROW__</a>
+      </div>
+
+      <div class="prod-card reveal">
+        <div>
+          <div class="prod-icon">__ICON_ACC__</div>
+          <h3>Acessórios</h3>
+          <p>Proteção, praticidade e estilo para seus dispositivos.</p>
+        </div>
+        <a class="prod-link" href="https://wa.me/5533991795060?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Digital%20Tecnologia%20e%20gostaria%20de%20saber%20mais%20sobre%20os%20produtos%20dispon%C3%ADveis." target="_blank" rel="noopener">Consultar disponibilidade __ARROW__</a>
+      </div>
+
+      <div class="prod-card reveal">
+        <div>
+          <div class="prod-icon">__ICON_TECH__</div>
+          <h3>Tecnologia</h3>
+          <p>Produtos para facilitar seu dia a dia.</p>
+        </div>
+        <a class="prod-link" href="https://wa.me/5533991795060?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Digital%20Tecnologia%20e%20gostaria%20de%20saber%20mais%20sobre%20os%20produtos%20dispon%C3%ADveis." target="_blank" rel="noopener">Consultar disponibilidade __ARROW__</a>
+      </div>
+
+      <div class="prod-card reveal">
+        <div>
+          <div class="prod-icon">__ICON_MORE__</div>
+          <h3>Mais opções</h3>
+          <p>Consulte nossa equipe.</p>
+        </div>
+        <a class="prod-link" href="https://wa.me/5533991795060?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Digital%20Tecnologia%20e%20gostaria%20de%20saber%20mais%20sobre%20os%20produtos%20dispon%C3%ADveis." target="_blank" rel="noopener">Consultar disponibilidade __ARROW__</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SERVIÇOS ===================== -->
+<section class="sec services" id="servicos">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <h2>Mais que celulares.</h2>
+      <p>Celulares, manutenção e acessórios em geral.</p>
+    </div>
+
+    <div class="serv-grid reveal">
+      <div class="serv-card">
+        <div class="serv-num">01</div>
+        <h3>Celulares</h3>
+        <p>Encontre opções para diferentes necessidades e momentos.</p>
+      </div>
+      <div class="serv-card">
+        <div class="serv-num">02</div>
+        <h3>Manutenção</h3>
+        <p>Conte com a Digital para cuidar dos seus dispositivos.</p>
+      </div>
+      <div class="serv-card">
+        <div class="serv-num">03</div>
+        <h3>Acessórios</h3>
+        <p>Complete seu setup com acessórios para o seu dia a dia.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== DIFERENCIAIS ===================== -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <h2>Por que escolher a Digital?</h2>
+    </div>
+
+    <div class="diff-grid">
+      <div class="diff-card reveal">
+        <div class="diff-icon">__ICON_SUPPORT__</div>
+        <h3>Atendimento</h3>
+        <p>Uma equipe preparada para atender você.</p>
+      </div>
+      <div class="diff-card reveal">
+        <div class="diff-icon">__ICON_QUALITY__</div>
+        <h3>Qualidade</h3>
+        <p>Produtos de qualidade para uma compra mais segura.</p>
+      </div>
+      <div class="diff-card reveal">
+        <div class="diff-icon">__ICON_DELIVERY__</div>
+        <h3>Entrega</h3>
+        <p>Praticidade para receber seu produto.</p>
+      </div>
+      <div class="diff-card reveal">
+        <div class="diff-icon">__ICON_SUPPORT2__</div>
+        <h3>Pós-venda</h3>
+        <p>Suporte e atenção também depois da compra.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== GALERIA / INSTAGRAM ===================== -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <h2>Conheça a Digital por dentro.</h2>
+      <p>Uma loja de tecnologia que também gosta de estar perto de quem compra.</p>
+    </div>
+
+    <div class="gallery reveal">
+      <div class="g-item g1"><img src="__IMG_INTERIOR__" alt="Balcão de atendimento da Digital Tecnologia" loading="lazy"></div>
+      <div class="g-item g2"><img src="__IMG_STOREFRONT2__" alt="Fachada da Digital Tecnologia em Capelinha" loading="lazy"></div>
+      <div class="g-item g3"><img src="__IMG_JBL2__" alt="Caixa de som JBL disponível na loja" loading="lazy"></div>
+      <div class="g-item g4"><img src="__IMG_EARBUDS__" alt="Fone de ouvido sem fio na Digital Tecnologia" loading="lazy"></div>
+      <div class="g-item g5"><img src="__IMG_ALEXA__" alt="Assistente virtual Alexa Echo Dot na Digital Tecnologia" loading="lazy"></div>
+    </div>
+
+    <div class="gallery-foot reveal">
+      <span class="ig-handle">Siga a Digital no Instagram <b>@digitaltecnologiacap</b></span>
+      <a class="btn btn-dark" href="https://www.instagram.com/digitaltecnologiacap/" target="_blank" rel="noopener">Ver Instagram __ARROW__</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SOBRE ===================== -->
+<section class="sec" id="sobre">
+  <div class="wrap about">
+    <div class="about-media reveal">
+      <img src="__IMG_INTERIOR2__" alt="Interior da loja Digital Tecnologia" loading="lazy">
+    </div>
+    <div class="about-text reveal">
+      <h2>Mais que o essencial.</h2>
+      <p>A Digital Tecnologia é uma loja de celulares e tecnologia localizada em Capelinha - MG, oferecendo celulares, acessórios e manutenção, com foco em atendimento, qualidade e confiança.</p>
+      <div class="about-list">
+        <div class="about-list-item">__ICON_CHECK__ Celulares, acessórios e manutenção em um só lugar</div>
+        <div class="about-list-item">__ICON_CHECK__ Atendimento próximo, direto pelo WhatsApp</div>
+        <div class="about-list-item">__ICON_CHECK__ Loja física no Centro de Capelinha - MG</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== AVALIAÇÕES ===================== -->
+<section class="sec" id="avaliacoes">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <h2>Quem compra, recomenda.</h2>
+    </div>
+
+    <div class="reviews-top reveal">
+      <div class="rev-score">5,0</div>
+      <div class="rev-meta">
+        <span class="stars">★★★★★</span>
+        <span>113 avaliações no Google</span>
+      </div>
+    </div>
+
+    <div class="rev-grid">
+      <div class="rev-card reveal">
+        <span class="stars">★★★★★</span>
+        <p>"Ótimo atendimento, preço bom e entrega rápida. Vale a pena comprar na loja."</p>
+        <div class="rev-src">__ICON_GOOGLE__ Google Reviews</div>
+      </div>
+      <div class="rev-card reveal">
+        <span class="stars">★★★★★</span>
+        <p>"Recomendo para quem busca segurança na compra e um ótimo suporte no pós-venda!"</p>
+        <div class="rev-src">__ICON_GOOGLE__ Google Reviews</div>
+      </div>
+      <div class="rev-card reveal">
+        <span class="stars">★★★★★</span>
+        <p>"Loja com excelentes produtos e com ótimos preços, e atendimento bom."</p>
+        <div class="rev-src">__ICON_GOOGLE__ Google Reviews</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== LOCALIZAÇÃO ===================== -->
+<section class="sec" id="contato">
+  <div class="wrap">
+    <div class="loc reveal">
+      <div class="loc-info">
+        <h2>Venha conhecer a Digital.</h2>
+
+        <div class="loc-status"><span class="dot"></span> Aberto · Fecha 18:00</div>
+
+        <div class="loc-row">
+          __ICON_PIN__
+          <div><b>Praça do Povo, 16B - Centro</b><span>Capelinha - MG, 39680-000</span></div>
+        </div>
+        <div class="loc-row">
+          __ICON_PHONE_SM__
+          <div><b>(33) 99179-5060</b><span>Atendimento via WhatsApp</span></div>
+        </div>
+
+        <div class="loc-actions">
+          <a class="btn btn-solid" href="https://www.google.com/maps/search/?api=1&query=Digital+Tecnologia+Pra%C3%A7a+do+Povo+16B+Centro+Capelinha+MG" target="_blank" rel="noopener">Como chegar</a>
+          <a class="btn btn-outline" href="https://wa.me/5533991795060?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Digital%20Tecnologia%20e%20gostaria%20de%20saber%20mais%20sobre%20os%20produtos%20dispon%C3%ADveis." target="_blank" rel="noopener">Falar no WhatsApp</a>
+        </div>
+      </div>
+      <div class="loc-map">
+        <img src="__IMG_STOREFRONT3__" alt="Fachada da Digital Tecnologia, Praça do Povo, Capelinha - MG" loading="lazy">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FAQ ===================== -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <h2>Perguntas frequentes</h2>
+    </div>
+
+    <div class="faq-list reveal">
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">Como consulto os celulares disponíveis?<span class="faq-plus"></span></button>
+        <div class="faq-a"><p>Entre em contato pelo WhatsApp e consulte nossa equipe sobre os produtos disponíveis.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">A Digital Tecnologia faz entrega?<span class="faq-plus"></span></button>
+        <div class="faq-a"><p>Sim. A empresa informa disponibilidade de entrega. Consulte condições diretamente pelo WhatsApp.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">Onde fica a Digital Tecnologia?<span class="faq-plus"></span></button>
+        <div class="faq-a"><p>Praça do Povo, 16B - Centro, Capelinha - MG.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">Como posso entrar em contato?<span class="faq-plus"></span></button>
+        <div class="faq-a"><p>Você pode falar diretamente com a equipe pelo WhatsApp no número (33) 99179-5060.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CTA FINAL ===================== -->
+<section class="sec cta-final">
+  <div class="cta-glow"></div>
+  <div class="wrap cta-inner">
+    <div class="reveal">
+      <h2>Seu próximo upgrade<br>começa aqui.</h2>
+      <p>Fale com a Digital Tecnologia e consulte os produtos disponíveis.</p>
+      <a class="btn btn-solid" href="https://wa.me/5533991795060?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Digital%20Tecnologia%20e%20gostaria%20de%20saber%20mais%20sobre%20os%20produtos%20dispon%C3%ADveis." target="_blank" rel="noopener">
+        __WA_ICON_SMALL__ Falar no WhatsApp __ARROW__
+      </a>
+    </div>
+    <div class="cta-visual reveal">
+      <div class="cta-ring"></div>
+      <div class="cta-phone"></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <div class="logo">__LOGO_ICON__ <span>DIGITAL<small>TECNOLOGIA</small></span></div>
+        <p>Mais que o essencial, você encontra na Digital.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Navegação</h4>
+        <ul>
+          <li><a href="#inicio">Início</a></li>
+          <li><a href="#produtos">Produtos</a></li>
+          <li><a href="#servicos">Serviços</a></li>
+          <li><a href="#sobre">Sobre</a></li>
+          <li><a href="#avaliacoes">Avaliações</a></li>
+          <li><a href="#contato">Contato</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Contato</h4>
+        <ul>
+          <li>Praça do Povo, 16B - Centro</li>
+          <li>Capelinha - MG</li>
+          <li><a href="https://wa.me/5533991795060">(33) 99179-5060</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© Digital Tecnologia. Todos os direitos reservados.</span>
+      <a class="foot-social" href="https://www.instagram.com/digitaltecnologiacap/" target="_blank" rel="noopener">__ICON_INSTA__ @digitaltecnologiacap</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ===================== WHATSAPP FLUTUANTE ===================== -->
+<a class="wa-float" href="https://wa.me/5533991795060?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Digital%20Tecnologia%20e%20gostaria%20de%20saber%20mais%20sobre%20os%20produtos%20dispon%C3%ADveis." target="_blank" rel="noopener" aria-label="Fale com a Digital no WhatsApp">
+  <span class="wa-tip">Fale com a Digital</span>
+  <span class="wa-btn">__WA_ICON_BIG__</span>
+</a>
+
+<script>
+(function(){
+  // intro
+  window.addEventListener('load', function(){
+    setTimeout(function(){
+      document.getElementById('intro').classList.add('hide');
+    }, 950);
+  });
+
+  // header hide on scroll down
+  var header = document.getElementById('site-header');
+  var lastY = window.scrollY;
+  window.addEventListener('scroll', function(){
+    var y = window.scrollY;
+    if(y > 140 && y > lastY){ header.classList.add('hide-nav'); }
+    else{ header.classList.remove('hide-nav'); }
+    lastY = y;
+  }, { passive:true });
+
+  // mobile menu
+  var burger = document.getElementById('hamburger');
+  var menu = document.getElementById('mobile-menu');
+  burger.addEventListener('click', function(){
+    var open = menu.classList.toggle('open');
+    burger.classList.toggle('open', open);
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+  menu.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){
+      menu.classList.remove('open');
+      burger.classList.remove('open');
+      burger.setAttribute('aria-expanded','false');
+      document.body.style.overflow = '';
+    });
+  });
+
+  // reveal on scroll
+  var revealEls = document.querySelectorAll('.reveal');
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold:0.14, rootMargin:'0px 0px -40px 0px' });
+  revealEls.forEach(function(el){ io.observe(el); });
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-item').forEach(function(item){
+    var q = item.querySelector('.faq-q');
+    var a = item.querySelector('.faq-a');
+    q.addEventListener('click', function(){
+      var isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(function(other){
+        if(other !== item){
+          other.classList.remove('open');
+          other.querySelector('.faq-a').style.maxHeight = null;
+          other.querySelector('.faq-q').setAttribute('aria-expanded','false');
+        }
+      });
+      if(isOpen){
+        item.classList.remove('open');
+        a.style.maxHeight = null;
+        q.setAttribute('aria-expanded','false');
+      } else {
+        item.classList.add('open');
+        a.style.maxHeight = a.scrollHeight + 'px';
+        q.setAttribute('aria-expanded','true');
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>
