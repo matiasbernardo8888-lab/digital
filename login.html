@@ -106,12 +106,20 @@
   function strong(v) { return Object.keys(RULES).every(function (k) { return RULES[k](v); }); }
   function goApp() { window.location.replace('index.html'); }
 
-  // Já logado? Vai direto para o painel (exceto quando veio pelo link de nova senha).
+  // Avisos vindos do painel (?error=...).
+  var errorParam = new URLSearchParams(window.location.search).get('error');
+  if (errorParam === 'sem_acesso') {
+    show('Sua conta não tem uma assinatura ativa do Sora. Se você já comprou, entre com o mesmo e-mail usado na compra. Se o problema continuar, fale com o suporte.');
+  } else if (errorParam === 'verificacao') {
+    show('Não foi possível confirmar seu acesso agora. Verifique sua internet e entre novamente.');
+  }
+
+  // Já logado? Vai direto para o painel (exceto quando veio pelo link de nova senha ou com aviso).
   var recovering = /type=recovery/.test(window.location.hash);
   sb.auth.onAuthStateChange(function (event) {
     if (event === 'PASSWORD_RECOVERY') openNewPassword();
   });
-  if (!recovering) {
+  if (!recovering && !errorParam) {
     sb.auth.getSession().then(function (r) { if (r.data && r.data.session) goApp(); });
   }
 
