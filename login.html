@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="pt-BR" translate="no" data-page="login">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="google" content="notranslate">
+<meta name="robots" content="noindex">
+<title>Entrar | Sora</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;500;600;700&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"></script>
+<script src="auth.js"></script>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;
+    background:radial-gradient(60% 50% at 50% 0%,rgba(124,58,237,.35),transparent 70%),#0D0A26;color:#fff;
+    font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+  .card{width:100%;max-width:420px;background:rgba(32,24,72,.72);border:1px solid #3B2F6B;border-radius:24px;padding:28px;
+    display:flex;flex-direction:column;gap:16px;box-shadow:0 18px 48px rgba(3,8,24,.55);backdrop-filter:blur(16px)}
+  .brand{display:flex;align-items:center;gap:10px}
+  .brand img{width:44px;height:44px;filter:drop-shadow(0 0 8px rgba(124,58,237,.7))}
+  .brand span{font-family:Cinzel,Georgia,serif;font-size:22px;font-weight:700;letter-spacing:.1em}
+  h1{margin:0;font-size:26px}
+  p.sub{margin:0;color:#B9B2DA;font-size:15px}
+  .tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:4px;border-radius:999px;background:#140F2E;border:1px solid #3B2F6B}
+  .tabs button{height:42px;border:0;border-radius:999px;background:transparent;color:#D6D0F0;font:600 14px inherit;font-family:inherit;cursor:pointer}
+  .tabs button[aria-selected=true]{background:#7C3AED;color:#fff}
+  form{display:flex;flex-direction:column;gap:14px}
+  label{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:500;color:#B9B2DA}
+  input[type=email],input[type=password]{height:46px;padding:0 14px;border-radius:12px;border:1px solid #3B2F6B;background:#140F2E;color:#fff;font-size:16px;font-family:inherit}
+  input:focus,button:focus-visible{outline:2px solid #C9B8FF;outline-offset:1px}
+  .primary{height:48px;border:0;border-radius:999px;background:#7C3AED;color:#fff;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer}
+  .primary:disabled{opacity:.7;cursor:default}
+  .rules{margin:0;padding:0;list-style:none;display:grid;gap:4px;font-size:13px;color:#B9B2DA}
+  .rules li.ok{color:#4ADE80}
+  .msg{padding:10px 14px;border-radius:12px;font-size:14px}
+  .msg.err{background:rgba(220,38,38,.14);color:#FFB4B4}
+  .msg.ok{background:rgba(34,197,94,.14);color:#BDF5CF}
+  .link{background:none;border:0;padding:0;color:#C9B8FF;font:14px inherit;font-family:inherit;text-decoration:underline;cursor:pointer;align-self:flex-start}
+  [hidden]{display:none !important}
+</style>
+</head>
+<body data-page="login">
+<main class="card" aria-labelledby="titulo">
+  <div class="brand"><img src="assets/daa6d48dad01a913a3a12fa358ef8fc8.webp" alt=""><span>SORA</span></div>
+  <h1 id="titulo">Entrar na Sora</h1>
+  <p class="sub" id="subtitulo">Acesse seu painel de vendas e a Academia.</p>
+
+  <div class="tabs" role="tablist" aria-label="Entrar ou criar conta">
+    <button type="button" role="tab" id="tab-login" aria-selected="true" aria-controls="form-login">Entrar</button>
+    <button type="button" role="tab" id="tab-cadastro" aria-selected="false" aria-controls="form-cadastro">Criar conta</button>
+  </div>
+
+  <div id="msg" class="msg" role="status" hidden></div>
+
+  <form id="form-login" role="tabpanel" aria-labelledby="tab-login" novalidate>
+    <label>E-mail<input name="email" type="email" autocomplete="email" inputmode="email" required maxlength="254"></label>
+    <label>Senha<input name="password" type="password" autocomplete="current-password" required maxlength="72"></label>
+    <button class="primary" type="submit">Entrar</button>
+    <button class="link" type="button" id="esqueci">Esqueci minha senha</button>
+  </form>
+
+  <form id="form-cadastro" role="tabpanel" aria-labelledby="tab-cadastro" novalidate hidden>
+    <label>E-mail<input name="email" type="email" autocomplete="email" inputmode="email" required maxlength="254"></label>
+    <label>Senha<input name="password" id="nova-senha" type="password" autocomplete="new-password" required maxlength="72" aria-describedby="regras"></label>
+    <ul class="rules" id="regras" aria-live="polite">
+      <li data-r="len">• Pelo menos 8 caracteres</li>
+      <li data-r="up">• Uma letra maiúscula</li>
+      <li data-r="num">• Um número</li>
+      <li data-r="sym">• Um símbolo (ex.: ! @ # $ %)</li>
+    </ul>
+    <label>Confirmar senha<input name="confirm" type="password" autocomplete="new-password" required maxlength="72"></label>
+    <button class="primary" type="submit">Criar conta</button>
+  </form>
+
+  <form id="form-nova-senha" novalidate hidden>
+    <label>Nova senha<input name="password" type="password" autocomplete="new-password" required maxlength="72"></label>
+    <label>Confirmar nova senha<input name="confirm" type="password" autocomplete="new-password" required maxlength="72"></label>
+    <button class="primary" type="submit">Salvar nova senha</button>
+  </form>
+</main>
+
+<script>
+(function () {
+  var sb = window.soraAuth;
+  if (!sb) return;
+  var $ = function (id) { return document.getElementById(id); };
+  var msg = $('msg');
+  var GENERIC = 'E-mail ou senha inválidos';
+  var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  var RULES = {
+    len: function (v) { return v.length >= 8; },
+    up: function (v) { return /[A-Z]/.test(v); },
+    num: function (v) { return /[0-9]/.test(v); },
+    sym: function (v) { return /[^A-Za-z0-9]/.test(v); }
+  };
+  var baseUrl = window.location.origin + window.location.pathname.replace(/[^/]*$/, '');
+
+  function show(text, ok) { msg.textContent = text; msg.className = 'msg ' + (ok ? 'ok' : 'err'); msg.hidden = false; }
+  function clear() { msg.hidden = true; }
+  function busy(form, on, label) {
+    var b = form.querySelector('.primary');
+    b.disabled = on;
+    if (on) { b.dataset.l = b.textContent; b.textContent = label; } else if (b.dataset.l) { b.textContent = b.dataset.l; }
+  }
+  function strong(v) { return Object.keys(RULES).every(function (k) { return RULES[k](v); }); }
+  function goApp() { window.location.replace('index.html'); }
+
+  // Já logado? Vai direto para o painel (exceto quando veio pelo link de nova senha).
+  var recovering = /type=recovery/.test(window.location.hash);
+  sb.auth.onAuthStateChange(function (event) {
+    if (event === 'PASSWORD_RECOVERY') openNewPassword();
+  });
+  if (!recovering) {
+    sb.auth.getSession().then(function (r) { if (r.data && r.data.session) goApp(); });
+  }
+
+  function setTab(which) {
+    var login = which === 'login';
+    $('tab-login').setAttribute('aria-selected', String(login));
+    $('tab-cadastro').setAttribute('aria-selected', String(!login));
+    $('form-login').hidden = !login;
+    $('form-cadastro').hidden = login;
+    $('titulo').textContent = login ? 'Entrar na Sora' : 'Criar conta na Sora';
+    $('subtitulo').textContent = login ? 'Acesse seu painel de vendas e a Academia.' : 'Leva menos de um minuto.';
+    clear();
+  }
+  $('tab-login').addEventListener('click', function () { setTab('login'); });
+  $('tab-cadastro').addEventListener('click', function () { setTab('cadastro'); });
+
+  $('nova-senha').addEventListener('input', function (e) {
+    var v = e.target.value;
+    Array.prototype.forEach.call(document.querySelectorAll('#regras li'), function (li) {
+      li.classList.toggle('ok', RULES[li.dataset.r](v));
+    });
+  });
+
+  $('form-login').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var f = e.target, email = f.email.value.trim().toLowerCase(), pass = f.password.value;
+    if (!EMAIL_RE.test(email) || !pass) { show(GENERIC); return; }
+    clear(); busy(f, true, 'Entrando…');
+    sb.auth.signInWithPassword({ email: email, password: pass }).then(function (r) {
+      busy(f, false);
+      if (r.error) {
+        if (r.error.status === 429) show('Muitas tentativas. Aguarde alguns minutos e tente novamente.');
+        else if (r.error.code === 'email_not_confirmed') show('Confirme seu e-mail pelo link que enviamos antes de entrar.');
+        else show(GENERIC);
+        return;
+      }
+      goApp();
+    });
+  });
+
+  $('form-cadastro').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var f = e.target, email = f.email.value.trim().toLowerCase(), pass = f.password.value;
+    if (!EMAIL_RE.test(email)) { show('E-mail inválido'); return; }
+    if (!strong(pass)) { show('A senha precisa ter 8+ caracteres, uma maiúscula, um número e um símbolo.'); return; }
+    if (pass !== f.confirm.value) { show('As senhas não coincidem'); return; }
+    clear(); busy(f, true, 'Criando conta…');
+    sb.auth.signUp({ email: email, password: pass, options: { emailRedirectTo: baseUrl + 'login.html' } }).then(function (r) {
+      busy(f, false);
+      if (r.error && r.error.code === 'weak_password') { show('Essa senha é fraca ou já apareceu em vazamentos. Escolha outra.'); return; }
+      if (r.error && r.error.status === 429) { show('Muitas tentativas. Aguarde alguns minutos e tente novamente.'); return; }
+      if (r.data && r.data.session) { goApp(); return; }
+      f.reset();
+      setTab('login');
+      show('Se o e-mail puder ser usado, enviamos um link de confirmação. Confirme e depois entre aqui.', true);
+    });
+  });
+
+  $('esqueci').addEventListener('click', function () {
+    var email = $('form-login').email.value.trim().toLowerCase();
+    if (!EMAIL_RE.test(email)) { show('Digite seu e-mail no campo acima e clique de novo em "Esqueci minha senha".'); return; }
+    sb.auth.resetPasswordForEmail(email, { redirectTo: baseUrl + 'login.html' }).then(function () {
+      show('Se existir uma conta com esse e-mail, enviamos um link para criar uma nova senha.', true);
+    });
+  });
+
+  function openNewPassword() {
+    $('form-login').hidden = true; $('form-cadastro').hidden = true;
+    document.querySelector('.tabs').hidden = true;
+    $('form-nova-senha').hidden = false;
+    $('titulo').textContent = 'Criar nova senha';
+    $('subtitulo').textContent = '8+ caracteres, uma maiúscula, um número e um símbolo.';
+    clear();
+  }
+  $('form-nova-senha').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var f = e.target, pass = f.password.value;
+    if (!strong(pass)) { show('A senha precisa ter 8+ caracteres, uma maiúscula, um número e um símbolo.'); return; }
+    if (pass !== f.confirm.value) { show('As senhas não coincidem'); return; }
+    busy(f, true, 'Salvando…');
+    sb.auth.updateUser({ password: pass }).then(function (r) {
+      busy(f, false);
+      if (r.error) { show('Não foi possível salvar. Peça um novo link em "Esqueci minha senha".'); return; }
+      goApp();
+    });
+  });
+})();
+</script>
+</body>
+</html>
