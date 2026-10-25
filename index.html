@@ -1,8 +1,10 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-BR" translate="no">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="google" content="notranslate">
+<meta http-equiv="content-language" content="pt-BR">
 <title>SORA — Dashboard</title>
 <script src="./vendor/react.js"></script>
   <style>html{visibility:hidden;opacity:0}</style>
@@ -82,11 +84,15 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 @media (max-width:860px){
 .sora .main{padding:16px 14px 104px !important}
 .sora .player-grid{grid-template-columns:minmax(0,1fr) !important}
+.sora .sales-head{display:none !important}
+.sora .sale-row{grid-template-columns:minmax(0,1fr) auto 24px !important;row-gap:4px !important}
+.sora .sale-row .sale-cell{display:none !important}
+.sora .sale-row .sale-mobile{display:block !important}
 }
 @media (prefers-reduced-motion:reduce){.sora .screen,.sora::before,.sora::after{animation:none}}
 </style>
 </helmet>
-<div class="{{ rootClass }}" style="min-height: 100vh; display: flex; background: #07051A; color: #FFFFFF; font-family: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.5">
+<div class="{{ rootClass }}" translate="no" style="min-height: 100vh; display: flex; background: #07051A; color: #FFFFFF; font-family: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.5">
 
 
 <div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column">
@@ -107,10 +113,9 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 </button>
 </div>
 <div style="display: flex; align-items: center; gap: 8px">
-<button class="ghost" onClick="{{ openSettings }}" aria-label="Personalização da agência" style="width: 44px; height: 44px; border-radius: 999px; border: 1px solid #3B2F6B; background: transparent; color: #D6D0F0; cursor: pointer; display: flex; align-items: center; justify-content: center">
+<button class="ghost" onClick="{{ openSettings }}" aria-label="Configurações" style="width: 44px; height: 44px; border-radius: 999px; border: 1px solid #3B2F6B; background: transparent; color: #D6D0F0; cursor: pointer; display: flex; align-items: center; justify-content: center">
 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
 </button>
-<button class="btn" onClick="{{ openSettings }}" aria-label="Conta e personalização" style="width: 44px; height: 44px; border-radius: 999px; background: {{ primary }}; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; border: 0; color: #FFFFFF; cursor: pointer; font-family: inherit">{{ initial }}</button>
 </div>
 </header>
 
@@ -145,6 +150,28 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 
 <sc-if value="{{ isDash }}" hint-placeholder-val="{{ true }}">
 <section class="screen" style="display: flex; flex-direction: column; gap: 28px">
+<article class="card" aria-label="Meta de faturamento" style="background: rgba(32,24,72,0.6); backdrop-filter: blur(16px); border: 1px solid #3B2F6B; border-radius: 22px; padding: 18px 22px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #FFE7B3">{{ goal.level }}</span>
+<span style="font-size: 17px; font-weight: 700">€ {{ goal.paid }} <span style="font-size: 14px; font-weight: 500; color: #B9B2DA">de € {{ goal.target }} recebidos</span></span>
+</div>
+<span style="font-size: 22px; font-weight: 800; color: #4ADE80">{{ goal.pct }}%</span>
+</div>
+<div role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ goal.bar }}" aria-label="Progresso da meta" style="height: 14px; border-radius: 999px; background: #140F2E; border: 1px solid #3B2F6B; overflow: hidden">
+<div style="height: 100%; width: {{ goal.bar }}%; background: linear-gradient(90deg, #7C3AED, #FFD98A); border-radius: 999px; box-shadow: 0 0 14px rgba(255,217,138,0.55); transition: width 0.6s ease"></div>
+</div>
+<div style="display: flex; justify-content: space-between; gap: 8px">
+<sc-for list="{{ goal.steps }}" as="gs" hint-placeholder-count="3">
+<span style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: {{ gs.color }}">
+<span style="width: 18px; height: 18px; border-radius: 999px; border: 2px solid {{ gs.color }}; background: {{ gs.fill }}; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #0D0A26">{{ gs.mark }}</span>
+<span>{{ gs.label }}</span>
+</span>
+</sc-for>
+</div>
+<span style="font-size: 12px; color: #B9B2DA">{{ goal.note }}</span>
+</article>
+
 <div class="magic-hero" onMouseMove="{{ magicMove }}" onMouseLeave="{{ magicLeave }}" onTouchMove="{{ magicTouch }}" onTouchEnd="{{ magicLeave }}" style="position: relative; isolation: isolate; overflow: hidden; border-radius: 24px; min-height: 360px; padding: 36px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center">
 <div class="magic-layer" aria-hidden="true">
 <sc-for list="{{ magicCards }}" as="c" hint-placeholder-count="12">
@@ -222,113 +249,45 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 </div>
 </article>
 
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(360px, 100%), 1fr)); gap: 20px">
 
-<article class="card lift" style="background: rgba(32,24,72,0.6); backdrop-filter: blur(16px); border: 1px solid #3B2F6B; border-radius: 24px; box-shadow: 0 18px 48px rgba(3,8,24,0.45); padding: 28px; display: flex; flex-direction: column; gap: 22px">
-<div style="display: flex; align-items: center; gap: 14px">
-<div style="width: 56px; height: 56px; border-radius: 18px; background: rgba(124,58,237,0.16); border: 1px solid rgba(124,58,237,0.4); display: flex; align-items: center; justify-content: center; color: #C9B8FF">
-<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M17 6.5a7 7 0 1 0 0 11"></path><path d="M3 10h10"></path><path d="M3 14h10"></path></svg>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<h2 style="margin: 0; font-size: 20px; font-weight: 700">Acesso rápido</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 16px">
+<article class="card lift" style="background: rgba(32,24,72,0.6); backdrop-filter: blur(16px); border: 1px solid #3B2F6B; border-radius: 24px; box-shadow: 0 18px 48px rgba(3,8,24,0.45); padding: 22px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; align-items: center; gap: 12px">
+<div style="width: 48px; height: 48px; flex-shrink: 0; border-radius: 16px; background: rgba(124,58,237,0.16); border: 1px solid rgba(124,58,237,0.4); display: flex; align-items: center; justify-content: center; color: #C9B8FF">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 6.5a7 7 0 1 0 0 11M3 10h10M3 14h10"></path></svg>
 </div>
-<div style="display: flex; flex-direction: column; gap: 2px">
-<span style="font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #C9B8FF">Gestão de Vendas — Europa</span>
-<h2 style="margin: 0; font-size: 22px; font-weight: 700">Minhas Vendas na Europa</h2>
+<h3 style="margin: 0; font-size: 19px; font-weight: 700; font-family: Cinzel, Georgia, serif; letter-spacing: 0.03em">Vendas</h3>
 </div>
-</div>
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(140px, 100%), 1fr)); gap: 12px">
-<div style="background: #140F2E; border: 1px solid #3B2F6B; border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 2px">
-<span style="font-size: 20px; font-weight: 700">€ {{ totalEur }}</span>
-<span style="font-size: 13px; color: #B9B2DA">em Vendas</span>
-</div>
-<div style="background: #140F2E; border: 1px solid #3B2F6B; border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 2px">
-<span style="font-size: 20px; font-weight: 700">R$ {{ totalBrl }}</span>
-<span style="font-size: 13px; color: #B9B2DA">Convertido</span>
-</div>
-<div style="background: #140F2E; border: 1px solid #3B2F6B; border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 2px">
-<span style="font-size: 20px; font-weight: 700; color: #4ADE80">{{ rev.growth30 }}</span>
-<span style="font-size: 13px; color: #B9B2DA">Crescimento</span>
-</div>
-</div>
-<button class="btn" onClick="{{ goVendas }}" style="height: 48px; padding: 0 24px; border: 0; border-radius: 999px; background: {{ primary }}; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer">Abrir Gestão de Vendas</button>
+<p style="margin: 0; color: #D6D0F0; font-size: 14px">Registre cada site vendido, acompanhe o status e calcule o lucro em euro e em reais.</p>
+<span style="font-size: 13px; font-weight: 600; color: #FFE7B3">{{ quick.vendas }}</span>
+<button class="btn" onClick="{{ goVendas }}" style="margin-top: auto; height: 46px; padding: 0 20px; border: 0; border-radius: 999px; background: {{ primary }}; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer">Abrir vendas</button>
 </article>
-
-<article class="card lift" style="background: rgba(32,24,72,0.6); backdrop-filter: blur(16px); border: 1px solid #3B2F6B; border-radius: 24px; box-shadow: 0 18px 48px rgba(3,8,24,0.45); padding: 28px; display: flex; flex-direction: column; gap: 22px">
-<div style="display: flex; align-items: center; gap: 14px">
-<div style="width: 56px; height: 56px; border-radius: 18px; background: rgba(124,58,237,0.16); border: 1px solid rgba(124,58,237,0.4); display: flex; align-items: center; justify-content: center; color: #C9B8FF">
-<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10 12 5 2 10l10 5 10-5z"></path><path d="M6 12v5c3 2.5 9 2.5 12 0v-5"></path></svg>
+<article class="card lift" style="background: rgba(32,24,72,0.6); backdrop-filter: blur(16px); border: 1px solid #3B2F6B; border-radius: 24px; box-shadow: 0 18px 48px rgba(3,8,24,0.45); padding: 22px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; align-items: center; gap: 12px">
+<div style="width: 48px; height: 48px; flex-shrink: 0; border-radius: 16px; background: rgba(124,58,237,0.16); border: 1px solid rgba(124,58,237,0.4); display: flex; align-items: center; justify-content: center; color: #C9B8FF">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM12 6a6 6 0 1 0 0 12 6 6 0 0 0 0-12zM12 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"></path></svg>
 </div>
-<div style="display: flex; flex-direction: column; gap: 2px">
-<span style="font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #C9B8FF">Academia SORA — Passo a Passo</span>
-<h2 style="margin: 0; font-size: 22px; font-weight: 700">Academia de Criação de Sites</h2>
+<h3 style="margin: 0; font-size: 19px; font-weight: 700; font-family: Cinzel, Georgia, serif; letter-spacing: 0.03em">Nichos</h3>
 </div>
-</div>
-<p style="margin: 0; color: #B9B2DA">Aprenda do zero a criar e vender sites na Europa</p>
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(140px, 100%), 1fr)); gap: 12px">
-<div style="background: #140F2E; border: 1px solid #3B2F6B; border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 2px">
-<span style="font-size: 20px; font-weight: 700">4</span>
-<span style="font-size: 13px; color: #B9B2DA">Módulos</span>
-</div>
-<div style="background: #140F2E; border: 1px solid #3B2F6B; border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 2px">
-<span style="font-size: 20px; font-weight: 700">12</span>
-<span style="font-size: 13px; color: #B9B2DA">Aulas</span>
-</div>
-<div style="background: #140F2E; border: 1px solid #3B2F6B; border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 2px">
-<span style="font-size: 20px; font-weight: 700">{{ doneCount }} de 4</span>
-<span style="font-size: 13px; color: #B9B2DA">Concluídos</span>
-</div>
-</div>
-<button class="btn" onClick="{{ goAcad }}" style="margin-top: auto; height: 48px; padding: 0 24px; border: 0; border-radius: 999px; background: {{ primary }}; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer">Acessar Aulas</button>
+<p style="margin: 0; color: #D6D0F0; font-size: 14px">Os 20 nichos que mais vendem, com pitch e Meta Prompt prontos para copiar.</p>
+<span style="font-size: 13px; font-weight: 600; color: #FFE7B3">{{ quick.nichos }}</span>
+<button class="btn" onClick="{{ goNichos }}" style="margin-top: auto; height: 46px; padding: 0 20px; border: 0; border-radius: 999px; background: {{ primary }}; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer">Ver nichos</button>
 </article>
-
+<article class="card lift" style="background: rgba(32,24,72,0.6); backdrop-filter: blur(16px); border: 1px solid #3B2F6B; border-radius: 24px; box-shadow: 0 18px 48px rgba(3,8,24,0.45); padding: 22px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; align-items: center; gap: 12px">
+<div style="width: 48px; height: 48px; flex-shrink: 0; border-radius: 16px; background: rgba(124,58,237,0.16); border: 1px solid rgba(124,58,237,0.4); display: flex; align-items: center; justify-content: center; color: #C9B8FF">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10 12 5 2 10l10 5 10-5zM6 12v5c3 2.5 9 2.5 12 0v-5"></path></svg>
 </div>
-
-<article class="card" style="background: rgba(32,24,72,0.6); backdrop-filter: blur(16px); border: 1px solid #3B2F6B; border-radius: 24px; box-shadow: 0 18px 48px rgba(3,8,24,0.45); padding: 28px; display: flex; flex-direction: column; gap: 18px">
-<div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px">
-<div style="display: flex; flex-direction: column; gap: 2px">
-<span style="font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #C9B8FF">Acompanhamento</span>
-<h2 style="margin: 0; font-size: 22px; font-weight: 700">Meta de Vendas</h2>
+<h3 style="margin: 0; font-size: 19px; font-weight: 700; font-family: Cinzel, Georgia, serif; letter-spacing: 0.03em">Academia</h3>
 </div>
-<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #B9B2DA">
-<span>Meta em EURO (€)</span>
-<input type="number" min="0" step="100" value="{{ goal.value }}" onChange="{{ onGoal }}" style="width: 170px; height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid #3B2F6B; background: #140F2E; color: #FFFFFF; font-size: 15px; font-weight: 600">
-</label>
-</div>
-<div style="display: flex; flex-direction: column; gap: 8px">
-<div style="display: flex; justify-content: space-between; gap: 12px; font-size: 14px; color: #D6D0F0">
-<span>€ {{ goal.paid }} recebidos de € {{ goal.target }}</span>
-<span style="font-weight: 700; color: #4ADE80">{{ goal.pct }}%</span>
-</div>
-<div style="height: 12px; border-radius: 999px; background: #140F2E; border: 1px solid #3B2F6B; overflow: hidden">
-<div style="height: 100%; width: {{ goal.bar }}%; background: #4ADE80; border-radius: 999px; transition: width 0.4s ease"></div>
-</div>
-</div>
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr)); gap: 12px">
-<div style="background: #140F2E; border: 1px solid #3B2F6B; border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; color: #B9B2DA">Pago</span><span style="font-size: 18px; font-weight: 700">€ {{ goal.paid }}</span></div>
-<div style="background: #140F2E; border: 1px solid #3B2F6B; border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; color: #B9B2DA">Pendente</span><span style="font-size: 18px; font-weight: 700">€ {{ goal.pending }}</span></div>
-<div style="background: #140F2E; border: 1px solid #3B2F6B; border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; color: #B9B2DA">Negociando</span><span style="font-size: 18px; font-weight: 700">€ {{ goal.negotiating }}</span></div>
-</div>
-<button class="ghost" onClick="{{ goVendas }}" style="align-self: flex-start; height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid #3B2F6B; background: transparent; color: #FFFFFF; font-size: 14px; font-weight: 600; cursor: pointer">Ver todas as vendas</button>
+<p style="margin: 0; color: #D6D0F0; font-size: 14px">Aulas passo a passo para criar e vender sites na Europa.</p>
+<span style="font-size: 13px; font-weight: 600; color: #FFE7B3">{{ quick.acad }}</span>
+<button class="btn" onClick="{{ goAcad }}" style="margin-top: auto; height: 46px; padding: 0 20px; border: 0; border-radius: 999px; background: {{ primary }}; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer">Continuar aulas</button>
 </article>
-
-<article class="card" style="background: rgba(32,24,72,0.6); backdrop-filter: blur(16px); border: 1px solid #3B2F6B; border-radius: 24px; box-shadow: 0 18px 48px rgba(3,8,24,0.45); padding: 28px; display: flex; flex-direction: column; gap: 18px">
-<div style="display: flex; flex-direction: column; gap: 2px">
-<span style="font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #C9B8FF">Mensagens prontas</span>
-<h2 style="margin: 0; font-size: 22px; font-weight: 700">Scripts que Fecham</h2>
 </div>
-<div style="display: flex; flex-wrap: wrap; gap: 8px">
-<sc-for list="{{ langs }}" as="lg" hint-placeholder-count="3">
-<button onClick="{{ lg.pick }}" style="height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid {{ lg.border }}; background: {{ lg.bg }}; color: #FFFFFF; font-size: 14px; font-weight: 600; cursor: pointer">{{ lg.label }}</button>
-</sc-for>
 </div>
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 14px">
-<sc-for list="{{ scripts }}" as="sc" hint-placeholder-count="3">
-<div style="background: #140F2E; border: 1px solid #3B2F6B; border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 12px">
-<h3 style="margin: 0; font-size: 15px; font-weight: 700">{{ sc.title }}</h3>
-<p style="margin: 0; flex-grow: 1; color: #D6D0F0; font-size: 14px; white-space: pre-line">{{ sc.text }}</p>
-<button class="ghost" onClick="{{ sc.copy }}" style="align-self: flex-start; height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid #3B2F6B; background: transparent; color: #FFFFFF; font-size: 14px; font-weight: 600; cursor: pointer">{{ sc.copyLabel }}</button>
-</div>
-</sc-for>
-</div>
-</article>
 </section>
 </sc-if>
 
@@ -351,81 +310,111 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 </div>
 </div>
 
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 14px">
-<div style="background: rgba(32,24,72,0.6); backdrop-filter: blur(16px); border: 1px solid #3B2F6B; border-radius: 24px; padding: 20px 22px; display: flex; flex-direction: column; gap: 4px; box-shadow: 0 18px 48px rgba(3,8,24,0.35)">
-<span style="font-size: 13px; color: #B9B2DA">Total em Euro</span>
-<span style="font-size: 26px; font-weight: 700">€ {{ totalEur }}</span>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr)); gap: 14px">
+<sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+<div style="position: relative; overflow: hidden; background: linear-gradient(140deg, {{ k.tint }}, rgba(32,24,72,0.7) 60%); backdrop-filter: blur(16px); border: 1px solid {{ k.border }}; border-radius: 22px; padding: 18px 20px; display: flex; align-items: center; gap: 14px; box-shadow: 0 18px 48px rgba(3,8,24,0.35)">
+<span style="width: 46px; height: 46px; flex-shrink: 0; border-radius: 14px; background: {{ k.color }}; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(0,0,0,0.35)">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ k.icon }}"></path></svg>
+</span>
+<span style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+<span style="font-size: 13px; color: #D6D0F0">{{ k.label }}</span>
+<span style="font-size: 21px; font-weight: 700; line-height: 1.2; overflow-wrap: anywhere">{{ k.value }}</span>
+<span style="font-size: 12px; color: #B9B2DA">{{ k.sub }}</span>
+</span>
 </div>
-<div style="background: rgba(32,24,72,0.6); backdrop-filter: blur(16px); border: 1px solid #3B2F6B; border-radius: 24px; padding: 20px 22px; display: flex; flex-direction: column; gap: 4px; box-shadow: 0 18px 48px rgba(3,8,24,0.35)">
-<span style="font-size: 13px; color: #B9B2DA">Total em Reais</span>
-<span style="font-size: 26px; font-weight: 700">R$ {{ totalBrl }}</span>
-</div>
-<div style="background: rgba(32,24,72,0.6); backdrop-filter: blur(16px); border: 1px solid #3B2F6B; border-radius: 24px; padding: 20px 22px; display: flex; flex-direction: column; gap: 4px; box-shadow: 0 18px 48px rgba(3,8,24,0.35)">
-<span style="font-size: 13px; color: #B9B2DA">Total de sites vendidos</span>
-<span style="font-size: 26px; font-weight: 700">{{ count }}</span>
-</div>
-</div>
-
-<div style="display: flex; flex-wrap: wrap; gap: 8px">
-<sc-for list="{{ filters }}" as="f" hint-placeholder-count="4">
-<button onClick="{{ f.pick }}" style="height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid {{ f.border }}; background: {{ f.bg }}; color: #FFFFFF; font-size: 14px; font-weight: 600; cursor: pointer">{{ f.label }}</button>
 </sc-for>
 </div>
 
-<sc-if value="{{ noSales }}" hint-placeholder-val="{{ false }}">
-<div style="border: 1px dashed #3B2F6B; border-radius: 24px; padding: 40px 24px; text-align: center; color: #B9B2DA">{{ emptyMsg }}</div>
-</sc-if>
+<div style="background: rgba(32,24,72,0.6); backdrop-filter: blur(16px); border: 1px solid #3B2F6B; border-radius: 24px; box-shadow: 0 18px 48px rgba(3,8,24,0.35); overflow: hidden">
 
-<div style="display: flex; flex-direction: column; gap: 14px">
-<sc-for list="{{ sales }}" as="s" hint-placeholder-count="3">
-<article style="background: rgba(32,24,72,0.6); backdrop-filter: blur(16px); border: 1px solid #3B2F6B; border-radius: 24px; padding: 20px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 18px 48px rgba(3,8,24,0.35)">
-<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
-<div style="display: flex; align-items: center; gap: 10px">
-<span style="font-size: 13px; font-weight: 700; color: #C9B8FF; letter-spacing: 0.06em">VENDA {{ s.n }}</span>
-<span style="display: flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; border-radius: 999px; background: #140F2E; border: 1px solid #3B2F6B; font-size: 12px; font-weight: 600; color: #EDE8FF">
-<span style="width: 8px; height: 8px; border-radius: 999px; background: {{ s.dot }}"></span>
-<span>{{ s.status }}</span>
-</span>
-</div>
-<button class="ghost" onClick="{{ s.remove }}" aria-label="Excluir venda" style="width: 44px; height: 44px; border-radius: 999px; border: 1px solid #3B2F6B; background: transparent; color: #D6D0F0; cursor: pointer; display: flex; align-items: center; justify-content: center">
-<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"></path></svg>
-</button>
-</div>
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr)); gap: 12px">
-<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #B9B2DA">
-<span>Nome do Site Vendido</span>
-<input type="text" placeholder="Ex.: Site da Padaria" value="{{ s.nome }}" onChange="{{ s.onNome }}" style="height: 44px; width: 100%; padding: 0 12px; border-radius: 12px; border: 1px solid #3B2F6B; background: #140F2E; color: #FFFFFF; font-size: 15px">
+<div style="padding: 16px; display: flex; flex-direction: column; gap: 12px; border-bottom: 1px solid #3B2F6B">
+<div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center">
+<label style="position: relative; flex: 1 1 240px; display: flex">
+<span class="sr-only" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Buscar venda</span>
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B9B2DA" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="position: absolute; left: 14px; top: 13px"><path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM21 21l-4.3-4.3"></path></svg>
+<input type="search" placeholder="Buscar por site ou cliente/país" value="{{ salesSearch }}" onInput="{{ onSalesSearch }}" style="height: 44px; width: 100%; padding: 0 14px 0 40px; border-radius: 999px; border: 1px solid #3B2F6B; background: #140F2E; color: #FFFFFF; font-size: 15px">
 </label>
-<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #B9B2DA">
-<span>Cliente / País</span>
-<input type="text" placeholder="Ex.: Alemanha, Portugal, França" value="{{ s.cliente }}" onChange="{{ s.onCliente }}" style="height: 44px; width: 100%; padding: 0 12px; border-radius: 12px; border: 1px solid #3B2F6B; background: #140F2E; color: #FFFFFF; font-size: 15px">
-</label>
-<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #B9B2DA">
-<span>Valor em EURO (€)</span>
-<input type="number" min="0" step="0.01" placeholder="0,00" value="{{ s.valor }}" onChange="{{ s.onValor }}" style="height: 44px; width: 100%; padding: 0 12px; border-radius: 12px; border: 1px solid #3B2F6B; background: #140F2E; color: #FFFFFF; font-size: 15px">
-</label>
-<div style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #B9B2DA">
-<span>Valor em REAIS (R$)</span>
-<div style="height: 44px; padding: 0 12px; border-radius: 12px; border: 1px solid #3B2F6B; background: rgba(124,58,237,0.1); color: #FFFFFF; font-size: 15px; font-weight: 600; display: flex; align-items: center">R$ {{ s.brl }}</div>
-</div>
-<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #B9B2DA">
-<span>Data da venda</span>
-<input type="date" value="{{ s.data }}" onChange="{{ s.onData }}" style="height: 44px; width: 100%; padding: 0 12px; border-radius: 12px; border: 1px solid #3B2F6B; background: #140F2E; color: #FFFFFF; font-size: 15px">
-</label>
-<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #B9B2DA">
-<span>Status</span>
-<select value="{{ s.status }}" onChange="{{ s.onStatus }}" style="height: 44px; width: 100%; padding: 0 12px; border-radius: 12px; border: 1px solid #3B2F6B; background: #140F2E; color: #FFFFFF; font-size: 15px">
-<option value="Pago">Pago</option>
-<option value="Pendente">Pendente</option>
-<option value="Negociando">Negociando</option>
+<label style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #B9B2DA">
+<span>Ordenar</span>
+<select value="{{ salesSort }}" onChange="{{ onSalesSort }}" style="height: 44px; padding: 0 12px; border-radius: 999px; border: 1px solid #3B2F6B; background: #140F2E; color: #FFFFFF; font-size: 14px">
+<option value="recentes">Mais recentes</option>
+<option value="antigas">Mais antigas</option>
+<option value="maior">Maior valor</option>
+<option value="menor">Menor valor</option>
+<option value="nome">Nome A–Z</option>
 </select>
 </label>
 </div>
-</article>
+<div style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px">
+<sc-for list="{{ filters }}" as="f" hint-placeholder-count="4">
+<button onClick="{{ f.pick }}" style="flex-shrink: 0; height: 38px; padding: 0 14px; border-radius: 999px; border: 1px solid {{ f.border }}; background: {{ f.bg }}; color: #FFFFFF; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px">
+<span style="width: 8px; height: 8px; border-radius: 999px; background: {{ f.dot }}"></span>
+<span>{{ f.label }}</span>
+</button>
+</sc-for>
+</div>
+</div>
+
+<sc-if value="{{ noSales }}" hint-placeholder-val="{{ false }}">
+<div style="padding: 40px 24px; text-align: center; color: #B9B2DA">{{ emptyMsg }}</div>
+</sc-if>
+
+<div class="sales-head" style="display: grid; grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.1fr) 120px 28px; gap: 12px; padding: 10px 18px; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: #B9B2DA; background: rgba(20,15,46,0.6)">
+<span>SITE / CLIENTE</span><span>DATA</span><span style="text-align: right">EURO</span><span style="text-align: right">REAIS</span><span>STATUS</span><span></span>
+</div>
+
+<div style="display: flex; flex-direction: column">
+<sc-for list="{{ sales }}" as="s" hint-placeholder-count="5">
+<div style="border-top: 1px solid rgba(59,47,107,0.7); background: {{ s.rowBg }}">
+<button class="ghost sale-row" onClick="{{ s.toggle }}" aria-expanded="{{ s.open }}" style="width: 100%; min-height: 64px; padding: 10px 18px; border: 0; background: transparent; color: #FFFFFF; cursor: pointer; text-align: left; display: grid; grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.1fr) 120px 28px; gap: 12px; align-items: center">
+<span style="display: flex; align-items: center; gap: 12px; min-width: 0">
+<span style="width: 38px; height: 38px; flex-shrink: 0; border-radius: 12px; background: {{ s.avatarBg }}; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700">{{ s.initial }}</span>
+<span style="display: flex; flex-direction: column; min-width: 0">
+<span style="font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{ s.title }}</span>
+<span style="font-size: 13px; color: #B9B2DA; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{ s.sub }}</span>
+<span class="sale-mobile" style="display: none; font-size: 13px; font-weight: 600; color: #FFFFFF">€ {{ s.eur }} · {{ s.dateLabel }}</span>
+</span>
+</span>
+<span class="sale-cell" style="font-size: 14px; color: #D6D0F0">{{ s.dateLabel }}</span>
+<span class="sale-cell" style="font-size: 15px; font-weight: 600; text-align: right">€ {{ s.eur }}</span>
+<span class="sale-cell" style="font-size: 14px; color: #D6D0F0; text-align: right">R$ {{ s.brl }}</span>
+<span class="sale-status" style="justify-self: start; display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 12px; border-radius: 999px; background: {{ s.pillBg }}; color: {{ s.pillColor }}; font-size: 12px; font-weight: 700">
+<span style="width: 7px; height: 7px; border-radius: 999px; background: {{ s.dot }}"></span>{{ s.status }}
+</span>
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#DDD2FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: rotate({{ s.chev }}); transition: transform 0.2s ease"><path d="m6 9 6 6 6-6"></path></svg>
+</button>
+<sc-if value="{{ s.open }}" hint-placeholder-val="{{ false }}">
+<div style="padding: 4px 18px 18px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr)); gap: 12px">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #B9B2DA"><span>Nome do Site Vendido</span><input type="text" placeholder="Ex.: Site da Padaria" value="{{ s.nome }}" onChange="{{ s.onNome }}" style="height: 44px; width: 100%; padding: 0 12px; border-radius: 12px; border: 1px solid #3B2F6B; background: #140F2E; color: #FFFFFF; font-size: 15px"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #B9B2DA"><span>Cliente / País</span><input type="text" placeholder="Ex.: Alemanha, Portugal, França" value="{{ s.cliente }}" onChange="{{ s.onCliente }}" style="height: 44px; width: 100%; padding: 0 12px; border-radius: 12px; border: 1px solid #3B2F6B; background: #140F2E; color: #FFFFFF; font-size: 15px"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #B9B2DA"><span>Valor em EURO (€)</span><input type="number" min="0" step="0.01" placeholder="0,00" value="{{ s.valor }}" onChange="{{ s.onValor }}" style="height: 44px; width: 100%; padding: 0 12px; border-radius: 12px; border: 1px solid #3B2F6B; background: #140F2E; color: #FFFFFF; font-size: 15px"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #B9B2DA"><span>Data da venda</span><input type="date" value="{{ s.data }}" onChange="{{ s.onData }}" style="height: 44px; width: 100%; padding: 0 12px; border-radius: 12px; border: 1px solid #3B2F6B; background: #140F2E; color: #FFFFFF; font-size: 15px"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #B9B2DA"><span>Status</span><select value="{{ s.status }}" onChange="{{ s.onStatus }}" style="height: 44px; width: 100%; padding: 0 12px; border-radius: 12px; border: 1px solid #3B2F6B; background: #140F2E; color: #FFFFFF; font-size: 15px"><option value="Pago">Pago</option><option value="Pendente">Pendente</option><option value="Negociando">Negociando</option></select></label>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center">
+<span style="font-size: 14px; color: #D6D0F0">Em reais: <strong style="color: #FFFFFF">R$ {{ s.brl }}</strong></span>
+<div style="display: flex; gap: 10px">
+<button class="ghost" onClick="{{ s.remove }}" style="height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid rgba(248,113,113,0.5); background: transparent; color: #FCA5A5; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"></path></svg>Excluir
+</button>
+<button class="btn" onClick="{{ s.toggle }}" style="height: 44px; padding: 0 20px; border: 0; border-radius: 999px; background: {{ primary }}; color: #FFFFFF; font-size: 14px; font-weight: 700; cursor: pointer">Pronto</button>
+</div>
+</div>
+</div>
+</sc-if>
+</div>
 </sc-for>
 </div>
 
-<button class="ghost" onClick="{{ addSale }}" style="height: 52px; border-radius: 999px; border: 1px dashed #7C3AED; background: transparent; color: #DDD2FF; font-size: 15px; font-weight: 600; cursor: pointer">Adicionar Nova Venda</button>
+<sc-if value="{{ salesMore }}" hint-placeholder-val="{{ false }}">
+<div style="padding: 14px; border-top: 1px solid #3B2F6B; display: flex; justify-content: center">
+<button class="ghost" onClick="{{ showMoreSales }}" style="height: 44px; padding: 0 20px; border-radius: 999px; border: 1px solid #3B2F6B; background: #140F2E; color: #FFFFFF; font-size: 14px; font-weight: 600; cursor: pointer">{{ salesMoreLabel }}</button>
+</div>
+</sc-if>
+<div style="padding: 10px 18px; border-top: 1px solid #3B2F6B; font-size: 12px; color: #B9B2DA">{{ salesCountLabel }}</div>
+</div>
+
 
 <article style="background: rgba(32,24,72,0.6); backdrop-filter: blur(16px); border: 1px solid #3B2F6B; border-radius: 24px; padding: 24px; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 18px 48px rgba(3,8,24,0.35)">
 <h2 style="margin: 0; font-size: 20px; font-weight: 700">Calculadora de Lucro Euro</h2>
@@ -475,7 +464,7 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 <button onClick="{{ toggleFavOnly }}" style="height: 48px; padding: 0 18px; border-radius: 999px; border: 1px solid {{ favOnlyBorder }}; background: {{ favOnlyBg }}; color: #FFFFFF; font-size: 14px; font-weight: 600; cursor: pointer">{{ favOnlyLabel }}</button>
 </div>
 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px">
-<span style="font-size: 13px; font-weight: 500; color: #B9B2DA">Idioma do pitch copiado:</span>
+<span style="font-size: 13px; font-weight: 500; color: #B9B2DA">Idioma do pitch e do Meta Prompt:</span>
 <sc-for list="{{ pitchLangs }}" as="pl" hint-placeholder-count="3">
 <button onClick="{{ pl.pick }}" style="height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid {{ pl.border }}; background: {{ pl.bg }}; color: #FFFFFF; font-size: 14px; font-weight: 600; cursor: pointer">{{ pl.label }}</button>
 </sc-for>
@@ -500,7 +489,72 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 <span style="font-size: 20px; font-weight: 700; color: #4ADE80">Ticket {{ n.ticket }}</span>
 <span style="font-size: 14px; color: #D6D0F0">{{ n.why }}</span>
 </div>
+<button class="ghost" onClick="{{ n.toggleInfo }}" aria-expanded="{{ n.infoOpen }}" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px dashed #3B2F6B; background: transparent; color: #DDD2FF; font-size: 13px; font-weight: 600; cursor: pointer; text-align: left">{{ n.infoLabel }}</button>
+<sc-if value="{{ n.infoOpen }}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 12px; border-radius: 14px; background: rgba(14,10,36,0.5); border: 1px solid #3B2F6B">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #B9B2DA"><span>Nome da empresa</span><input type="text" maxLength="120" value="{{ n.info.nome }}" onChange="{{ n.onNome }}" style="height: 44px; width: 100%; padding: 0 12px; border-radius: 12px; border: 1px solid #3B2F6B; background: #140F2E; color: #FFFFFF; font-size: 15px"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #B9B2DA"><span>WhatsApp (com código do país)</span><input type="tel" maxLength="30" placeholder="+351 912 345 678" value="{{ n.info.whats }}" onChange="{{ n.onWhats }}" style="height: 44px; width: 100%; padding: 0 12px; border-radius: 12px; border: 1px solid #3B2F6B; background: #140F2E; color: #FFFFFF; font-size: 15px"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #B9B2DA"><span>Cidade / País</span><input type="text" maxLength="120" placeholder="Lisboa, Portugal" value="{{ n.info.cidade }}" onChange="{{ n.onCidade }}" style="height: 44px; width: 100%; padding: 0 12px; border-radius: 12px; border: 1px solid #3B2F6B; background: #140F2E; color: #FFFFFF; font-size: 15px"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #B9B2DA"><span>Instagram ou site atual</span><input type="text" maxLength="200" placeholder="@empresa" value="{{ n.info.insta }}" onChange="{{ n.onInsta }}" style="height: 44px; width: 100%; padding: 0 12px; border-radius: 12px; border: 1px solid #3B2F6B; background: #140F2E; color: #FFFFFF; font-size: 15px"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #B9B2DA"><span>Outras informações (serviços, horário, endereço, diferenciais)</span><textarea maxLength="1500" value="{{ n.info.extra }}" onChange="{{ n.onExtra }}" style="min-height: 84px; width: 100%; padding: 10px 12px; border-radius: 12px; border: 1px solid #3B2F6B; background: #140F2E; color: #FFFFFF; font-size: 15px; line-height: 1.5; resize: vertical"></textarea></label>
+<span style="font-size: 12px; color: #B9B2DA">Esses dados entram no Meta Prompt. Ficam salvos só neste navegador.</span>
+</div>
+</sc-if>
+<div style="display: flex; flex-direction: column; gap: 8px">
 <button class="btn" onClick="{{ n.copy }}" style="height: 44px; padding: 0 20px; border: 0; border-radius: 999px; background: {{ n.btnBg }}; color: #FFFFFF; font-size: 14px; font-weight: 700; cursor: pointer">{{ n.copyLabel }}</button>
+<button class="ghost" onClick="{{ n.copyMeta }}" style="height: 44px; padding: 0 20px; border-radius: 999px; border: 1px solid {{ n.btnBg }}; background: transparent; color: #FFFFFF; font-size: 14px; font-weight: 700; cursor: pointer">{{ n.metaLabel }}</button>
+<a class="ghost" href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer" style="height: 44px; padding: 0 20px; border-radius: 999px; border: 1px solid #10A37F; background: rgba(16,163,127,0.14); color: #FFFFFF; font-size: 14px; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px"><span>Entrar no ChatGPT</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg></a>
+</div>
+</article>
+</sc-for>
+</div>
+</section>
+</sc-if>
+
+<sc-if value="{{ isFlow }}" hint-placeholder-val="{{ false }}">
+<section class="screen" style="display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 30px; font-weight: 700; letter-spacing: -0.02em">Gerador de Prompts para Google Flow</h1>
+<p style="margin: 0; color: #B9B2DA">Escolha o nicho, copie o prompt e cole no Google Flow (Veo 3) para gerar um vídeo cinematográfico de fundo para o site.</p>
+</div>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #B9B2DA">
+<span>Buscar nicho</span>
+<input type="search" placeholder="Buscar nicho..." value="{{ flow.q }}" onChange="{{ flow.onQ }}" style="height: 48px; width: 100%; padding: 0 16px; border-radius: 999px; border: 1px solid #3B2F6B; background: #140F2E; color: #FFFFFF; font-size: 15px">
+</label>
+<div role="group" aria-label="Filtrar por categoria" style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{ flow.cats }}" as="fc" hint-placeholder-count="6">
+<button onClick="{{ fc.pick }}" aria-pressed="{{ fc.on }}" style="height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid {{ fc.border }}; background: {{ fc.bg }}; color: #FFFFFF; font-size: 14px; font-weight: 600; cursor: pointer">{{ fc.label }}</button>
+</sc-for>
+</div>
+<div role="group" aria-label="Idioma do slogan no vídeo" style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px">
+<span style="font-size: 13px; font-weight: 500; color: #B9B2DA">Idioma do slogan no vídeo:</span>
+<sc-for list="{{ flow.langs }}" as="fl" hint-placeholder-count="6">
+<button onClick="{{ fl.pick }}" aria-pressed="{{ fl.on }}" style="height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid {{ fl.border }}; background: {{ fl.bg }}; color: #FFFFFF; font-size: 13px; font-weight: 600; cursor: pointer">{{ fl.label }}</button>
+</sc-for>
+</div>
+<sc-if value="{{ flow.empty }}" hint-placeholder-val="{{ false }}">
+<div style="border: 1px dashed #3B2F6B; border-radius: 24px; padding: 40px 24px; text-align: center; color: #B9B2DA">Nenhum nicho encontrado.</div>
+</sc-if>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 14px">
+<sc-for list="{{ flow.items }}" as="f" hint-placeholder-count="6">
+<article class="lift" style="background: rgba(32,24,72,0.6); backdrop-filter: blur(16px); border: 1px solid #3B2F6B; border-radius: 24px; padding: 18px; display: flex; flex-direction: column; gap: 14px">
+<button onClick="{{ f.open }}" aria-label="Ver prompt completo: {{ f.title }}" style="padding: 0; border: 0; background: transparent; color: #FFFFFF; text-align: left; cursor: pointer; display: flex; flex-direction: column; gap: 12px; flex-grow: 1">
+<span style="display: flex; align-items: center; gap: 12px">
+<span style="width: 46px; height: 46px; flex-shrink: 0; border-radius: 14px; background: rgba(124,58,237,0.18); border: 1px solid rgba(124,58,237,0.45); display: flex; align-items: center; justify-content: center; color: #DDD2FF">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ f.icon }}"></path></svg>
+</span>
+<span style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 16px; font-weight: 700">{{ f.title }}</span>
+<span style="font-size: 12px; font-weight: 600; color: #FFE7B3">{{ f.category }}</span>
+</span>
+</span>
+<span style="font-size: 14px; color: #D6D0F0; line-height: 1.5">{{ f.preview }}</span>
+<span style="font-size: 14px; font-style: italic; font-weight: 600; color: #FFE7B3">“{{ f.slogan }}”</span>
+<span style="font-size: 12px; font-weight: 600; color: #C9B8FF">Toque para ver o prompt completo e as configurações</span>
+</button>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<button class="btn" onClick="{{ f.copy }}" style="height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: {{ primary }}; color: #FFFFFF; font-size: 14px; font-weight: 700; cursor: pointer">{{ f.copyLabel }}</button>
+</div>
 </article>
 </sc-for>
 </div>
@@ -514,95 +568,133 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 <p style="margin: 0; color: #B9B2DA">Aprenda do zero a criar e vender sites na Europa · {{ doneCount }} de 4 módulos concluídos</p>
 </div>
 
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 12px">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 14px">
 <sc-for list="{{ modules }}" as="m" hint-placeholder-count="4">
-<button class="ghost" onClick="{{ m.pick }}" style="min-height: 76px; padding: 14px 16px; border-radius: 18px; border: 1px solid {{ m.border }}; background: {{ m.bg }}; color: #FFFFFF; cursor: pointer; text-align: left; display: flex; flex-direction: column; gap: 4px">
-<span style="font-size: 12px; font-weight: 700; letter-spacing: 0.06em; color: #DDD2FF">MÓDULO {{ m.num }} · {{ m.state }}</span>
-<span style="font-size: 14px; font-weight: 600; line-height: 1.35">{{ m.title }}</span>
+<button class="ghost modcard" onClick="{{ m.pick }}" aria-pressed="{{ m.on }}" style="position: relative; overflow: hidden; min-height: 168px; padding: 0; border-radius: 22px; border: 2px solid {{ m.border }}; background: #140F2E; color: #FFFFFF; cursor: pointer; text-align: left; box-shadow: {{ m.shadow }}; transform: {{ m.lift }}; transition: transform 0.2s ease, box-shadow 0.2s ease">
+<img src="{{ m.cover }}" alt="" loading="lazy" decoding="async" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: {{ m.imgOpacity }}">
+<div style="position: absolute; inset: 0; background: linear-gradient(160deg, {{ m.tint }} 0%, rgba(13,10,38,0.55) 45%, rgba(7,5,26,0.96) 100%)"></div>
+<div style="position: relative; height: 100%; min-height: 164px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; gap: 12px">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
+<span style="width: 44px; height: 44px; border-radius: 14px; background: {{ m.iconBg }}; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 18px rgba(0,0,0,0.4)">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ m.icon }}"></path></svg>
+</span>
+<span style="padding: 5px 10px; border-radius: 999px; background: {{ m.chipBg }}; color: {{ m.chipColor }}; font-size: 11px; font-weight: 700; letter-spacing: 0.06em">{{ m.state }}</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span style="font-family: Cinzel, Georgia, serif; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; color: #FFE7B3">MÓDULO {{ m.numLabel }}</span>
+<span style="font-size: 17px; font-weight: 700; line-height: 1.3; text-shadow: 0 2px 12px rgba(0,0,0,0.8)">{{ m.title }}</span>
+<span style="font-size: 13px; font-weight: 600; color: {{ m.ctaColor }}">{{ m.cta }}</span>
+</div>
+</div>
 </button>
 </sc-for>
 </div>
 
-<div class="player-grid" style="display: grid; grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr); gap: 20px; align-items: start">
+<div class="player-grid" style="display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 20px; align-items: stretch">
 
-<div style="display: flex; flex-direction: column; gap: 16px; min-width: 0">
-<div style="background: rgba(32,24,72,0.6); backdrop-filter: blur(16px); border: 1px solid #3B2F6B; border-radius: 24px; padding: 14px; box-shadow: 0 18px 48px rgba(3,8,24,0.45); display: flex; flex-direction: column; gap: 14px">
+<div style="background: rgba(32,24,72,0.6); backdrop-filter: blur(16px); border: 1px solid #3B2F6B; border-radius: 24px; box-shadow: 0 18px 48px rgba(3,8,24,0.45); padding: 14px; min-width: 0">
 <div style="position: relative; aspect-ratio: 16 / 9; border-radius: 16px; background: radial-gradient(120% 120% at 20% 0%, #1B2B52 0%, #070B1A 70%); overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 20px; text-align: center">
+<sc-if value="{{ cur.hasCover }}" hint-placeholder-val="{{ false }}">
+<img src="{{ cur.cover }}" alt="" loading="lazy" decoding="async" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover">
+<div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(7,5,26,0.05) 40%, rgba(7,5,26,0.7) 100%)"></div>
+</sc-if>
 <sc-if value="{{ cur.hasUrl }}" hint-placeholder-val="{{ false }}">
-<a href="{{ cur.watchUrl }}" target="_blank" rel="noopener" aria-label="Assistir no YouTube" class="btn" style="width: 76px; height: 76px; border-radius: 999px; background: {{ primary }}; color: #FFFFFF; display: flex; align-items: center; justify-content: center">
+<a href="{{ cur.watchUrl }}" target="_blank" rel="noopener" aria-label="Assistir aula" class="btn" style="position: relative; z-index: 1; width: 76px; height: 76px; border-radius: 999px; background: {{ primary }}; color: #FFFFFF; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.55)">
 <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>
 </a>
-<span style="font-size: 14px; color: #D6D0F0">Vídeo vinculado · abre no YouTube</span>
+<span style="position: relative; z-index: 1; font-size: 14px; font-weight: 600; color: #FFFFFF; text-shadow: 0 2px 10px rgba(0,0,0,0.9)">Assistir aula</span>
 </sc-if>
 <sc-if value="{{ cur.noUrl }}" hint-placeholder-val="{{ true }}">
 <div style="width: 76px; height: 76px; border-radius: 999px; border: 1px solid #3B2F6B; background: rgba(255,255,255,0.05); color: #B9B2DA; display: flex; align-items: center; justify-content: center">
 <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>
 </div>
-<span style="font-size: 14px; color: #B9B2DA">Nenhum vídeo adicionado. Cole o link do YouTube abaixo.</span>
+<span style="position: relative; z-index: 1; font-size: 14px; color: #B9B2DA">Vídeo em breve.</span>
 </sc-if>
-<div style="position: absolute; left: 16px; right: 16px; bottom: 14px; display: flex; align-items: center; gap: 10px">
+<div style="position: absolute; z-index: 1; left: 16px; right: 16px; bottom: 14px; display: flex; align-items: center; gap: 10px">
 <span style="font-size: 12px; color: #D6D0F0">0:00</span>
 <div style="flex-grow: 1; height: 4px; border-radius: 999px; background: rgba(255,255,255,0.18)"></div>
 </div>
 </div>
-<div style="display: flex; flex-direction: column; gap: 4px; padding: 0 6px">
-<span style="font-size: 12px; font-weight: 700; letter-spacing: 0.06em; color: #C9B8FF">MÓDULO {{ cur.num }} · {{ cur.lesson }}</span>
-<h2 style="margin: 0; font-size: 20px; font-weight: 700">{{ cur.title }}</h2>
-</div>
-<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #B9B2DA; padding: 0 6px 6px">
-<span>Link do vídeo no YouTube (área do administrador)</span>
-<input type="url" placeholder="https://www.youtube.com/watch?v=..." value="{{ cur.url }}" onChange="{{ onUrl }}" style="height: 44px; width: 100%; padding: 0 14px; border-radius: 999px; border: 1px solid #3B2F6B; background: #140F2E; color: #FFFFFF; font-size: 15px">
-</label>
 </div>
 
-<div style="background: rgba(32,24,72,0.6); backdrop-filter: blur(16px); border: 1px solid #3B2F6B; border-radius: 24px; padding: 22px; display: flex; flex-direction: column; gap: 14px">
-<h3 style="margin: 0; font-size: 16px; font-weight: 700">Descrição da aula</h3>
+<div style="background: rgba(32,24,72,0.6); backdrop-filter: blur(16px); border: 1px solid #3B2F6B; border-radius: 24px; box-shadow: 0 18px 48px rgba(3,8,24,0.45); padding: 24px; display: flex; flex-direction: column; gap: 16px; min-width: 0">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-family: Cinzel, Georgia, serif; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; color: #FFE7B3">MÓDULO {{ cur.numLabel }} · {{ cur.videoLabel }}</span>
+<h2 style="margin: 0; font-size: 22px; font-weight: 700; line-height: 1.25">{{ cur.title }}</h2>
+</div>
 <p style="margin: 0; color: #D6D0F0; text-wrap: pretty">{{ cur.desc }}</p>
-<button class="btn" onClick="{{ toggleDone }}" style="align-self: flex-start; height: 48px; padding: 0 24px; border-radius: 999px; border: 1px solid {{ cur.doneBorder }}; background: {{ cur.doneBg }}; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px">
+<sc-if value="{{ cur.multi }}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<span style="font-size: 12px; font-weight: 700; letter-spacing: 0.1em; color: #FFE7B3">ESTE MÓDULO TEM {{ cur.videoCountWord }} AULAS · ASSISTA NA ORDEM</span>
+<div role="tablist" aria-label="Aulas do módulo" style="display: flex; flex-direction: column; gap: 10px">
+<sc-for list="{{ videos }}" as="v" hint-placeholder-count="2">
+<button class="ghost" role="tab" aria-selected="{{ v.on }}" onClick="{{ v.pick }}" style="position: relative; min-height: 76px; padding: 12px 14px; border-radius: 18px; border: 2px solid {{ v.border }}; background: {{ v.bg }}; box-shadow: {{ v.shadow }}; color: #FFFFFF; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 14px; transition: transform 0.2s ease, box-shadow 0.2s ease">
+<span style="width: 48px; height: 48px; flex-shrink: 0; border-radius: 14px; background: {{ v.numBg }}; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1; box-shadow: 0 6px 16px rgba(0,0,0,0.35)">
+<span style="font-size: 9px; font-weight: 700; letter-spacing: 0.08em; opacity: 0.85">AULA</span>
+<span style="font-size: 20px; font-weight: 800">{{ v.n }}</span>
+</span>
+<span style="display: flex; flex-direction: column; gap: 2px; min-width: 0; flex-grow: 1">
+<span style="font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: {{ v.tagColor }}">{{ v.tag }}</span>
+<span style="font-size: 16px; font-weight: 700; line-height: 1.25">{{ v.name }}</span>
+</span>
+<span style="width: 34px; height: 34px; flex-shrink: 0; border-radius: 999px; background: {{ v.playBg }}; display: flex; align-items: center; justify-content: center">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>
+</span>
+</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+<div style="margin-top: auto; display: flex; flex-wrap: wrap; gap: 10px">
+<sc-if value="{{ cur.hasUrl }}" hint-placeholder-val="{{ true }}">
+<a href="{{ cur.watchUrl }}" target="_blank" rel="noopener" class="btn" style="flex: 1 1 160px; height: 48px; padding: 0 20px; border-radius: 999px; background: {{ primary }}; color: #FFFFFF; font-size: 15px; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>
+<span>Assistir aula</span>
+</a>
+</sc-if>
+<button class="btn" onClick="{{ toggleDone }}" style="flex: 1 1 160px; height: 48px; padding: 0 20px; border-radius: 999px; border: 1px solid {{ cur.doneBorder }}; background: {{ cur.doneBg2 }}; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px">
 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>
 <span>{{ cur.doneLabel }}</span>
 </button>
 </div>
 </div>
 
-<div style="display: flex; flex-direction: column; gap: 16px; min-width: 0">
-<div style="background: rgba(32,24,72,0.6); backdrop-filter: blur(16px); border: 1px solid #3B2F6B; border-radius: 24px; padding: 18px; display: flex; flex-direction: column; gap: 10px">
-<h3 style="margin: 0 4px 4px; font-size: 16px; font-weight: 700">Aulas do módulo</h3>
-<sc-for list="{{ lessons }}" as="l" hint-placeholder-count="3">
-<button class="ghost" onClick="{{ l.pick }}" style="min-height: 56px; padding: 10px 14px; border-radius: 14px; border: 1px solid {{ l.border }}; background: {{ l.bg }}; color: #FFFFFF; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 12px">
-<span style="width: 32px; height: 32px; flex-shrink: 0; border-radius: 999px; background: #140F2E; border: 1px solid #3B2F6B; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #DDD2FF">{{ l.n }}</span>
-<span style="display: flex; flex-direction: column">
-<span style="font-size: 12px; color: #B9B2DA">Parte {{ l.n }}</span>
-<span style="font-size: 14px; font-weight: 600">{{ l.name }}</span>
+</div>
+<sc-if value="{{ cur.hasTools }}" hint-placeholder-val="{{ false }}">
+<section aria-labelledby="ferramentas" style="background: rgba(32,24,72,0.6); backdrop-filter: blur(16px); border: 1px solid #3B2F6B; border-radius: 24px; padding: 22px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; color: #FFE7B3">FERRAMENTAS DESTE MÓDULO</span>
+<h2 id="ferramentas" style="margin: 0; font-size: 20px; font-weight: 700">{{ cur.toolsTitle }}</h2>
+<p style="margin: 0; font-size: 14px; color: #B9B2DA">{{ cur.toolsHint }}</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 12px">
+<sc-for list="{{ tools }}" as="t" hint-placeholder-count="4">
+<a href="{{ t.url }}" target="_blank" rel="noopener" class="btn" style="min-height: 84px; padding: 14px; border-radius: 18px; border: 1px solid {{ t.border }}; background: linear-gradient(135deg, {{ t.tint }}, rgba(20,15,46,0.9) 70%); color: #FFFFFF; text-decoration: none; display: flex; align-items: center; gap: 14px">
+<span style="width: 52px; height: 52px; flex-shrink: 0; border-radius: 16px; background: {{ t.color }}; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(0,0,0,0.4)">
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ t.icon }}"></path></svg>
 </span>
-</button>
+<span style="display: flex; flex-direction: column; gap: 2px; min-width: 0; flex-grow: 1">
+<span style="font-size: 16px; font-weight: 700">{{ t.name }}</span>
+<span style="font-size: 13px; color: #D6D0F0; line-height: 1.35">{{ t.what }}</span>
+<span style="font-size: 12px; color: #B9B2DA">{{ t.domain }}</span>
+</span>
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#DDD2FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M7 17 17 7M8 7h9v9"></path></svg>
+</a>
 </sc-for>
 </div>
-
-<div style="background: rgba(32,24,72,0.6); backdrop-filter: blur(16px); border: 1px solid #3B2F6B; border-radius: 24px; padding: 18px; display: flex; flex-direction: column; gap: 10px">
-<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 4px">
-<h3 style="margin: 0; font-size: 16px; font-weight: 700">Checklist do módulo</h3>
-<span style="font-size: 13px; font-weight: 600; color: #DDD2FF">{{ cur.checkLabel }}</span>
+</section>
+</sc-if>
+<sc-if value="{{ cur.showPrompt }}" hint-placeholder-val="{{ false }}">
+<article style="background: rgba(32,24,72,0.6); backdrop-filter: blur(16px); border: 1px solid #3B2F6B; border-radius: 24px; padding: 22px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #FFE7B3">Prompt pronto</span>
+<h2 style="margin: 0; font-size: 20px; font-weight: 700">Prompt de animação de rolagem</h2>
+<p style="margin: 0; font-size: 14px; color: #B9B2DA">Copie e cole na IA junto com o arquivo do seu site.</p>
 </div>
-<div style="height: 8px; border-radius: 999px; background: #140F2E; border: 1px solid #3B2F6B; overflow: hidden; margin: 0 4px 4px">
-<div style="height: 100%; width: {{ cur.checkPct }}%; background: #4ADE80; border-radius: 999px; transition: width 0.3s ease"></div>
-</div>
-<sc-for list="{{ checks }}" as="c" hint-placeholder-count="3">
-<label style="min-height: 44px; padding: 8px 12px; border-radius: 12px; border: 1px solid #3B2F6B; display: flex; align-items: center; gap: 12px; cursor: pointer; font-size: 14px; color: #EDE8FF">
-<input type="checkbox" checked="{{ c.on }}" onChange="{{ c.toggle }}" style="width: 20px; height: 20px; flex-shrink: 0; accent-color: #4ADE80">
-<span>{{ c.label }}</span>
-</label>
-</sc-for>
-</div>
-
-<label style="background: rgba(32,24,72,0.6); backdrop-filter: blur(16px); border: 1px solid #3B2F6B; border-radius: 24px; padding: 18px; display: flex; flex-direction: column; gap: 10px">
-<span style="font-size: 16px; font-weight: 700; margin: 0 4px">Minhas anotações</span>
-<textarea placeholder="Escreva aqui suas anotações deste módulo..." value="{{ cur.notes }}" onChange="{{ onNotes }}" style="min-height: 170px; width: 100%; padding: 12px 14px; border-radius: 14px; border: 1px solid #3B2F6B; background: #140F2E; color: #FFFFFF; font-size: 15px; line-height: 1.5; resize: vertical"></textarea>
-<span style="font-size: 12px; color: #B9B2DA; margin: 0 4px">Salvo automaticamente neste navegador.</span>
-</label>
-</div>
-
-</div>
+<div style="background: #140F2E; border: 1px solid #3B2F6B; border-radius: 16px; padding: 14px 16px; font-size: 14px; line-height: 1.6; color: #EDE8FF; white-space: pre-wrap; word-break: break-word">{{ acadPrompt.text }}</div>
+<button class="btn" onClick="{{ acadPrompt.copy }}" style="align-self: flex-start; height: 46px; padding: 0 22px; border: 0; border-radius: 999px; background: {{ primary }}; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer">{{ acadPrompt.label }}</button>
+</article>
+</sc-if>
 </section>
 </sc-if>
 
@@ -622,6 +714,60 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 <button class="btn" onClick="{{ toggleMenu }}" aria-label="Menu" aria-expanded="{{ menuOpen }}" style="position: fixed; left: 16px; bottom: 16px; z-index: 22; width: 58px; height: 58px; border: 0; border-radius: 999px; background: {{ primary }}; color: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center">
 <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
 </button>
+
+<sc-if value="{{ flowModal.open }}" hint-placeholder-val="{{ false }}">
+<div style="position: fixed; inset: 0; z-index: 30; background: rgba(6,4,20,0.72); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; padding: 16px">
+<div class="screen" role="dialog" aria-modal="true" aria-label="Prompt do Google Flow" style="width: 100%; max-width: 720px; max-height: 100%; overflow: auto; background: #1C1640; border: 1px solid #3B2F6B; border-radius: 24px; box-shadow: 0 24px 64px rgba(3,8,24,0.7); padding: 24px; display: flex; flex-direction: column; gap: 18px">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+<div style="display: flex; align-items: center; gap: 12px">
+<span style="width: 46px; height: 46px; flex-shrink: 0; border-radius: 14px; background: rgba(124,58,237,0.18); border: 1px solid rgba(124,58,237,0.45); display: flex; align-items: center; justify-content: center; color: #DDD2FF">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ flowModal.icon }}"></path></svg>
+</span>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<h2 style="margin: 0; font-size: 20px; font-weight: 700">{{ flowModal.title }}</h2>
+<span style="font-size: 13px; color: #B9B2DA">Slogan no final do vídeo: <span style="font-style: italic; font-weight: 600; color: #FFE7B3">“{{ flowModal.slogan }}”</span></span>
+</div>
+</div>
+<button class="ghost" onClick="{{ flowModal.close }}" aria-label="Fechar" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; border: 1px solid #3B2F6B; background: transparent; color: #D6D0F0; cursor: pointer; display: flex; align-items: center; justify-content: center">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+</button>
+</div>
+<div style="background: #140F2E; border: 1px solid #3B2F6B; border-radius: 16px; padding: 14px 16px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; line-height: 1.6; color: #EDE8FF; white-space: pre-wrap; word-break: break-word">{{ flowModal.prompt }}</div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px">
+<button class="btn" onClick="{{ flowModal.copy }}" style="height: 46px; padding: 0 22px; border: 0; border-radius: 999px; background: {{ primary }}; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer">{{ flowModal.copyLabel }}</button>
+<a class="ghost" href="https://labs.google/fx/tools/flow" target="_blank" rel="noopener noreferrer" style="height: 46px; padding: 0 20px; border-radius: 999px; border: 1px solid #3B2F6B; background: transparent; color: #FFFFFF; font-size: 14px; font-weight: 600; text-decoration: none; display: flex; align-items: center">Abrir Google Flow</a>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<h3 style="margin: 0; font-size: 14px; font-weight: 700">Configurações recomendadas no Flow</h3>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(120px, 100%), 1fr)); gap: 8px">
+<sc-for list="{{ flowModal.settings }}" as="st" hint-placeholder-count="5">
+<div style="background: #140F2E; border: 1px solid #3B2F6B; border-radius: 14px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; color: #B9B2DA">{{ st.label }}</span><span style="font-size: 14px; font-weight: 700">{{ st.value }}</span></div>
+</sc-for>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 10px">
+<h3 style="margin: 0; font-size: 14px; font-weight: 700">Prompt negativo (se o Flow tiver o campo)</h3>
+<button class="ghost" onClick="{{ flowModal.copyNeg }}" style="height: 36px; padding: 0 14px; border-radius: 999px; border: 1px solid #3B2F6B; background: transparent; color: #FFFFFF; font-size: 13px; font-weight: 600; cursor: pointer">Copiar</button>
+</div>
+<div style="font-size: 13px; color: #D6D0F0; line-height: 1.5">{{ flowModal.negative }}</div>
+</div>
+<button class="ghost" onClick="{{ flowModal.toggleEdit }}" aria-expanded="{{ flowModal.editOpen }}" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px dashed #3B2F6B; background: transparent; color: #DDD2FF; font-size: 14px; font-weight: 600; cursor: pointer; text-align: left">{{ flowModal.editLabel }}</button>
+<sc-if value="{{ flowModal.editOpen }}" hint-placeholder-val="{{ false }}">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr)); gap: 10px">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #B9B2DA"><span>Cidade</span><input type="text" maxLength="80" placeholder="Lisboa" value="{{ flowModal.vars.city }}" onChange="{{ flowModal.onCity }}" style="height: 44px; width: 100%; padding: 0 12px; border-radius: 12px; border: 1px solid #3B2F6B; background: #140F2E; color: #FFFFFF; font-size: 15px"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #B9B2DA"><span>Nome do escritório</span><input type="text" maxLength="60" placeholder="Silva &amp; Associados" value="{{ flowModal.vars.name }}" onChange="{{ flowModal.onName }}" style="height: 44px; width: 100%; padding: 0 12px; border-radius: 12px; border: 1px solid #3B2F6B; background: #140F2E; color: #FFFFFF; font-size: 15px"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #B9B2DA"><span>Cor da marca</span><input type="text" maxLength="40" placeholder="amarelo e branco" value="{{ flowModal.vars.color }}" onChange="{{ flowModal.onColor }}" style="height: 44px; width: 100%; padding: 0 12px; border-radius: 12px; border: 1px solid #3B2F6B; background: #140F2E; color: #FFFFFF; font-size: 15px"></label>
+</div>
+<span style="font-size: 12px; color: #B9B2DA">As variáveis entram no prompt na hora. A cor pode ser em português (ex.: amarelo e branco) ou em código (#FFD700): o Sora converte para o Veo e pede que ela apareça só na luz, nos objetos e nas paredes, nunca escrita. O Veo pode errar letras do nome e do slogan; se acontecer, gere de novo ou deixe o nome vazio.</span>
+</sc-if>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ toastOn }}" hint-placeholder-val="{{ false }}">
+<div role="status" class="screen" style="position: fixed; left: 50%; bottom: 96px; transform: translateX(-50%); z-index: 40; padding: 12px 20px; border-radius: 999px; background: #1F8F4E; color: #FFFFFF; font-size: 14px; font-weight: 700; box-shadow: 0 12px 32px rgba(3,8,24,0.55); white-space: nowrap">{{ toast }}</div>
+</sc-if>
 
 <sc-if value="{{ showSettings }}" hint-placeholder-val="{{ false }}">
 <div style="position: fixed; inset: 0; z-index: 30; background: rgba(6,4,20,0.72); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; padding: 16px">
@@ -649,22 +795,8 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 </div>
 
 <div style="background: #140F2E; border: 1px solid #3B2F6B; border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 14px">
-<h3 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #C9B8FF">Vendas</h3>
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr)); gap: 12px">
-<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #B9B2DA">
-<span>Cotação do Euro (R$)</span>
-<input type="number" step="0.01" min="0" value="{{ rate }}" onChange="{{ onRate }}" style="height: 44px; width: 100%; padding: 0 12px; border-radius: 12px; border: 1px solid #3B2F6B; background: #140F2E; color: #FFFFFF; font-size: 15px">
-</label>
-<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #B9B2DA">
-<span>Meta de vendas em EURO (€)</span>
-<input type="number" step="100" min="0" value="{{ goal.value }}" onChange="{{ onGoal }}" style="height: 44px; width: 100%; padding: 0 12px; border-radius: 12px; border: 1px solid #3B2F6B; background: #140F2E; color: #FFFFFF; font-size: 15px">
-</label>
-</div>
-</div>
-
-<div style="background: #140F2E; border: 1px solid #3B2F6B; border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 14px">
 <h3 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #C9B8FF">Dados</h3>
-<span style="font-size: 13px; color: #B9B2DA">Apaga vendas, anotações, links, favoritos e configurações deste navegador e volta aos dados de exemplo.</span>
+<span style="font-size: 13px; color: #B9B2DA">Apaga vendas, progresso da Academia, links, favoritos e configurações deste navegador e deixa o site zerado.</span>
 <button class="ghost" onClick="{{ cfg.reset }}" style="align-self: flex-start; height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid #F5A524; background: transparent; color: #FFD58A; font-size: 14px; font-weight: 600; cursor: pointer">{{ cfg.resetLabel }}</button>
 </div>
 
@@ -687,13 +819,11 @@ class Component extends DCLogic {
       rate: '6.20',
       mod: 0,
       lesson: 0,
-      sales: [
-        { id: 1, nome: 'Padaria Lisboa', cliente: 'Portugal', valor: '1200', data: '2026-07-14', status: 'Pago' },
-        { id: 2, nome: 'Auto Werkstatt Müller', cliente: 'Alemanha', valor: '2400', data: '2026-08-02', status: 'Pago' },
-        { id: 3, nome: 'Boulangerie Lumière', cliente: 'França', valor: '1850', data: '2026-08-21', status: 'Pendente' },
-        { id: 4, nome: 'Studio Yoga Milano', cliente: 'Itália', valor: '1500', data: '2026-09-09', status: 'Negociando' },
-        { id: 5, nome: 'Clínica Dental Porto', cliente: 'Portugal', valor: '1500', data: '2026-09-26', status: 'Pago' }
-      ],
+      sales: [],
+      salesSearch: '',
+      salesSort: 'recentes',
+      openSale: null,
+      salesLimit: 10,
       mods: [
         { url: '', notes: '', done: false },
         { url: '', notes: '', done: false },
@@ -706,6 +836,15 @@ class Component extends DCLogic {
       lang: 'pt',
       favs: [],
       favOnly: false,
+      flowCat: 'Todos',
+      flowLang: 'pt',
+      flowQ: '',
+      flowOpen: -1,
+      flowEdit: false,
+      flowVars: { city: '', name: '', color: '' },
+      toast: '',
+      nichoInfo: {},
+      infoOpen: -1,
       menuOpen: false,
       revPeriod: '30',
       pitchLang: 'pt',
@@ -725,6 +864,16 @@ class Component extends DCLogic {
         vp.name = 'viewport';
         vp.content = 'width=device-width, initial-scale=1, viewport-fit=cover';
         document.head.appendChild(vp);
+      }
+      if (typeof document !== 'undefined' && document.documentElement) {
+        document.documentElement.setAttribute('lang', 'pt-BR');
+        document.documentElement.setAttribute('translate', 'no');
+        if (document.head && !document.querySelector('meta[name="google"]')) {
+          var nt = document.createElement('meta');
+          nt.name = 'google';
+          nt.content = 'notranslate';
+          document.head.appendChild(nt);
+        }
       }
     } catch (e) {}
     base.typed = 0;
@@ -766,8 +915,13 @@ class Component extends DCLogic {
           if (typeof saved.goal === 'string') base.goal = saved.goal;
           if (typeof saved.pitchLang === 'string') base.pitchLang = saved.pitchLang;
           if (Array.isArray(saved.favs)) base.favs = saved.favs;
+          if (saved.flowVars && typeof saved.flowVars === 'object') base.flowVars = saved.flowVars;
+          if (typeof saved.flowLang === 'string') base.flowLang = saved.flowLang;
+          if (saved.nichoInfo && typeof saved.nichoInfo === 'object') base.nichoInfo = saved.nichoInfo;
           if (Array.isArray(saved.sales)) base.sales = saved.sales;
-          if (Array.isArray(saved.mods) && saved.mods.length === 4) base.mods = saved.mods;
+          if (Array.isArray(saved.mods) && saved.mods.length === 4) {
+            base.mods = saved.modsV === 2 ? saved.mods : [saved.mods[2], saved.mods[0], saved.mods[1], saved.mods[3]];
+          }
           if (saved.agency && typeof saved.agency === 'object') {
             var oldTheme = saved.agency.themeV !== 4;
             base.agency = Object.assign(base.agency, saved.agency);
@@ -1106,8 +1260,8 @@ class Component extends DCLogic {
   persist() {
     try {
       window.localStorage.setItem(this.KEY, JSON.stringify({
-        rate: this.state.rate, sales: this.state.sales, mods: this.state.mods,
-        agency: this.state.agency, calc: this.state.calc, goal: this.state.goal, favs: this.state.favs, pitchLang: this.state.pitchLang
+        rate: this.state.rate, sales: this.state.sales, mods: this.state.mods, modsV: 2,
+        agency: this.state.agency, calc: this.state.calc, goal: this.state.goal, favs: this.state.favs, pitchLang: this.state.pitchLang, nichoInfo: this.state.nichoInfo, flowVars: this.state.flowVars, flowLang: this.state.flowLang
       }));
     } catch (e) {}
   }
@@ -1123,6 +1277,130 @@ class Component extends DCLogic {
   color() {
     var c = this.state.agency.color;
     return /^#[0-9a-fA-F]{6}$/.test(c || '') ? c : '#7C3AED';
+  }
+
+  toastShow(msg) {
+    var self = this;
+    this.setState({ toast: msg });
+    if (this.toastTimer) clearTimeout(this.toastTimer);
+    this.toastTimer = setTimeout(function () { self.setState({ toast: '' }); }, 2400);
+  }
+
+  buildFlow(st) {
+    var self = this;
+    var FLOW = [{"id": "advogado-empresarial", "niche": "advogado", "category": "Jurídico", "title": "Advogado Empresarial", "prompt_flow": "Cinematic wide shot, a polished walnut boardroom table with a fountain pen and neatly stacked contracts, panoramic floor-to-ceiling windows overlooking a modern city skyline at golden hour, warm sunlight casting long soft shadows, slow lateral dolly along the table, confident, prestigious, trustworthy atmosphere, deep navy and warm gold tones, photorealistic, ultra slow motion, 4K, shallow depth of field, seamless loop, no people, no text, no audio", "negative_prompt": "people, faces, hands, text, letters, logos, watermark, subtitles, distorted objects, flickering, low resolution, cartoon, oversaturated colors, shaky camera", "recommended_settings": {"duration": "8s", "aspect_ratio": "16:9", "resolution": "1080p", "style": "Cinematic Slow Motion", "loop": true}, "preview_text": "Mesa de reunião em madeira com contratos e caneta-tinteiro, vista para a cidade no pôr do sol. Câmera desliza devagar ao longo da mesa.", "icon": "M12 3v18M7 21h10M5 7h14M5 7l-3 7a3 3 0 0 0 6 0zM19 7l-3 7a3 3 0 0 0 6 0zM12 3l-1 4h2z", "example_search": "Google Veo 3 corporate boardroom golden hour"}, {"id": "advogado-trabalhista", "niche": "advogado", "category": "Jurídico", "title": "Advogado Trabalhista", "prompt_flow": "Cinematic medium shot, an open ledger and a brass desk lamp on a tidy wooden desk beside a window, morning light gently sweeping across the pages, dust particles floating in the air, slow push-in camera, reassuring, fair, approachable atmosphere, warm amber and soft teal tones, photorealistic, ultra slow motion, 4K, shallow depth of field, seamless loop, no people, no text, no audio", "negative_prompt": "people, faces, hands, text, letters, logos, watermark, subtitles, distorted objects, flickering, low resolution, cartoon, oversaturated colors, shaky camera", "recommended_settings": {"duration": "8s", "aspect_ratio": "16:9", "resolution": "1080p", "style": "Cinematic Slow Motion", "loop": true}, "preview_text": "Mesa de madeira com livro aberto e luminária, luz da manhã passando pelas páginas e partículas no ar. Câmera se aproxima devagar.", "icon": "M12 3v18M7 21h10M5 7h14M5 7l-3 7a3 3 0 0 0 6 0zM19 7l-3 7a3 3 0 0 0 6 0zM12 3l-1 4h2z", "example_search": "Google Veo 3 law office morning light"}, {"id": "advogado-criminal", "niche": "advogado", "category": "Jurídico", "title": "Advogado Criminal", "prompt_flow": "Dark cinematic timelapse, modern courthouse building at dawn, dramatic clouds moving slowly over the building, subtle light reflections on the glass facade, static camera with slow parallax, professional, trustworthy, powerful atmosphere, desaturated blue tones with warm light accents, photorealistic, ultra slow motion, 4K, shallow depth of field, seamless loop, no people, no text, no audio", "negative_prompt": "people, faces, hands, text, letters, logos, watermark, subtitles, distorted objects, flickering, low resolution, cartoon, oversaturated colors, shaky camera", "recommended_settings": {"duration": "8s", "aspect_ratio": "16:9", "resolution": "1080p", "style": "Cinematic Slow Motion", "loop": true}, "preview_text": "Timelapse escuro de um tribunal moderno ao amanhecer, com nuvens dramáticas passando e reflexos no vidro.", "icon": "M12 3v18M7 21h10M5 7h14M5 7l-3 7a3 3 0 0 0 6 0zM19 7l-3 7a3 3 0 0 0 6 0zM12 3l-1 4h2z", "example_search": "Google Veo 3 courthouse timelapse dawn"}, {"id": "psicologo", "niche": "psicologo", "category": "Saúde", "title": "Psicólogo", "prompt_flow": "Cinematic close-up, a single autumn leaf falling in ultra slow motion in a bright minimalist therapy office, soft natural light coming from the window, dust particles floating in the air, slow dolly in, peaceful, serene, healing atmosphere, muted beige and sage green tones, photorealistic, ultra slow motion, 4K, shallow depth of field, seamless loop, no people, no text, no audio", "negative_prompt": "people, faces, hands, text, letters, logos, watermark, subtitles, distorted objects, flickering, low resolution, cartoon, oversaturated colors, shaky camera", "recommended_settings": {"duration": "8s", "aspect_ratio": "16:9", "resolution": "1080p", "style": "Cinematic Slow Motion", "loop": true}, "preview_text": "Uma folha de outono caindo em câmera lenta num consultório claro e minimalista, com luz natural da janela.", "icon": "M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z", "example_search": "Google Veo 3 falling leaf slow motion calm"}, {"id": "clinica-estetica", "niche": "clinica-estetica", "category": "Beleza", "title": "Clínica de Estética", "prompt_flow": "Macro shot, a droplet of golden serum falling in slow motion into calm water and creating perfect ripples, luxurious spa background softly blurred, soft bokeh lights, slow orbit camera, elegant, premium, clean aesthetic, champagne and soft rose tones, 120fps, photorealistic, ultra slow motion, 4K, shallow depth of field, seamless loop, no people, no text, no audio", "negative_prompt": "people, faces, hands, text, letters, logos, watermark, subtitles, distorted objects, flickering, low resolution, cartoon, oversaturated colors, shaky camera", "recommended_settings": {"duration": "8s", "aspect_ratio": "16:9", "resolution": "1080p", "style": "Cinematic Slow Motion", "loop": true}, "preview_text": "Gota de sérum dourado caindo em câmera lenta na água e formando ondas perfeitas, com fundo de spa desfocado.", "icon": "M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 3v4M17 5h4", "example_search": "Google Veo 3 golden serum drop macro slow motion"}, {"id": "barbearia", "niche": "barbearia", "category": "Beleza", "title": "Barbearia Premium", "prompt_flow": "Cinematic close-up, a straight razor and a vintage shaving brush resting on a dark marble counter while warm steam rises from a hot towel, moody premium barbershop with leather chairs blurred in the background, low-key tungsten lighting with a soft rim light, slow dolly across the counter, masculine, sophisticated, confident atmosphere, rich black, copper and whiskey tones, photorealistic, ultra slow motion, 4K, shallow depth of field, seamless loop, no people, no text, no audio", "negative_prompt": "people, faces, hands, text, letters, logos, watermark, subtitles, distorted objects, flickering, low resolution, cartoon, oversaturated colors, shaky camera", "recommended_settings": {"duration": "8s", "aspect_ratio": "16:9", "resolution": "1080p", "style": "Cinematic Slow Motion", "loop": true}, "preview_text": "Navalha e pincel sobre bancada de mármore escuro, vapor subindo da toalha quente, barbearia premium ao fundo.", "icon": "M6 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12", "example_search": "Google Veo 3 barbershop cinematic steam razor"}, {"id": "contador", "niche": "contador", "category": "Negócios", "title": "Contador / Contabilidade", "prompt_flow": "Cinematic shot, pages of a financial report turning gently on a clean white desk next to a laptop showing rising charts, bright modern office with large windows, soft diffused daylight, slow overhead crane down, organized, calm, reliable atmosphere, crisp white, navy and emerald green tones, photorealistic, ultra slow motion, 4K, shallow depth of field, seamless loop, no people, no text, no audio", "negative_prompt": "people, faces, hands, text, letters, logos, watermark, subtitles, distorted objects, flickering, low resolution, cartoon, oversaturated colors, shaky camera", "recommended_settings": {"duration": "8s", "aspect_ratio": "16:9", "resolution": "1080p", "style": "Cinematic Slow Motion", "loop": true}, "preview_text": "Páginas de relatório virando sobre mesa branca ao lado de um notebook com gráficos subindo, escritório claro.", "icon": "M5 2h14v20H5zM8 6h8M8 11h2M14 11h2M8 15h2M14 15h2M8 19h8", "example_search": "Google Veo 3 modern office financial report cinematic"}, {"id": "dentista", "niche": "dentista", "category": "Saúde", "title": "Dentista", "prompt_flow": "Cinematic macro shot, a crystal-clear drop of water sliding down a pristine white ceramic surface, ultra-modern dental clinic softly blurred in the background, bright clean diffused lighting, slow push-in, fresh, hygienic, reassuring atmosphere, bright white and mint blue tones, photorealistic, ultra slow motion, 4K, shallow depth of field, seamless loop, no people, no text, no audio", "negative_prompt": "people, faces, hands, text, letters, logos, watermark, subtitles, distorted objects, flickering, low resolution, cartoon, oversaturated colors, shaky camera", "recommended_settings": {"duration": "8s", "aspect_ratio": "16:9", "resolution": "1080p", "style": "Cinematic Slow Motion", "loop": true}, "preview_text": "Gota de água cristalina escorrendo numa superfície branca de cerâmica, clínica odontológica moderna ao fundo.", "icon": "M7 3c-2.5 0-4 2-4 4.5 0 3 1.5 4 2 7 .5 3 1 6.5 2.5 6.5S9.5 17 12 17s2 4 3.5 4 2-3.5 2.5-6.5c.5-3 2-4 2-7C20 5 18.5 3 16 3c-2 0-2.5 1-4 1S9 3 7 3z", "example_search": "Google Veo 3 water drop macro clean white"}, {"id": "arquiteto", "niche": "arquiteto", "category": "Negócios", "title": "Arquiteto", "prompt_flow": "Cinematic shot, sunlight and shadows slowly sweeping across a minimalist concrete and oak living space as clouds pass, floor-to-ceiling glass and a sculptural staircase, natural golden hour light, slow gliding dolly, sophisticated, calm, inspiring atmosphere, warm sand, concrete grey and oak tones, photorealistic, ultra slow motion, 4K, shallow depth of field, seamless loop, no people, no text, no audio", "negative_prompt": "people, faces, hands, text, letters, logos, watermark, subtitles, distorted objects, flickering, low resolution, cartoon, oversaturated colors, shaky camera", "recommended_settings": {"duration": "8s", "aspect_ratio": "16:9", "resolution": "1080p", "style": "Cinematic Slow Motion", "loop": true}, "preview_text": "Luz e sombra passando devagar por uma sala minimalista de concreto e madeira, com escada escultural e vidro do chão ao teto.", "icon": "M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6M9 10h.01M15 10h.01", "example_search": "Google Veo 3 minimalist architecture light shadows timelapse"}, {"id": "personal-trainer", "niche": "personal-trainer", "category": "Saúde", "title": "Personal Trainer / Academia", "prompt_flow": "Cinematic slow motion, chalk dust bursting into the air as a heavy kettlebell is set down on the floor of a premium dark gym, dramatic top light cutting through the haze, low-angle camera slowly orbiting, powerful, energetic, determined atmosphere, deep charcoal with electric orange highlights, photorealistic, ultra slow motion, 4K, shallow depth of field, seamless loop, no people, no text, no audio", "negative_prompt": "people, faces, hands, text, letters, logos, watermark, subtitles, distorted objects, flickering, low resolution, cartoon, oversaturated colors, shaky camera", "recommended_settings": {"duration": "8s", "aspect_ratio": "16:9", "resolution": "1080p", "style": "Cinematic Slow Motion", "loop": true}, "preview_text": "Pó de magnésio explodindo no ar quando um kettlebell toca o chão de uma academia escura, com luz dramática de cima.", "icon": "M6 7v10M3 9v6M18 7v10M21 9v6M6 12h12", "example_search": "Google Veo 3 gym chalk dust slow motion"}, {"id": "imobiliaria", "niche": "imobiliaria", "category": "Negócios", "title": "Imobiliária", "prompt_flow": "Cinematic aerial drone shot, slowly gliding toward a bright modern house with a pool at sunset, palm trees swaying gently, warm golden light reflecting on the water, smooth forward drone movement, aspirational, welcoming, premium atmosphere, warm gold and turquoise tones, photorealistic, ultra slow motion, 4K, shallow depth of field, seamless loop, no people, no text, no audio", "negative_prompt": "people, faces, hands, text, letters, logos, watermark, subtitles, distorted objects, flickering, low resolution, cartoon, oversaturated colors, shaky camera", "recommended_settings": {"duration": "8s", "aspect_ratio": "16:9", "resolution": "1080p", "style": "Cinematic Slow Motion", "loop": true}, "preview_text": "Drone se aproximando devagar de uma casa moderna com piscina ao pôr do sol, luz dourada refletindo na água.", "icon": "M3 11 12 3l9 8M5 9v12h14V9M10 21v-6h4v6", "example_search": "Google Veo 3 drone modern house pool sunset"}, {"id": "restaurante", "niche": "restaurante", "category": "Food", "title": "Restaurante / Cafeteria", "prompt_flow": "Cinematic macro slow motion, rich espresso pouring into a ceramic cup and forming golden crema, cozy café with warm string lights blurred in the background, soft warm side lighting with gentle steam rising, slow push-in, inviting, comforting, artisanal atmosphere, warm brown, cream and caramel tones, photorealistic, ultra slow motion, 4K, shallow depth of field, seamless loop, no people, no text, no audio", "negative_prompt": "people, faces, hands, text, letters, logos, watermark, subtitles, distorted objects, flickering, low resolution, cartoon, oversaturated colors, shaky camera", "recommended_settings": {"duration": "8s", "aspect_ratio": "16:9", "resolution": "1080p", "style": "Cinematic Slow Motion", "loop": true}, "preview_text": "Espresso caindo na xícara e formando crema dourada em câmera lenta, café aconchegante com luzes quentes ao fundo.", "icon": "M17 8h1a4 4 0 0 1 0 8h-1M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4zM6 2v3M10 2v3M14 2v3", "example_search": "Google Veo 3 espresso pour slow motion cafe"}];
+    var SLOGANS = [{"pt": "Segurança jurídica para o seu negócio crescer.", "en": "Legal security for your business to grow.", "es": "Seguridad jurídica para que tu negocio crezca.", "fr": "La sécurité juridique pour faire grandir votre entreprise.", "de": "Rechtssicherheit für Ihr Unternehmenswachstum.", "it": "Sicurezza legale per far crescere la tua azienda."}, {"pt": "Seus direitos, defendidos com seriedade.", "en": "Your rights, defended with integrity.", "es": "Tus derechos, defendidos con seriedad.", "fr": "Vos droits, défendus avec sérieux.", "de": "Ihre Rechte – mit Sorgfalt verteidigt.", "it": "I tuoi diritti, difesi con serietà."}, {"pt": "Defesa firme quando você mais precisa.", "en": "Strong defense when you need it most.", "es": "Una defensa firme cuando más la necesitas.", "fr": "Une défense solide quand vous en avez le plus besoin.", "de": "Starke Verteidigung, wenn es darauf ankommt.", "it": "Una difesa solida quando ne hai più bisogno."}, {"pt": "Sua mente merece cuidado.", "en": "Your mind deserves care.", "es": "Tu mente merece cuidado.", "fr": "Votre esprit mérite qu’on en prenne soin.", "de": "Ihre Seele verdient Fürsorge.", "it": "La tua mente merita cura."}, {"pt": "Realce a sua beleza natural.", "en": "Enhance your natural beauty.", "es": "Realza tu belleza natural.", "fr": "Révélez votre beauté naturelle.", "de": "Betonen Sie Ihre natürliche Schönheit.", "it": "Esalta la tua bellezza naturale."}, {"pt": "Estilo é atitude.", "en": "Style is an attitude.", "es": "El estilo es actitud.", "fr": "Le style, c’est une attitude.", "de": "Stil ist Haltung.", "it": "Lo stile è un atteggiamento."}, {"pt": "Suas finanças em ordem, seu negócio em paz.", "en": "Your finances in order, your business at peace.", "es": "Tus finanzas en orden, tu negocio en paz.", "fr": "Vos finances en ordre, votre entreprise sereine.", "de": "Ihre Finanzen in Ordnung, Ihr Unternehmen in Ruhe.", "it": "Le tue finanze in ordine, la tua azienda serena."}, {"pt": "Seu sorriso em boas mãos.", "en": "Your smile in good hands.", "es": "Tu sonrisa en buenas manos.", "fr": "Votre sourire entre de bonnes mains.", "de": "Ihr Lächeln in guten Händen.", "it": "Il tuo sorriso in buone mani."}, {"pt": "Espaços que contam a sua história.", "en": "Spaces that tell your story.", "es": "Espacios que cuentan tu historia.", "fr": "Des espaces qui racontent votre histoire.", "de": "Räume, die Ihre Geschichte erzählen.", "it": "Spazi che raccontano la tua storia."}, {"pt": "Seu melhor começa hoje.", "en": "Your best starts today.", "es": "Tu mejor versión empieza hoy.", "fr": "Votre meilleure version commence aujourd’hui.", "de": "Ihr Bestes beginnt heute.", "it": "Il tuo meglio inizia oggi."}, {"pt": "O lar dos seus sonhos está aqui.", "en": "Your dream home is here.", "es": "La casa de tus sueños está aquí.", "fr": "La maison de vos rêves est ici.", "de": "Ihr Traumzuhause wartet hier.", "it": "La casa dei tuoi sogni è qui."}, {"pt": "Sabores que aquecem a alma.", "en": "Flavors that warm the soul.", "es": "Sabores que reconfortan el alma.", "fr": "Des saveurs qui réchauffent l’âme.", "de": "Aromen, die die Seele wärmen.", "it": "Sapori che scaldano l’anima."}];
+    var fl = ['pt', 'en', 'es', 'fr', 'de', 'it'].indexOf(st.flowLang) >= 0 ? st.flowLang : 'pt';
+    var vars = st.flowVars || {};
+    var clean = function (v, max) { return String(v || '').replace(/["\n\r]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, max); };
+    var city = clean(vars.city, 80), name = clean(vars.name, 60), color = clean(vars.color, 40);
+    var sloganOf = function (i) { return (SLOGANS[i] && SLOGANS[i][fl]) || ''; };
+    var colorToEnglish = function (raw) {
+      var t = String(raw || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
+      if (!t) return '';
+      var named = [['black', 0, 0, 0], ['white', 255, 255, 255], ['light grey', 200, 200, 200], ['dark grey', 80, 80, 80], ['red', 210, 40, 40], ['burgundy', 128, 0, 32], ['orange', 240, 140, 30], ['yellow', 245, 210, 40], ['gold', 212, 175, 55], ['beige', 225, 205, 170], ['brown', 120, 75, 40], ['green', 40, 160, 70], ['dark green', 20, 80, 45], ['mint green', 160, 225, 190], ['turquoise', 40, 200, 190], ['light blue', 140, 190, 240], ['blue', 40, 90, 220], ['navy blue', 20, 30, 80], ['purple', 120, 50, 200], ['lilac', 190, 160, 220], ['pink', 240, 140, 180], ['coral', 250, 120, 100]];
+      t = t.replace(/#([0-9a-f]{6}|[0-9a-f]{3})\b/g, function (m, h) {
+        if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+        var r = parseInt(h.slice(0, 2), 16), g = parseInt(h.slice(2, 4), 16), b = parseInt(h.slice(4, 6), 16);
+        var best = named[0], bd = Infinity;
+        named.forEach(function (n) { var d = Math.pow(n[1] - r, 2) + Math.pow(n[2] - g, 2) + Math.pow(n[3] - b, 2); if (d < bd) { bd = d; best = n; } });
+        return best[0];
+      });
+      var dict = [['azul marinho', 'navy blue'], ['azul royal', 'royal blue'], ['verde musgo', 'moss green'], ['verde agua', 'aqua green'], ['off white', 'off-white'], ['off-white', 'off-white'],
+        ['amarelo', 'yellow'], ['amarela', 'yellow'], ['branco', 'white'], ['branca', 'white'], ['preto', 'black'], ['preta', 'black'], ['azul', 'blue'], ['vermelho', 'red'], ['vermelha', 'red'],
+        ['verde', 'green'], ['rosa', 'pink'], ['roxo', 'purple'], ['roxa', 'purple'], ['violeta', 'violet'], ['lilas', 'lilac'], ['laranja', 'orange'], ['dourado', 'gold'], ['dourada', 'gold'],
+        ['prateado', 'silver'], ['prata', 'silver'], ['cinza', 'grey'], ['grafite', 'charcoal grey'], ['bege', 'beige'], ['marrom', 'brown'], ['castanho', 'brown'], ['vinho', 'burgundy'], ['bordo', 'burgundy'],
+        ['turquesa', 'turquoise'], ['ciano', 'cyan'], ['creme', 'cream'], ['nude', 'nude beige'], ['coral', 'coral'], ['salmao', 'salmon'], ['champanhe', 'champagne'], ['terracota', 'terracotta'], ['oliva', 'olive'],
+        ['claro', 'light'], ['clara', 'light'], ['escuro', 'dark'], ['escura', 'dark']];
+      dict.forEach(function (d) { t = t.replace(new RegExp('\\b' + d[0] + '\\b', 'g'), d[1]); });
+      t = t.replace(/\b([a-z-]+(?: [a-z-]+)?) (light|dark)\b/g, '$2 $1');
+      t = t.replace(/\s*(?:,|\/|\+|&|\be\b|\by\b|\bet\b|\bund\b)\s*/g, ' and ').replace(/[^a-z\- ]/g, ' ').replace(/\s+/g, ' ').trim();
+      t = t.replace(/^(and )+|( and)+$/g, '').replace(/( and)+ /g, ' and ');
+      var parts = t.split(' and ').filter(Boolean);
+      if (parts.length > 2) t = parts.slice(0, -1).join(', ') + ' and ' + parts[parts.length - 1];
+      return t;
+    };
+    var promptOf = function (f) {
+      var p = f.prompt_flow.replace(/, no text\b/, '');
+      var slogan = sloganOf(FLOW.indexOf(f));
+      var colorEn = colorToEnglish(color);
+      if (colorEn) {
+        var palette = 'color palette dominated by ' + colorEn + ', applied only through the lighting, materials, furniture, walls and decor';
+        var swapped = p.replace(/, [^,]*\b(?:tones|highlights)\b[^,]*(?=, )/, ', ' + palette);
+        p = swapped !== p ? swapped : p + ', ' + palette;
+      }
+      if (city) p += ', with the architecture, light and atmosphere of ' + city;
+      if (name) p += ', a small elegant engraved sign reading "' + name + '" softly out of focus in the background';
+      if (slogan) p += ', ending with the elegant on-screen title "' + slogan + '" fading in softly at the center of the frame in a clean modern font during the last two seconds, spelled exactly as written';
+      var allowed = [];
+      if (name) allowed.push('"' + name + '" on the sign');
+      if (slogan) allowed.push('"' + slogan + '" at the end');
+      p += allowed.length
+        ? '. The only readable text in the entire video is ' + allowed.join(' and ') + '; no other words, letters, numbers or color names written on walls, objects or anywhere else'
+        : ', no text, no letters, no words written anywhere';
+      return p;
+    };
+    var nq = String(st.flowQ || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    var items = [];
+    FLOW.forEach(function (f, i) {
+      if (st.flowCat !== 'Todos' && f.category !== st.flowCat) return;
+      var hay = (f.title + ' ' + f.category + ' ' + f.preview_text).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      if (nq && hay.indexOf(nq) === -1) return;
+      var key = 'flow' + i;
+      items.push({
+        title: f.title, category: f.category, preview: f.preview_text, icon: f.icon, slogan: sloganOf(i),
+        example: 'https://www.youtube.com/results?search_query=' + encodeURIComponent(f.example_search),
+        copyLabel: st.copied === key ? 'Copiado' : 'Copiar Prompt',
+        copy: function () { self.copyText(key, promptOf(f)); self.toastShow('Prompt copiado! Cole no Google Flow'); },
+        open: function () { self.setState({ flowOpen: i }); }
+      });
+    });
+    var cats = ['Todos', 'Saúde', 'Beleza', 'Jurídico', 'Negócios', 'Food'].map(function (c) {
+      var on = st.flowCat === c;
+      return { label: c, on: on, bg: on ? self.color() : 'transparent', border: on ? self.color() : '#3B2F6B', pick: function () { self.setState({ flowCat: c }); } };
+    });
+    var cur = FLOW[st.flowOpen];
+    var setVar = function (field) {
+      return function (e) {
+        var v = Object.assign({}, self.state.flowVars || {});
+        v[field] = e.target.value;
+        self.save({ flowVars: v });
+      };
+    };
+    var filledVars = [city, name, color].filter(Boolean).length;
+    var rs = cur ? cur.recommended_settings : {};
+    var modal = {
+      open: !!cur,
+      title: cur ? cur.title : '',
+      icon: cur ? cur.icon : '',
+      prompt: cur ? promptOf(cur) : '',
+      slogan: cur ? sloganOf(st.flowOpen) : '',
+      negative: cur ? cur.negative_prompt : '',
+      settings: cur ? [
+        { label: 'Duração', value: rs.duration },
+        { label: 'Proporção', value: rs.aspect_ratio },
+        { label: 'Resolução', value: rs.resolution },
+        { label: 'Estilo', value: rs.style },
+        { label: 'Loop', value: rs.loop ? 'Ativado' : 'Desativado' }
+      ] : [],
+      copyLabel: st.copied === 'flowModal' ? 'Copiado' : 'Copiar Prompt',
+      copy: function () { if (cur) { self.copyText('flowModal', promptOf(cur)); self.toastShow('Prompt copiado! Cole no Google Flow'); } },
+      copyNeg: function () { if (cur) { self.copyText('flowNeg', cur.negative_prompt); self.toastShow('Prompt negativo copiado!'); } },
+      close: function () { self.setState({ flowOpen: -1, flowEdit: false }); },
+      editOpen: !!st.flowEdit,
+      editLabel: (st.flowEdit ? 'Fechar variáveis' : 'Editar variáveis: cidade, nome do escritório, cor da marca') + (filledVars ? ' (' + filledVars + ' preenchida' + (filledVars > 1 ? 's' : '') + ')' : ''),
+      toggleEdit: function () { self.setState({ flowEdit: !st.flowEdit }); },
+      vars: { city: vars.city || '', name: vars.name || '', color: vars.color || '' },
+      onCity: setVar('city'), onName: setVar('name'), onColor: setVar('color')
+    };
+    var langs = [['pt', 'Português'], ['en', 'English'], ['es', 'Español'], ['fr', 'Français'], ['de', 'Deutsch'], ['it', 'Italiano']].map(function (l) {
+      var on = fl === l[0];
+      return { label: l[1], on: on, bg: on ? self.color() : 'transparent', border: on ? self.color() : '#3B2F6B', pick: function () { self.save({ flowLang: l[0] }); } };
+    });
+    return {
+      flow: { langs: langs, items: items, empty: items.length === 0, cats: cats, q: st.flowQ || '', onQ: function (e) { self.setState({ flowQ: e.target.value }); } },
+      flowModal: modal
+    };
   }
 
   copyText(key, text) {
@@ -1197,6 +1475,7 @@ class Component extends DCLogic {
     var byStatus = {};
     var cnt = {};
     var dots = { Pago: '#4ADE80', Pendente: '#F5A524', Negociando: '#C9B8FF' };
+    var pills = { Pago: 'rgba(74,222,128,0.14)', Pendente: 'rgba(245,165,36,0.14)', Negociando: 'rgba(201,184,255,0.16)' };
 
     var sales = st.sales.map(function (s, i) {
       var v = self.num(s.valor);
@@ -1207,6 +1486,18 @@ class Component extends DCLogic {
         n: (i + 1 < 10 ? '0' : '') + (i + 1),
         nome: s.nome, cliente: s.cliente, valor: s.valor, data: s.data, status: s.status,
         brl: self.money(v * rate),
+        eur: self.money(v), num: v,
+        title: s.nome || 'Site sem nome',
+        sub: s.cliente || 'Cliente / país não informado',
+        initial: (((s.nome || '').replace(/^\s*(site|loja|landing page|p[aá]gina)\s+(d[aoe]s?\s+)?/i, '') || s.cliente || '?').trim().charAt(0) || '?').toUpperCase(),
+        avatarBg: ['#7C3AED', '#DB2777', '#0EA5E9', '#D97706', '#16A34A'][i % 5],
+        dateLabel: s.data ? s.data.split('-').reverse().join('/') : '—',
+        open: st.openSale === s.id,
+        chev: st.openSale === s.id ? '180deg' : '0deg',
+        rowBg: st.openSale === s.id ? 'rgba(124,58,237,0.12)' : 'transparent',
+        pillBg: pills[s.status] || 'rgba(201,184,255,0.16)',
+        pillColor: dots[s.status] || '#C9B8FF',
+        toggle: function () { self.setState({ openSale: st.openSale === s.id ? null : s.id }); },
         dot: dots[s.status] || '#C9B8FF',
         onNome: function (e) { self.setSale(s.id, 'nome', e.target.value); },
         onCliente: function (e) { self.setSale(s.id, 'cliente', e.target.value); },
@@ -1223,6 +1514,7 @@ class Component extends DCLogic {
       { id: 'dash', label: 'Dashboard', icon: 'M3 3h7v9H3zM14 3h7v5h-7zM14 12h7v9h-7zM3 16h7v5H3z' },
       { id: 'vendas', label: 'Vendas', icon: 'M17 6.5a7 7 0 1 0 0 11M3 10h10M3 14h10' },
       { id: 'nichos', label: 'Nichos', icon: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM12 6a6 6 0 1 0 0 12 6 6 0 0 0 0-12zM12 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4z' },
+      { id: 'flow', label: 'Vídeos Flow', icon: 'M3 5h18v14H3zM3 9h18M7 5l2 4M12 5l2 4M17 5l2 4M10 12.5v4l3.5-2z' },
       { id: 'acad', label: 'Academia', icon: 'M22 10 12 5 2 10l10 5 10-5zM6 12v5c3 2.5 9 2.5 12 0v-5' }
     ];
     var nav = navDefs.map(function (d) {
@@ -1236,22 +1528,52 @@ class Component extends DCLogic {
     });
 
     var defs = [
-      { title: 'Como Criar o Site do Zero', desc: 'Do planejamento à publicação: estrutura das páginas, layout, textos e os ajustes finais para entregar um site profissional ao cliente.' },
-      { title: 'Como Configurar Domínio e Hospedagem Europeia', desc: 'Como registrar o domínio, escolher uma hospedagem com servidores na Europa, apontar o DNS e ativar o certificado SSL.' },
-      { title: 'Como Encontrar Clientes na Europa', desc: 'Onde procurar negócios que precisam de um site, como fazer a primeira abordagem e como apresentar a sua proposta.' },
+      { title: 'Como Encontrar Clientes', desc: 'Onde encontrar negócios na Europa que precisam de um site, como fazer a primeira abordagem e como apresentar a sua proposta.' },
+      { title: 'Como Criar o Seu Site', desc: 'Do planejamento à publicação: estrutura das páginas, layout, textos e os ajustes finais para entregar um site profissional ao cliente.' },
+      { title: 'Como Configurar o Domínio', desc: 'Como registrar o domínio, apontar o DNS, ativar o certificado SSL e deixar o site do cliente no ar.' },
       { title: 'Como Fechar a Venda e Receber em Euro', desc: 'Como definir o preço, formalizar o acordo, emitir a cobrança e receber o pagamento em euro com conversão para reais.' }
     ];
-    var lessonNames = ['Introdução', 'Na Prática', 'Arquivos e Templates'];
+    var lessonSets = [
+      ['Escolhendo o nicho e o país', 'Onde achar empresas sem site', 'Primeira abordagem e follow-up'],
+      ['Gerando o prompt do site na Sora', 'Criando o site com IA', 'Ajustes finais e teste no celular'],
+      ['Como comprar o domínio', 'Como configurar o domínio', 'Ativando o SSL e conferindo tudo'],
+      ['Apresentando o modelo ao cliente', 'Definindo o preço e fechando o acordo', 'Recebendo em euro e convertendo para reais']
+    ];
+    var lessonNames = lessonSets[st.mod] || lessonSets[0];
+    // Vídeos de cada módulo, na ordem em que devem ser assistidos.
+    var COVER = './assets/7e0d5c3ea156370423746d166261c508.webp';
+    var videoSets = [
+      [{ name: 'Como Encontrar Clientes', url: 'https://www.youtube.com/watch?v=uRWHB_cOW14' }],
+      [{ name: 'Como Criar o Seu Site', url: 'https://youtu.be/LQqi3mGpjlo' }],
+      [{ name: 'Como comprar o domínio', url: 'https://youtu.be/S5f9drsaVXA' }, { name: 'Como configurar o domínio', url: 'https://youtu.be/yFtwRGdXPO0' }],
+      [{ name: 'Como receber em euro', url: 'https://youtube.com/shorts/-NB6YFhlPBA' }]
+    ];
+    function moduleVideos(i) { return videoSets[i] || []; }
+    var modLooks = [
+      { color: '#7C3AED', tint: 'rgba(124,58,237,0.55)', icon: 'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75' },
+      { color: '#DB2777', tint: 'rgba(219,39,119,0.5)', icon: 'M3 4h18v12H3zM8 20h8M12 16v4M9 8l-2 2 2 2M15 8l2 2-2 2' },
+      { color: '#0EA5E9', tint: 'rgba(14,165,233,0.5)', icon: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20' },
+      { color: '#D97706', tint: 'rgba(217,119,6,0.5)', icon: 'M17 6.5A7 7 0 1 0 17 17.5M4 10h10M4 14h10' }
+    ];
     var doneCount = 0;
     var modules = defs.map(function (d, i) {
       var on = st.mod === i;
       var done = !!st.mods[i].done;
       if (done) doneCount += 1;
+      var look = modLooks[i];
       return {
-        num: i + 1, title: d.title,
-        state: done ? 'CONCLUÍDO' : '3 AULAS',
-        bg: on ? 'rgba(124,58,237,0.22)' : 'rgba(32,24,72,0.78)',
-        border: on ? '#7C3AED' : '#3B2F6B',
+        num: i + 1, numLabel: '0' + (i + 1), title: d.title, on: on,
+        state: done ? '✓ CONCLUÍDO' : (moduleVideos(i).length === 1 ? '1 VÍDEO' : moduleVideos(i).length + ' AULAS'),
+        chipBg: done ? 'rgba(34,197,94,0.9)' : 'rgba(7,5,26,0.72)',
+        chipColor: '#FFFFFF',
+        icon: look.icon, iconBg: look.color, tint: look.tint,
+        cover: COVER,
+        imgOpacity: on ? '0.75' : '0.45',
+        border: on ? '#C9B8FF' : 'rgba(124,58,237,0.45)',
+        shadow: on ? '0 0 0 4px rgba(124,58,237,0.35), 0 18px 40px rgba(124,58,237,0.45)' : '0 10px 28px rgba(3,8,24,0.5)',
+        lift: on ? 'translateY(-3px)' : 'none',
+        cta: on ? '▶ Assistindo agora' : '▶ Começar módulo',
+        ctaColor: on ? '#FFE7B3' : '#DDD2FF',
         pick: function () { self.setState({ mod: i, lesson: 0 }); }
       };
     });
@@ -1266,13 +1588,32 @@ class Component extends DCLogic {
     });
 
     var cm = st.mods[st.mod];
-    var match = /(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/.exec(cm.url || '');
+    var covers = ['./assets/7e0d5c3ea156370423746d166261c508.webp', './assets/7e0d5c3ea156370423746d166261c508.webp', './assets/7e0d5c3ea156370423746d166261c508.webp', './assets/7e0d5c3ea156370423746d166261c508.webp'];
+    var vids = moduleVideos(st.mod);
+    var vi = Math.min(st.lesson, Math.max(vids.length - 1, 0));
+    var videoUrl = vids[vi] ? vids[vi].url : '';
+    var videos = vids.map(function (v, i) {
+      var on = i === vi;
+      return {
+        n: i + 1, name: v.name, on: on,
+        bg: on ? 'linear-gradient(135deg, rgba(14,165,233,0.35), rgba(124,58,237,0.35))' : 'rgba(20,15,46,0.85)',
+        border: on ? '#7DD3FC' : 'rgba(124,58,237,0.5)',
+        shadow: on ? '0 0 0 3px rgba(14,165,233,0.25), 0 12px 28px rgba(14,165,233,0.3)' : 'none',
+        numBg: on ? 'linear-gradient(135deg, #0EA5E9, #7C3AED)' : '#2A2160',
+        playBg: on ? '#0EA5E9' : 'rgba(255,255,255,0.08)',
+        tag: on ? '▶ VOCÊ ESTÁ AQUI' : (i < vi ? 'AULA ANTERIOR' : 'PRÓXIMA AULA'),
+        tagColor: on ? '#7DD3FC' : '#B9B2DA',
+        pick: function () { self.setState({ lesson: i }); }
+      };
+    });
+    var match = /(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/.exec(videoUrl);
     var cur = {
       num: st.mod + 1,
       title: defs[st.mod].title,
       desc: defs[st.mod].desc,
       lesson: 'PARTE ' + (st.lesson + 1) + ' — ' + lessonNames[st.lesson].toUpperCase(),
-      url: cm.url, notes: cm.notes,
+      url: videoUrl, notes: cm.notes,
+      cover: covers[st.mod] || '', hasCover: !!covers[st.mod],
       hasUrl: !!match, noUrl: !match,
       watchUrl: match ? 'https://www.youtube.com/watch?v=' + match[1] : '#',
       doneLabel: cm.done ? 'Concluído' : 'Marcar como Concluído',
@@ -1281,10 +1622,10 @@ class Component extends DCLogic {
     };
 
     var checkDefs = [
-      ['Estrutura das páginas definida', 'Site testado no celular', 'Site publicado e revisado'],
-      ['Domínio registrado', 'Hospedagem europeia contratada', 'DNS e SSL configurados'],
-      ['Lista de potenciais clientes criada', 'Primeira abordagem enviada', 'Follow-up agendado'],
-      ['Proposta enviada ao cliente', 'Acordo formalizado', 'Pagamento em euro recebido']
+      ['Nicho e país escolhidos', 'Lista com empresas sem site montada', 'Primeiras abordagens enviadas'],
+      ['Meta Prompt do nicho gerado na Sora', 'Primeira versão do site criada', 'Site revisado e testado no celular'],
+      ['Domínio registrado', 'Site publicado e DNS apontado', 'Certificado SSL ativo'],
+      ['Modelo apresentado ao cliente', 'Preço e acordo fechados', 'Pagamento em euro recebido']
     ];
     var cks = Array.isArray(cm.checks) ? cm.checks : [false, false, false];
     var ckDone = 0;
@@ -1300,27 +1641,74 @@ class Component extends DCLogic {
         }
       };
     });
+    var toolSets = {
+      1: [
+          { name: 'Claude', what: 'IA que cria e ajusta o seu site', domain: 'claude.ai', url: 'https://claude.ai/', color: '#D97706', tint: 'rgba(217,119,6,0.28)', border: 'rgba(251,191,36,0.45)', icon: 'M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12zM9 11h.01M12 11h.01M15 11h.01' },
+          { name: 'ezgif', what: 'Converte e otimiza GIFs e imagens', domain: 'ezgif.com', url: 'https://ezgif.com/', color: '#16A34A', tint: 'rgba(22,163,74,0.28)', border: 'rgba(74,222,128,0.45)', icon: 'M3 5h18v14H3zM8 11a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM21 16l-5-5-9 8' },
+          { name: 'GitHub', what: 'Onde o código do site fica guardado', domain: 'github.com', url: 'https://github.com/dashboard', color: '#24292F', tint: 'rgba(255,255,255,0.10)', border: 'rgba(255,255,255,0.25)', icon: 'M6 3v12M18 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM18 9a9 9 0 0 1-9 9' },
+          { name: 'GitHub Desktop', what: 'Programa para enviar o site do seu PC', domain: 'desktop.github.com', url: 'https://desktop.github.com/download/', color: '#7C3AED', tint: 'rgba(124,58,237,0.30)', border: 'rgba(167,139,250,0.5)', icon: 'M3 4h18v12H3zM8 20h8M12 16v4M12 7v6M9 10l3 3 3-3' }
+      ],
+      3: [
+          { name: 'Wise', what: 'Conta internacional para receber em euro e converter para reais', domain: 'App Store · Wise', url: 'https://apps.apple.com/br/app/wise-conta-international/id612261027', color: '#65A30D', tint: 'rgba(132,204,22,0.28)', border: 'rgba(190,242,100,0.5)', icon: 'M3 7h18v12H3zM3 11h18M7 15h4M16 3l-4 4-4-4' }
+      ]
+    };
+    cur.hasTools = !!toolSets[st.mod];
+    cur.toolsTitle = st.mod === 3 ? 'App para receber em euro' : 'Sites que você vai usar';
+    cur.toolsHint = st.mod === 3 ? 'Baixe no celular e crie sua conta para receber dos clientes na Europa.' : 'Clique para abrir. Deixe essas abas abertas enquanto assiste à aula.';
+    cur.showPrompt = st.mod === 1;
+    cur.numLabel = '0' + (st.mod + 1);
+    cur.multi = vids.length > 1;
+    cur.videoLabel = vids.length === 1 ? '1 VÍDEO' : vids.length + ' AULAS';
+    cur.videoCountWord = ['', 'UMA', 'DUAS', 'TRÊS', 'QUATRO'][vids.length] || String(vids.length);
+    cur.doneBg2 = cm.done ? '#15803D' : 'rgba(255,255,255,0.06)';
     cur.checkLabel = ckDone + ' de 3';
     cur.checkPct = Math.round(ckDone / 3 * 100);
 
 
-    var shown = sales.filter(function (x) { return st.filter === 'Todos' || x.status === st.filter; });
+    var q = String(st.salesSearch || '').trim().toLowerCase();
+    var matched = sales.filter(function (x) {
+      if (st.filter !== 'Todos' && x.status !== st.filter) return false;
+      if (!q) return true;
+      return ((x.nome || '') + ' ' + (x.cliente || '')).toLowerCase().indexOf(q) !== -1;
+    });
+    var sortKey = st.salesSort || 'recentes';
+    matched = matched.map(function (x, i) { return { x: x, i: i }; }).sort(function (A, B) {
+      var a = A.x, b = B.x;
+      if (sortKey === 'maior') return b.num - a.num;
+      if (sortKey === 'menor') return a.num - b.num;
+      if (sortKey === 'nome') return (a.nome || '').localeCompare(b.nome || '', 'pt');
+      var da = a.data || '', db = b.data || '';
+      if (da === db) return A.i - B.i;
+      return sortKey === 'antigas' ? (da < db ? -1 : 1) : (da < db ? 1 : -1);
+    }).map(function (o) { return o.x; });
+    var limit = st.salesLimit || 10;
+    var shown = matched.slice(0, limit);
     var filters = ['Todos', 'Pago', 'Pendente', 'Negociando'].map(function (k) {
       var on = st.filter === k;
       return {
         label: k + ' (' + (k === 'Todos' ? sales.length : (cnt[k] || 0)) + ')',
         bg: on ? primary : 'transparent',
         border: on ? primary : '#3B2F6B',
-        pick: function () { self.setState({ filter: k }); }
+        dot: k === 'Todos' ? '#FFFFFF' : dots[k],
+        pick: function () { self.setState({ filter: k, salesLimit: 10 }); }
       };
     });
-    var target = this.num(st.goal);
     var paid = byStatus.Pago || 0;
-    var pct = target > 0 ? Math.round(paid / target * 100) : 0;
+    var tiers = [{ v: 10000, label: '10K' }, { v: 100000, label: '100K' }, { v: 1000000, label: '1 Milhão' }];
+    var lvl = 0;
+    while (lvl < tiers.length - 1 && paid >= tiers[lvl].v) lvl += 1;
+    var target = tiers[lvl].v;
+    var done = paid >= tiers[tiers.length - 1].v;
+    var pct = Math.min(100, Math.floor(paid / target * 1000) / 10);
     var goal = {
-      value: st.goal, target: this.money(target), paid: this.money(paid),
-      pending: this.money(byStatus.Pendente || 0), negotiating: this.money(byStatus.Negociando || 0),
-      pct: pct, bar: Math.min(100, pct)
+      level: done ? 'Meta de 1 milhão atingida' : 'Meta ' + (lvl + 1) + ' de 3 · rumo aos € ' + tiers[lvl].label,
+      target: this.money(target), paid: this.money(paid),
+      pct: pct.toLocaleString('pt-BR', { maximumFractionDigits: 1 }), bar: pct,
+      steps: tiers.map(function (t) {
+        var hit = paid >= t.v;
+        return { label: '€ ' + t.label, mark: hit ? '✓' : '', color: hit ? '#4ADE80' : (t.v === target ? '#FFE7B3' : '#8B84B3'), fill: hit ? '#4ADE80' : 'transparent' };
+      }),
+      note: lvl > 0 && !done ? 'Meta de € ' + tiers[lvl - 1].label + ' atingida. Agora rumo aos € ' + tiers[lvl].label + '.' : (done ? 'Você chegou ao topo.' : 'Conta só as vendas com status Pago. Ao bater a meta, a barra passa para a próxima.')
     };
     var norm = function (t) { return String(t || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); };
     var jump = function (patch) { return function () { self.setState(Object.assign({ showSearch: false, q: '' }, patch)); }; };
@@ -1329,9 +1717,9 @@ class Component extends DCLogic {
       { label: 'Controle de Vendas de Sites', kind: 'Seção', go: jump({ screen: 'vendas', filter: 'Todos' }) },
       { label: 'Calculadora de Lucro Euro', kind: 'Seção', go: jump({ screen: 'vendas' }) },
       { label: 'Academia de Criação de Sites', kind: 'Seção', go: jump({ screen: 'acad' }) },
-      { label: 'Meta de Vendas', kind: 'Seção', go: jump({ screen: 'dash' }) },
+      { label: 'Barra de metas (10K, 100K, 1 Milhão)', kind: 'Seção', go: jump({ screen: 'dash' }) },
       { label: 'Dicas de Nichos que Mais Vendem', kind: 'Seção', go: jump({ screen: 'nichos' }) },
-      { label: 'Scripts que Fecham', kind: 'Seção', go: jump({ screen: 'dash' }) },
+      { label: 'Gerador de Prompts para Google Flow', kind: 'Seção', go: jump({ screen: 'flow' }) },
       { label: 'Configurações', kind: 'Configuração', go: jump({ showSettings: true }) },
       { label: 'Suporte no WhatsApp', kind: 'Suporte', go: jump({ showSettings: true }) }
     ];
@@ -1367,19 +1755,73 @@ class Component extends DCLogic {
       ['Pet Shop', '€100-130', 'Fácil de fechar', A],
       ['Igreja / Comunidade Brasileira', '€80-120', 'Gera indicação', A]
     ];
+    var metaT = {
+      pt: {
+        co: ['Dados reais da empresa (o prompt final deve usar exatamente estes dados no site, sem inventar outros):', 'Nome da empresa', 'WhatsApp', '(os botões de CTA devem abrir https://wa.me/NUM)', 'Cidade/País', 'Instagram ou site', 'Informações extras', 'Para qualquer dado não informado acima, use marcadores entre colchetes, como [NOME DA EMPRESA] ou [WHATSAPP], em vez de inventar.'],
+        none: 'Ainda não há dados da empresa: o prompt final deve usar marcadores entre colchetes, como [NOME DA EMPRESA], [WHATSAPP] e [CIDADE], onde esses dados forem necessários.',
+        tpl: "Atue como um Engenheiro de Prompt Sênior e Diretor de Criação especialista em sites de alta conversão para pequenas empresas na Europa.\n\nSua única tarefa é CRIAR O PROMPT PERFEITO, longo e detalhado, para gerar um site profissional.\n\nEsse prompt será usado depois em outra IA (Claude, Lovable, v0) para gerar um site completo do nicho de {N}. Quanto mais específico e detalhado ele for, melhor será o site.\n\nO prompt final que você vai gerar precisa ser organizado em seções com títulos e pedir obrigatoriamente:\n\n1. TECNOLOGIA\n- React + Vite + Tailwind CSS, componentes reutilizáveis e código completo (nada de \"lorem ipsum\" nem trechos incompletos)\n- Animações suaves de entrada e microinterações com Framer Motion, ícones Lucide\n- Mobile-first, carregamento rápido (imagens otimizadas e lazy loading) e meta de Lighthouse acima de 90\n\n2. ESTRATÉGIA\n- Perfil do cliente ideal de {N}: quem é, dores, desejos e principais objeções antes de contratar\n- Posicionamento e tom de voz adequados ao nicho\n- Uma proposta de valor clara em uma única frase\n\n3. ESTRUTURA DO SITE (com o objetivo de cada seção e a copy completa já escrita)\n- Cabeçalho fixo com logo, menu com âncoras e botão de WhatsApp\n- Hero com headline focada em benefício, subtítulo, dois CTAs (WhatsApp e secundário) e prova social rápida\n- Faixa de confiança (anos de experiência, clientes atendidos, avaliações), com marcadores para os números reais\n- Problema e solução: as dores do cliente de {N} e como a empresa resolve cada uma\n- 6 serviços específicos de {N}, cada um com ícone, benefício principal e chamada para ação\n- Como funciona: 3 ou 4 passos, do primeiro contato até o resultado\n- Sobre / Autoridade: história, credenciais e foto da equipe\n- 4 a 6 diferenciais\n- Depoimentos (3 a 6) com nome, cidade e nota, marcados como exemplos para substituir por depoimentos reais\n- Galeria, portfólio ou antes e depois, se fizer sentido para {N}\n- FAQ com 6 a 8 perguntas que respondem às objeções reais do nicho\n- CTA final com formulário (nome, telefone, mensagem) com validação, que abre o WhatsApp com a mensagem já preenchida\n- Localização com mapa, horário de atendimento e rodapé com contatos, redes sociais e links legais\n- Botão flutuante de WhatsApp visível em todas as telas\n\n4. DESIGN\n- Paleta de cores com códigos hex que faça sentido para {N}, explicando o motivo de cada cor\n- Par de fontes do Google Fonts (títulos e textos), escala tipográfica e espaçamentos\n- Estilo das imagens, com termos de busca sugeridos no Unsplash\n- Visual premium, moderno e confiável, com hierarquia clara e contraste acessível (WCAG AA)\n\n5. CONVERSÃO\n- Um CTA a cada duas seções, gatilhos de prova social e autoridade, sem promessas falsas\n- Mensagem de WhatsApp pré-preenchida citando o serviço de interesse\n\n6. SEO E CONFORMIDADE EUROPEIA\n- Title, meta description, Open Graph, títulos semânticos e palavras-chave locais\n- Dados estruturados schema.org do tipo LocalBusiness com os dados da empresa\n- Aviso de cookies e Política de Privacidade conforme o RGPD, com consentimento no formulário\n\n7. IDIOMA\n- Todo o conteúdo do site (textos, botões, formulário, SEO) escrito em português\n\n8. ENTREGA\n- Estrutura de pastas, todos os arquivos completos e instruções para rodar e publicar na Vercel ou na Netlify\n\n{CO}\n\nNão gere o site. Não explique. Apenas gere o PROMPT FINAL que será usado para criar o site do nicho {N}.\n\nEscreva o prompt final em português e retorne-o dentro de um bloco de código para ser copiado."
+      },
+      en: {
+        co: ['Real company details (the final prompt must use exactly these details on the website, without inventing others):', 'Company name', 'WhatsApp', '(the CTA buttons must open https://wa.me/NUM)', 'City/Country', 'Instagram or website', 'Additional information', 'For any detail not provided above, use bracketed placeholders such as [COMPANY NAME] or [WHATSAPP] instead of making them up.'],
+        none: 'No company details yet: the final prompt must use bracketed placeholders such as [COMPANY NAME], [WHATSAPP] and [CITY] wherever these details are needed.',
+        tpl: "Act as a Senior Prompt Engineer and Creative Director specialized in high-converting websites for small businesses in Europe.\n\nYour only task is to CREATE THE PERFECT PROMPT, long and detailed, to generate a professional website.\n\nThis prompt will later be used in another AI (Claude, Lovable, v0) to generate a complete website for the niche: {N}. The more specific and detailed it is, the better the website will be.\n\nThe final prompt you generate must be organized into titled sections and must explicitly require:\n\n1. TECHNOLOGY\n- React + Vite + Tailwind CSS, reusable components and complete code (no \"lorem ipsum\" and no unfinished snippets)\n- Smooth entrance animations and micro-interactions with Framer Motion, Lucide icons\n- Mobile-first, fast loading (optimized images and lazy loading) and a Lighthouse target above 90\n\n2. STRATEGY\n- Ideal customer profile for {N}: who they are, pains, desires and main objections before hiring\n- Positioning and tone of voice suited to the niche\n- A clear value proposition in a single sentence\n\n3. WEBSITE STRUCTURE (with the goal of each section and the complete copy already written)\n- Sticky header with logo, anchor menu and WhatsApp button\n- Hero with a benefit-driven headline, subheadline, two CTAs (WhatsApp and secondary) and quick social proof\n- Trust bar (years of experience, clients served, ratings) with placeholders for the real numbers\n- Problem and solution: the pains of {N} customers and how the business solves each one\n- 6 services specific to {N}, each with an icon, main benefit and call to action\n- How it works: 3 or 4 steps, from first contact to result\n- About / Authority: story, credentials and team photo\n- 4 to 6 differentiators\n- Testimonials (3 to 6) with name, city and rating, marked as examples to be replaced with real testimonials\n- Gallery, portfolio or before-and-after, if it makes sense for {N}\n- FAQ with 6 to 8 questions that answer the niche's real objections\n- Final CTA with a validated form (name, phone, message) that opens WhatsApp with the message pre-filled\n- Location with map, opening hours and a footer with contacts, social media and legal links\n- Floating WhatsApp button visible on every screen\n\n4. DESIGN\n- Color palette with hex codes that makes sense for {N}, explaining the reason for each color\n- Google Fonts pairing (headings and body), type scale and spacing\n- Image style, with suggested Unsplash search terms\n- Premium, modern and trustworthy look, with clear hierarchy and accessible contrast (WCAG AA)\n\n5. CONVERSION\n- A CTA every two sections, social proof and authority triggers, no false promises\n- Pre-filled WhatsApp message mentioning the service of interest\n\n6. SEO AND EUROPEAN COMPLIANCE\n- Title, meta description, Open Graph, semantic headings and local keywords\n- schema.org LocalBusiness structured data with the company details\n- GDPR-compliant cookie notice and Privacy Policy, with consent in the form\n\n7. LANGUAGE\n- All website content (texts, buttons, form, SEO) written in English\n\n8. DELIVERY\n- Folder structure, all complete files and instructions to run and deploy on Vercel or Netlify\n\n{CO}\n\nDo not build the website. Do not explain. Only generate the FINAL PROMPT that will be used to create the website for {N}.\n\nWrite the final prompt in English and return it inside a code block so it can be copied."
+      },
+      es: {
+        co: ['Datos reales de la empresa (el prompt final debe usar exactamente estos datos en el sitio, sin inventar otros):', 'Nombre de la empresa', 'WhatsApp', '(los botones de CTA deben abrir https://wa.me/NUM)', 'Ciudad/País', 'Instagram o web', 'Información adicional', 'Para cualquier dato que no aparezca arriba, usa marcadores entre corchetes, como [NOMBRE DE LA EMPRESA] o [WHATSAPP], en lugar de inventarlo.'],
+        none: 'Todavía no hay datos de la empresa: el prompt final debe usar marcadores entre corchetes, como [NOMBRE DE LA EMPRESA], [WHATSAPP] y [CIUDAD], donde se necesiten esos datos.',
+        tpl: "Actúa como un Ingeniero de Prompts Sénior y Director Creativo especializado en sitios web de alta conversión para pequeñas empresas en Europa.\n\nTu única tarea es CREAR EL PROMPT PERFECTO, largo y detallado, para generar un sitio web profesional.\n\nEste prompt se usará después en otra IA (Claude, Lovable, v0) para generar un sitio web completo para el nicho de {N}. Cuanto más específico y detallado sea, mejor será el sitio.\n\nEl prompt final que generes debe estar organizado en secciones con títulos y pedir obligatoriamente:\n\n1. TECNOLOGÍA\n- React + Vite + Tailwind CSS, componentes reutilizables y código completo (nada de \"lorem ipsum\" ni fragmentos incompletos)\n- Animaciones de entrada suaves y microinteracciones con Framer Motion, iconos Lucide\n- Mobile-first, carga rápida (imágenes optimizadas y lazy loading) y objetivo de Lighthouse superior a 90\n\n2. ESTRATEGIA\n- Perfil del cliente ideal de {N}: quién es, sus problemas, deseos y principales objeciones antes de contratar\n- Posicionamiento y tono de voz adecuados al nicho\n- Una propuesta de valor clara en una sola frase\n\n3. ESTRUCTURA DEL SITIO (con el objetivo de cada sección y el texto completo ya escrito)\n- Cabecera fija con logo, menú con anclas y botón de WhatsApp\n- Hero con un titular centrado en el beneficio, subtítulo, dos CTA (WhatsApp y secundario) y prueba social rápida\n- Franja de confianza (años de experiencia, clientes atendidos, valoraciones) con marcadores para las cifras reales\n- Problema y solución: los problemas del cliente de {N} y cómo la empresa resuelve cada uno\n- 6 servicios específicos de {N}, cada uno con icono, beneficio principal y llamada a la acción\n- Cómo funciona: 3 o 4 pasos, desde el primer contacto hasta el resultado\n- Sobre nosotros / Autoridad: historia, credenciales y foto del equipo\n- De 4 a 6 diferenciales\n- Testimonios (de 3 a 6) con nombre, ciudad y puntuación, marcados como ejemplos para sustituir por testimonios reales\n- Galería, portfolio o antes y después, si tiene sentido para {N}\n- FAQ con 6 a 8 preguntas que respondan a las objeciones reales del nicho\n- CTA final con formulario validado (nombre, teléfono, mensaje) que abra WhatsApp con el mensaje ya escrito\n- Ubicación con mapa, horario de atención y pie de página con contactos, redes sociales y enlaces legales\n- Botón flotante de WhatsApp visible en todas las pantallas\n\n4. DISEÑO\n- Paleta de colores con códigos hex que tenga sentido para {N}, explicando el motivo de cada color\n- Combinación de fuentes de Google Fonts (títulos y textos), escala tipográfica y espaciados\n- Estilo de las imágenes, con términos de búsqueda sugeridos en Unsplash\n- Aspecto premium, moderno y confiable, con jerarquía clara y contraste accesible (WCAG AA)\n\n5. CONVERSIÓN\n- Un CTA cada dos secciones, recursos de prueba social y autoridad, sin promesas falsas\n- Mensaje de WhatsApp prellenado que mencione el servicio de interés\n\n6. SEO Y CUMPLIMIENTO EUROPEO\n- Title, meta description, Open Graph, encabezados semánticos y palabras clave locales\n- Datos estructurados schema.org de tipo LocalBusiness con los datos de la empresa\n- Aviso de cookies y Política de Privacidad conformes al RGPD, con consentimiento en el formulario\n\n7. IDIOMA\n- Todo el contenido del sitio (textos, botones, formulario, SEO) escrito en español\n\n8. ENTREGA\n- Estructura de carpetas, todos los archivos completos e instrucciones para ejecutarlo y publicarlo en Vercel o Netlify\n\n{CO}\n\nNo generes el sitio. No expliques. Genera solo el PROMPT FINAL que se usará para crear el sitio del nicho {N}.\n\nEscribe el prompt final en español y devuélvelo dentro de un bloque de código para poder copiarlo."
+      },
+      fr: {
+        co: ['Informations réelles de l’entreprise (le prompt final doit utiliser exactement ces informations sur le site, sans en inventer d’autres) :', 'Nom de l’entreprise', 'WhatsApp', '(les boutons CTA doivent ouvrir https://wa.me/NUM)', 'Ville/Pays', 'Instagram ou site web', 'Informations complémentaires', 'Pour toute information non fournie ci-dessus, utilise des repères entre crochets, comme [NOM DE L’ENTREPRISE] ou [WHATSAPP], au lieu de les inventer.'],
+        none: 'Aucune information sur l’entreprise pour l’instant : le prompt final doit utiliser des repères entre crochets, comme [NOM DE L’ENTREPRISE], [WHATSAPP] et [VILLE], là où ces informations sont nécessaires.',
+        tpl: "Agis comme un Ingénieur Prompt Senior et Directeur de Création spécialisé dans les sites web à fort taux de conversion pour les petites entreprises en Europe.\n\nTa seule tâche est de CRÉER LE PROMPT PARFAIT, long et détaillé, pour générer un site web professionnel.\n\nCe prompt sera ensuite utilisé dans une autre IA (Claude, Lovable, v0) pour générer un site web complet pour le secteur : {N}. Plus il sera précis et détaillé, meilleur sera le site.\n\nLe prompt final que tu génères doit être organisé en sections avec des titres et demander obligatoirement :\n\n1. TECHNOLOGIE\n- React + Vite + Tailwind CSS, composants réutilisables et code complet (pas de « lorem ipsum » ni d’extraits incomplets)\n- Animations d’entrée fluides et micro-interactions avec Framer Motion, icônes Lucide\n- Mobile-first, chargement rapide (images optimisées et lazy loading) et un objectif Lighthouse supérieur à 90\n\n2. STRATÉGIE\n- Profil du client idéal pour le secteur {N} : qui il est, ses problèmes, ses envies et ses principales objections avant de s’engager\n- Positionnement et ton adaptés au secteur\n- Une proposition de valeur claire en une seule phrase\n\n3. STRUCTURE DU SITE (avec l’objectif de chaque section et les textes complets déjà rédigés)\n- En-tête fixe avec logo, menu à ancres et bouton WhatsApp\n- Hero avec un titre axé sur le bénéfice, un sous-titre, deux CTA (WhatsApp et secondaire) et une preuve sociale rapide\n- Bandeau de confiance (années d’expérience, clients accompagnés, avis) avec des repères pour les chiffres réels\n- Problème et solution : les difficultés des clients du secteur {N} et comment l’entreprise résout chacune d’elles\n- 6 services spécifiques au secteur {N}, chacun avec une icône, son bénéfice principal et un appel à l’action\n- Comment ça marche : 3 ou 4 étapes, du premier contact au résultat\n- À propos / Autorité : histoire, références et photo de l’équipe\n- 4 à 6 points forts\n- Témoignages (3 à 6) avec nom, ville et note, signalés comme exemples à remplacer par de vrais témoignages\n- Galerie, portfolio ou avant/après, si c’est pertinent pour le secteur {N}\n- FAQ de 6 à 8 questions qui répondent aux vraies objections du secteur\n- CTA final avec un formulaire validé (nom, téléphone, message) qui ouvre WhatsApp avec le message déjà rédigé\n- Localisation avec carte, horaires d’ouverture et pied de page avec contacts, réseaux sociaux et liens légaux\n- Bouton WhatsApp flottant visible sur tous les écrans\n\n4. DESIGN\n- Palette de couleurs avec codes hexadécimaux adaptée au secteur {N}, en expliquant le choix de chaque couleur\n- Association de polices Google Fonts (titres et textes), échelle typographique et espacements\n- Style des images, avec des termes de recherche Unsplash suggérés\n- Rendu haut de gamme, moderne et rassurant, avec une hiérarchie claire et un contraste accessible (WCAG AA)\n\n5. CONVERSION\n- Un CTA toutes les deux sections, des leviers de preuve sociale et d’autorité, sans fausses promesses\n- Message WhatsApp pré-rempli mentionnant le service qui intéresse le visiteur\n\n6. SEO ET CONFORMITÉ EUROPÉENNE\n- Title, meta description, Open Graph, titres sémantiques et mots-clés locaux\n- Données structurées schema.org de type LocalBusiness avec les informations de l’entreprise\n- Bandeau cookies et Politique de confidentialité conformes au RGPD, avec consentement dans le formulaire\n\n7. LANGUE\n- Tout le contenu du site (textes, boutons, formulaire, SEO) rédigé en français\n\n8. LIVRAISON\n- Arborescence des dossiers, tous les fichiers complets et instructions pour lancer et publier le site sur Vercel ou Netlify\n\n{CO}\n\nNe crée pas le site. N’explique rien. Génère uniquement le PROMPT FINAL qui servira à créer le site pour le secteur {N}.\n\nRédige le prompt final en français et renvoie-le dans un bloc de code pour qu’il puisse être copié."
+      },
+      de: {
+        co: ['Echte Unternehmensdaten (der finale Prompt muss genau diese Daten auf der Website verwenden und darf keine anderen erfinden):', 'Firmenname', 'WhatsApp', '(die CTA-Buttons müssen https://wa.me/NUM öffnen)', 'Stadt/Land', 'Instagram oder Website', 'Weitere Informationen', 'Für alle oben nicht angegebenen Daten verwende Platzhalter in eckigen Klammern wie [FIRMENNAME] oder [WHATSAPP], statt sie zu erfinden.'],
+        none: 'Noch keine Unternehmensdaten: Der finale Prompt muss Platzhalter in eckigen Klammern wie [FIRMENNAME], [WHATSAPP] und [STADT] verwenden, wo diese Daten benötigt werden.',
+        tpl: "Agiere als Senior Prompt Engineer und Creative Director mit Spezialisierung auf Websites mit hoher Conversion-Rate für kleine Unternehmen in Europa.\n\nDeine einzige Aufgabe ist es, DEN PERFEKTEN PROMPT zu SCHREIBEN – ausführlich und detailliert –, mit dem eine professionelle Website erstellt wird.\n\nDieser Prompt wird anschließend in einer anderen KI (Claude, Lovable, v0) verwendet, um eine vollständige Website für folgende Branche zu generieren: {N}. Je konkreter und detaillierter er ist, desto besser wird die Website.\n\nDer finale Prompt muss in Abschnitte mit Überschriften gegliedert sein und ausdrücklich Folgendes verlangen:\n\n1. TECHNIK\n- React + Vite + Tailwind CSS, wiederverwendbare Komponenten und vollständiger Code (kein „Lorem ipsum“ und keine unvollständigen Ausschnitte)\n- Sanfte Einblend-Animationen und Mikrointeraktionen mit Framer Motion, Lucide-Icons\n- Mobile-first, schnelle Ladezeiten (optimierte Bilder und Lazy Loading) und ein Lighthouse-Ziel über 90\n\n2. STRATEGIE\n- Profil des idealen Kunden für {N}: wer er ist, seine Probleme, Wünsche und wichtigsten Einwände vor der Beauftragung\n- Positionierung und Tonalität passend zur Branche\n- Ein klares Nutzenversprechen in einem einzigen Satz\n\n3. AUFBAU DER WEBSITE (mit dem Ziel jedes Abschnitts und den vollständig ausformulierten Texten)\n- Fixierter Header mit Logo, Anker-Menü und WhatsApp-Button\n- Hero mit nutzenorientierter Headline, Subheadline, zwei CTAs (WhatsApp und sekundär) und schnellem Social Proof\n- Vertrauensleiste (Jahre Erfahrung, betreute Kunden, Bewertungen) mit Platzhaltern für die echten Zahlen\n- Problem und Lösung: die Probleme der Kunden von {N} und wie das Unternehmen jedes davon löst\n- 6 branchenspezifische Leistungen für {N}, jeweils mit Icon, Hauptnutzen und Call-to-Action\n- So funktioniert es: 3 oder 4 Schritte vom ersten Kontakt bis zum Ergebnis\n- Über uns / Autorität: Geschichte, Qualifikationen und Teamfoto\n- 4 bis 6 Alleinstellungsmerkmale\n- Kundenstimmen (3 bis 6) mit Name, Stadt und Bewertung, als Beispiele gekennzeichnet, die durch echte Kundenstimmen ersetzt werden\n- Galerie, Portfolio oder Vorher-Nachher, falls es für {N} sinnvoll ist\n- FAQ mit 6 bis 8 Fragen, die die echten Einwände der Branche beantworten\n- Finaler CTA mit validiertem Formular (Name, Telefon, Nachricht), das WhatsApp mit bereits ausgefüllter Nachricht öffnet\n- Standort mit Karte, Öffnungszeiten und Footer mit Kontakten, sozialen Netzwerken und rechtlichen Links (inkl. Impressum)\n- Schwebender WhatsApp-Button auf allen Bildschirmen sichtbar\n\n4. DESIGN\n- Farbpalette mit Hex-Codes, die zu {N} passt, mit Begründung für jede Farbe\n- Schriftpaar aus Google Fonts (Überschriften und Fließtext), Typografie-Skala und Abstände\n- Bildstil mit vorgeschlagenen Unsplash-Suchbegriffen\n- Hochwertiger, moderner und vertrauenswürdiger Look mit klarer Hierarchie und barrierefreiem Kontrast (WCAG AA)\n\n5. CONVERSION\n- Ein CTA alle zwei Abschnitte, Social-Proof- und Autoritätselemente, keine falschen Versprechen\n- Vorausgefüllte WhatsApp-Nachricht, die die gewünschte Leistung nennt\n\n6. SEO UND EUROPÄISCHE RECHTSKONFORMITÄT\n- Title, Meta Description, Open Graph, semantische Überschriften und lokale Keywords\n- Strukturierte Daten nach schema.org vom Typ LocalBusiness mit den Unternehmensdaten\n- DSGVO-konformer Cookie-Hinweis und Datenschutzerklärung, mit Einwilligung im Formular\n\n7. SPRACHE\n- Alle Inhalte der Website (Texte, Buttons, Formular, SEO) auf Deutsch\n\n8. LIEFERUNG\n- Ordnerstruktur, alle vollständigen Dateien und eine Anleitung zum Starten und Veröffentlichen auf Vercel oder Netlify\n\n{CO}\n\nErstelle nicht die Website. Erkläre nichts. Erstelle nur den FINALEN PROMPT, mit dem die Website für {N} erstellt wird.\n\nSchreibe den finalen Prompt auf Deutsch und gib ihn in einem Codeblock zurück, damit er kopiert werden kann."
+      },
+      it: {
+        co: ['Dati reali dell’azienda (il prompt finale deve usare esattamente questi dati nel sito, senza inventarne altri):', 'Nome dell’azienda', 'WhatsApp', '(i pulsanti CTA devono aprire https://wa.me/NUM)', 'Città/Paese', 'Instagram o sito web', 'Informazioni aggiuntive', 'Per qualsiasi dato non indicato sopra, usa segnaposto tra parentesi quadre, come [NOME AZIENDA] o [WHATSAPP], invece di inventarlo.'],
+        none: 'Non ci sono ancora dati dell’azienda: il prompt finale deve usare segnaposto tra parentesi quadre, come [NOME AZIENDA], [WHATSAPP] e [CITTÀ], dove servono questi dati.',
+        tpl: "Agisci come un Prompt Engineer Senior e Direttore Creativo specializzato in siti web ad alta conversione per piccole imprese in Europa.\n\nIl tuo unico compito è CREARE IL PROMPT PERFETTO, lungo e dettagliato, per generare un sito web professionale.\n\nQuesto prompt verrà poi usato in un’altra IA (Claude, Lovable, v0) per generare un sito web completo per il settore: {N}. Più sarà specifico e dettagliato, migliore sarà il sito.\n\nIl prompt finale che generi deve essere organizzato in sezioni con titoli e richiedere obbligatoriamente:\n\n1. TECNOLOGIA\n- React + Vite + Tailwind CSS, componenti riutilizzabili e codice completo (niente \"lorem ipsum\" né frammenti incompleti)\n- Animazioni di ingresso fluide e microinterazioni con Framer Motion, icone Lucide\n- Mobile-first, caricamento veloce (immagini ottimizzate e lazy loading) e obiettivo Lighthouse superiore a 90\n\n2. STRATEGIA\n- Profilo del cliente ideale per {N}: chi è, problemi, desideri e principali obiezioni prima di acquistare\n- Posizionamento e tono di voce adatti al settore\n- Una proposta di valore chiara in una sola frase\n\n3. STRUTTURA DEL SITO (con l’obiettivo di ogni sezione e i testi completi già scritti)\n- Header fisso con logo, menu ad ancore e pulsante WhatsApp\n- Hero con un titolo incentrato sul beneficio, sottotitolo, due CTA (WhatsApp e secondaria) e una rapida riprova sociale\n- Fascia di fiducia (anni di esperienza, clienti seguiti, recensioni) con segnaposto per i numeri reali\n- Problema e soluzione: i problemi dei clienti di {N} e come l’azienda risolve ciascuno di essi\n- 6 servizi specifici per {N}, ognuno con icona, beneficio principale e invito all’azione\n- Come funziona: 3 o 4 passaggi, dal primo contatto al risultato\n- Chi siamo / Autorevolezza: storia, credenziali e foto del team\n- Da 4 a 6 punti di forza\n- Testimonianze (da 3 a 6) con nome, città e valutazione, indicate come esempi da sostituire con testimonianze reali\n- Galleria, portfolio o prima e dopo, se ha senso per {N}\n- FAQ con 6-8 domande che rispondono alle vere obiezioni del settore\n- CTA finale con modulo validato (nome, telefono, messaggio) che apre WhatsApp con il messaggio già compilato\n- Posizione con mappa, orari di apertura e footer con contatti, social e link legali\n- Pulsante WhatsApp flottante visibile in tutte le schermate\n\n4. DESIGN\n- Palette di colori con codici esadecimali adatta a {N}, spiegando il motivo di ogni colore\n- Abbinamento di font Google Fonts (titoli e testi), scala tipografica e spaziature\n- Stile delle immagini, con termini di ricerca suggeriti su Unsplash\n- Aspetto premium, moderno e affidabile, con gerarchia chiara e contrasto accessibile (WCAG AA)\n\n5. CONVERSIONE\n- Una CTA ogni due sezioni, leve di riprova sociale e autorevolezza, senza false promesse\n- Messaggio WhatsApp precompilato che citi il servizio di interesse\n\n6. SEO E CONFORMITÀ EUROPEA\n- Title, meta description, Open Graph, titoli semantici e parole chiave locali\n- Dati strutturati schema.org di tipo LocalBusiness con i dati dell’azienda\n- Banner cookie e Informativa sulla privacy conformi al GDPR, con consenso nel modulo\n\n7. LINGUA\n- Tutti i contenuti del sito (testi, pulsanti, modulo, SEO) scritti in italiano\n\n8. CONSEGNA\n- Struttura delle cartelle, tutti i file completi e istruzioni per avviare e pubblicare il sito su Vercel o Netlify\n\n{CO}\n\nNon creare il sito. Non spiegare. Genera solo il PROMPT FINALE che verrà usato per creare il sito per {N}.\n\nScrivi il prompt finale in italiano e restituiscilo dentro un blocco di codice per poterlo copiare."
+      }
+    };
+    var buildMetaPrompt = function (lang, nicho, info) {
+      var T = metaT[lang] || metaT.pt;
+      var c = T.co;
+      var clean = function (v) { return String(v || '').replace(/\s+/g, ' ').trim().slice(0, 300); };
+      var nome = clean(info.nome), whats = clean(info.whats), cidade = clean(info.cidade), insta = clean(info.insta);
+      var extra = String(info.extra || '').trim().slice(0, 1500);
+      var digits = whats.replace(/\D/g, '');
+      var rows = [];
+      if (nome) rows.push('- ' + c[1] + ': ' + nome);
+      if (whats) rows.push('- ' + c[2] + ': ' + whats + (digits.length >= 8 ? ' ' + c[3].replace('NUM', digits) : ''));
+      if (cidade) rows.push('- ' + c[4] + ': ' + cidade);
+      if (insta) rows.push('- ' + c[5] + ': ' + insta);
+      if (extra) rows.push('- ' + c[6] + ': ' + extra);
+      var block = rows.length ? [c[0]].concat(rows, ['', c[7]]).join('\n') : T.none;
+      return T.tpl.split('{N}').join(nicho).split('{CO}').join(block);
+    };
     var badgeColors = {};
     badgeColors[F] = '#4ADE80'; badgeColors[M] = '#F5A524'; badgeColors[A] = '#C9B8FF';
     var nichoNames = {
       en: ['immigration lawyers', 'psychologists and therapists', 'aesthetic and dental clinics', 'accountants for foreigners', 'Brazilian restaurants in Europe', 'premium barbershops and salons', 'language schools', 'real estate agencies for Brazilians in Europe', 'auto repair shops', 'gyms and personal trainers', 'architects and interior designers', 'veterinary clinics', 'home cleaning services', 'construction and renovation companies', 'clothing stores and boutiques', 'photographers and videomakers', 'document and paperwork services', 'nutritionists', 'pet shops', 'churches and Brazilian communities'],
-      es: ['abogados de inmigración', 'psicólogos y terapeutas', 'clínicas estéticas y dentales', 'contables para extranjeros', 'restaurantes brasileños en Europa', 'barberías premium y salones', 'escuelas de idiomas', 'inmobiliarias para brasileños en Europa', 'talleres mecánicos', 'gimnasios y entrenadores personales', 'arquitectos e interioristas', 'clínicas veterinarias', 'servicios de limpieza del hogar', 'constructoras y empresas de reformas', 'tiendas de ropa y boutiques', 'fotógrafos y videomakers', 'gestorías y trámites de documentación', 'nutricionistas', 'tiendas de mascotas', 'iglesias y comunidades brasileñas']
+      es: ['abogados de inmigración', 'psicólogos y terapeutas', 'clínicas estéticas y dentales', 'contables para extranjeros', 'restaurantes brasileños en Europa', 'barberías premium y salones', 'escuelas de idiomas', 'inmobiliarias para brasileños en Europa', 'talleres mecánicos', 'gimnasios y entrenadores personales', 'arquitectos e interioristas', 'clínicas veterinarias', 'servicios de limpieza del hogar', 'constructoras y empresas de reformas', 'tiendas de ropa y boutiques', 'fotógrafos y videomakers', 'gestorías y trámites de documentación', 'nutricionistas', 'tiendas de mascotas', 'iglesias y comunidades brasileñas'],
+      fr: ['avocats en droit de l’immigration', 'psychologues et thérapeutes', 'cliniques esthétiques et dentaires', 'experts-comptables pour étrangers', 'restaurants brésiliens en Europe', 'barbiers haut de gamme et salons de coiffure', 'écoles de langues', 'agences immobilières pour Brésiliens en Europe', 'garages automobiles', 'salles de sport et coachs sportifs', 'architectes et architectes d’intérieur', 'cliniques vétérinaires', 'services de ménage à domicile', 'entreprises de construction et de rénovation', 'boutiques de vêtements', 'photographes et vidéastes', 'services administratifs et de documentation', 'nutritionnistes', 'animaleries', 'églises et communautés brésiliennes'],
+      de: ['Anwälte für Einwanderungsrecht', 'Psychologen und Therapeuten', 'Ästhetik- und Zahnkliniken', 'Steuerberater für Ausländer', 'brasilianische Restaurants in Europa', 'Premium-Barbershops und Friseursalons', 'Sprachschulen', 'Immobilienmakler für Brasilianer in Europa', 'Kfz-Werkstätten', 'Fitnessstudios und Personal Trainer', 'Architekten und Innenarchitekten', 'Tierarztpraxen', 'Haushaltsreinigungsdienste', 'Bau- und Renovierungsunternehmen', 'Bekleidungsgeschäfte und Boutiquen', 'Fotografen und Videografen', 'Behörden- und Dokumentenservices', 'Ernährungsberater', 'Zoohandlungen', 'Kirchen und brasilianische Gemeinden'],
+      it: ['avvocati specializzati in immigrazione', 'psicologi e terapeuti', 'cliniche estetiche e dentistiche', 'commercialisti per stranieri', 'ristoranti brasiliani in Europa', 'barbieri premium e saloni di bellezza', 'scuole di lingue', 'agenzie immobiliari per brasiliani in Europa', 'officine meccaniche', 'palestre e personal trainer', 'architetti e interior designer', 'cliniche veterinarie', 'servizi di pulizia domestica', 'imprese edili e di ristrutturazione', 'negozi di abbigliamento e boutique', 'fotografi e videomaker', 'agenzie di pratiche e documenti', 'nutrizionisti', 'negozi per animali', 'chiese e comunità brasiliane']
     };
     var pitchT = {
       pt: function (n) { return 'Olá, tudo bem?\nAcessei o seu perfil e notei que você ainda não tem um site, e pode estar perdendo clientes por isso.\nCrio sites para ' + n + ' e quero fazer o seu de forma 100% gratuita e sem compromisso.\nEu monto o site completo, mostro o resultado e você só paga se gostar. Se não gostar, não paga nada.\nPosso criar um primeiro modelo para você em poucas horas e te mando. Posso avançar?'; },
       en: function (n) { return 'Hi, how are you?\nI visited your profile and noticed you don\'t have a website yet, and you may be losing clients because of that.\nI build websites for ' + n + ' and I would like to create yours 100% free, with no obligation.\nI build the full site, show you the result, and you only pay if you like it. If you don\'t, you pay nothing.\nI can create a first draft for you in a few hours and send it over. Shall I go ahead?'; },
-      es: function (n) { return 'Hola, ¿qué tal?\nHe visitado su perfil y he notado que todavía no tiene página web, y puede estar perdiendo clientes por eso.\nCreo páginas web para ' + n + ' y quiero hacer la suya de forma 100% gratuita y sin compromiso.\nYo monto la web completa, le enseño el resultado y solo paga si le gusta. Si no le gusta, no paga nada.\nPuedo crear un primer modelo para usted en pocas horas y se lo envío. ¿Puedo seguir adelante?'; }
+      es: function (n) { return 'Hola, ¿qué tal?\nHe visitado su perfil y he notado que todavía no tiene página web, y puede estar perdiendo clientes por eso.\nCreo páginas web para ' + n + ' y quiero hacer la suya de forma 100% gratuita y sin compromiso.\nYo monto la web completa, le enseño el resultado y solo paga si le gusta. Si no le gusta, no paga nada.\nPuedo crear un primer modelo para usted en pocas horas y se lo envío. ¿Puedo seguir adelante?'; },
+      fr: function (n) { return 'Bonjour, comment allez-vous ?\nJ’ai consulté votre profil et j’ai remarqué que vous n’avez pas encore de site web, ce qui peut vous faire perdre des clients.\nJe crée des sites pour les ' + n + ' et j’aimerais réaliser le vôtre gratuitement et sans engagement.\nJe crée le site complet, je vous montre le résultat et vous ne payez que s’il vous plaît. Sinon, vous ne payez rien.\nJe peux vous préparer un premier modèle en quelques heures et vous l’envoyer. Je peux commencer ?'; },
+      de: function (n) { return 'Hallo, wie geht es Ihnen?\nIch habe mir Ihr Profil angesehen und gesehen, dass Sie noch keine Website haben – dadurch könnten Ihnen Kunden entgehen.\nIch erstelle Websites für ' + n + ' und würde Ihre gerne kostenlos und unverbindlich erstellen.\nIch baue die komplette Website, zeige Ihnen das Ergebnis, und Sie zahlen nur, wenn sie Ihnen gefällt. Wenn nicht, zahlen Sie nichts.\nIch kann Ihnen in wenigen Stunden einen ersten Entwurf erstellen und schicken. Darf ich loslegen?'; },
+      it: function (n) { return 'Buongiorno, come sta?\nHo visitato il suo profilo e ho notato che non ha ancora un sito web, e potrebbe perdere clienti per questo.\nCreo siti web per ' + n + ' e vorrei realizzare il suo gratuitamente e senza impegno.\nCreo il sito completo, le mostro il risultato e paga solo se le piace. Se non le piace, non paga nulla.\nPosso prepararle un primo modello in poche ore e inviarglielo. Posso procedere?'; }
     };
     var pl = pitchT[st.pitchLang] ? st.pitchLang : 'pt';
-    var pitchLangs = [['pt', 'Português'], ['en', 'English'], ['es', 'Español']].map(function (p) {
+    var pitchLangs = [['pt', 'Português'], ['en', 'English'], ['es', 'Español'], ['fr', 'Français'], ['de', 'Deutsch'], ['it', 'Italiano']].map(function (p) {
       var on = pl === p[0];
       return {
         label: p[1], bg: on ? primary : 'transparent', border: on ? primary : '#3B2F6B',
@@ -1420,7 +1862,7 @@ class Component extends DCLogic {
         self.setState(JSON.parse(self.DEFAULTS));
       }
     };
-    var rootClass = 'sora' + (cfg.spaceBg ? '' : ' plain') + (cfg.motion ? '' : ' calm');
+    var rootClass = 'sora notranslate' + (cfg.spaceBg ? '' : ' plain') + (cfg.motion ? '' : ' calm');
     var nnq = norm(st.nq);
     var nichos = [];
     nichoDefs.forEach(function (d, i) {
@@ -1428,6 +1870,20 @@ class Component extends DCLogic {
       if (st.favOnly && !fav) return;
       if (nnq && norm(d.join(' ')).indexOf(nnq) === -1) return;
       var key = 'n' + i;
+      var metaKey = 'm' + i;
+      var info = (st.nichoInfo && st.nichoInfo[i]) || {};
+      var nomeLocal = pl === 'pt' ? d[0] : nichoNames[pl][i];
+      var metaPrompt = buildMetaPrompt(pl, nomeLocal, info);
+      var setInfo = function (field) {
+        return function (e) {
+          var cur = Object.assign({}, (self.state.nichoInfo || {})[i] || {});
+          cur[field] = e.target.value;
+          var all = Object.assign({}, self.state.nichoInfo || {});
+          all[i] = cur;
+          self.save({ nichoInfo: all });
+        };
+      };
+      var filled = ['nome', 'whats', 'cidade', 'insta', 'extra'].filter(function (k) { return String(info[k] || '').trim(); }).length;
       var pitch = pitchT[pl](pl === 'pt' ? d[0] : nichoNames[pl][i]) + sign;
       nichos.push({
         rank: i + 1, name: d[0], ticket: d[1], why: d[2], badge: d[3],
@@ -1438,12 +1894,21 @@ class Component extends DCLogic {
         btnBg: primary,
         copyLabel: st.copied === key ? 'Pitch copiado' : 'Copiar Pitch',
         copy: function () { self.copyText(key, pitch); },
+        metaPrompt: metaPrompt,
+        info: { nome: info.nome || '', whats: info.whats || '', cidade: info.cidade || '', insta: info.insta || '', extra: info.extra || '' },
+        onNome: setInfo('nome'), onWhats: setInfo('whats'), onCidade: setInfo('cidade'), onInsta: setInfo('insta'), onExtra: setInfo('extra'),
+        infoOpen: st.infoOpen === i,
+        infoLabel: (st.infoOpen === i ? 'Fechar dados da empresa' : 'Dados da empresa') + (filled ? ' (' + filled + ' preenchido' + (filled > 1 ? 's' : '') + ')' : ''),
+        toggleInfo: function () { self.setState({ infoOpen: st.infoOpen === i ? -1 : i }); },
+        metaLabel: st.copied === metaKey ? 'Meta Prompt copiado' : 'Copiar Meta Prompt',
+        copyMeta: function () { self.copyText(metaKey, metaPrompt); },
         toggleFav: function () {
           self.save({ favs: fav ? st.favs.filter(function (x) { return x !== i; }) : st.favs.concat([i]) });
         }
       });
     });
 
+    var flowBuilt = this.buildFlow(st);
     var cEur = this.num(st.calc.valor);
     var receita = cEur * rate;
     var lucroBrl = receita - this.num(st.calc.dominio) - this.num(st.calc.hospedagem);
@@ -1454,56 +1919,18 @@ class Component extends DCLogic {
       margem: (receita > 0 ? lucroBrl / receita * 100 : 0).toLocaleString('pt-BR', { maximumFractionDigits: 1 })
     };
 
-    var scriptData = {
-      pt: {
-        label: 'Português PT', copy: 'Copiar', copied: 'Copiado',
-        items: [
-          ['Abordagem fria', "Olá [NOME], tudo bem?\nVi a [EMPRESA] e tive uma ideia: quero criar um site para o seu negócio de forma 100% gratuita e sem compromisso.\nEu faço o site completo, mostro-lhe o resultado e só paga se gostar. Se não gostar, não paga nada e fica tudo por aqui.\nPosso avançar e mostrar-lhe em [PRAZO] dias?"],
-          ['Follow-up', "Olá [NOME], volto ao contacto sobre o site da [EMPRESA].\nA proposta mantém-se: crio o site sem custo nenhum e sem compromisso, e só decide depois de o ver pronto.\nNão tem nada a perder. Só preciso do seu OK para começar. Posso avançar?"],
-          ['Fechamento', "Olá [NOME], o site da [EMPRESA] está pronto: [LINK]\nComo combinado, não pagou nada até aqui. Se gostou do resultado, o valor para ficar com ele é [VALOR] €, já com domínio e alojamento configurados.\nSe quiser avançar, envio-lhe hoje os dados de pagamento e coloco o site online. Se preferir algum ajuste antes, diga-me."]
-        ]
-      },
-      en: {
-        label: 'English', copy: 'Copy', copied: 'Copied',
-        items: [
-          ['Abordagem fria', "Hi [NAME],\nI came across [COMPANY] and I'd like to build a website for your business, 100% free and with no obligation.\nI create the full site, show you the result, and you only pay if you like it. If you don't, you pay nothing and that's the end of it.\nShall I go ahead and show you in [TIMEFRAME] days?"],
-          ['Follow-up', "Hi [NAME], following up about a website for [COMPANY].\nThe offer still stands: I build the site at no cost and with no obligation, and you only decide once you have seen it finished.\nYou have nothing to lose. I just need your OK to start. Shall I go ahead?"],
-          ['Fechamento', "Hi [NAME], the website for [COMPANY] is ready: [LINK]\nAs agreed, you haven't paid anything so far. If you like the result, the price to keep it is €[PRICE], with domain and hosting set up.\nIf you'd like to go ahead, I will send the payment details today and put the site live. If you want any changes first, just tell me."]
-        ]
-      },
-      es: {
-        label: 'Español', copy: 'Copiar', copied: 'Copiado',
-        items: [
-          ['Abordagem fria', "Hola [NOMBRE], ¿qué tal?\nHe visto [EMPRESA] y me gustaría crear una página web para su negocio de forma 100% gratuita y sin compromiso.\nYo hago la web completa, le enseño el resultado y solo paga si le gusta. Si no le gusta, no paga nada y ahí queda todo.\n¿Le parece que empiece y se la enseñe en [PLAZO] días?"],
-          ['Follow-up', "Hola [NOMBRE], le escribo de nuevo sobre la web de [EMPRESA].\nLa propuesta sigue en pie: creo la web sin ningún coste y sin compromiso, y usted decide solo después de verla terminada.\nNo tiene nada que perder. Solo necesito su visto bueno para empezar. ¿Puedo seguir adelante?"],
-          ['Fechamento', "Hola [NOMBRE], la web de [EMPRESA] ya está lista: [LINK]\nComo acordamos, hasta ahora no ha pagado nada. Si le gusta el resultado, el precio para quedársela es de [PRECIO] €, con dominio y alojamiento configurados.\nSi quiere seguir adelante, hoy mismo le envío los datos de pago y publico la web. Si prefiere algún ajuste antes, dígamelo."]
-        ]
-      }
-    };
-    var langs = ['pt', 'en', 'es'].map(function (k) {
-      var on = st.lang === k;
-      return {
-        label: scriptData[k].label,
-        bg: on ? primary : 'transparent',
-        border: on ? primary : '#3B2F6B',
-        pick: function () { self.setState({ lang: k }); }
-      };
-    });
-    var sd = scriptData[st.lang] || scriptData.pt;
-    var scripts = sd.items.map(function (it, i) {
-      var key = st.lang + i;
-      return {
-        title: it[0], text: it[1],
-        copyLabel: st.copied === key ? sd.copied : sd.copy,
-        copy: function () { self.copyText(key, it[1]); }
-      };
-    });
 
     return {
       isDash: st.screen === 'dash',
       isVendas: st.screen === 'vendas',
       isAcad: st.screen === 'acad',
+      acadPrompt: (function () { var t = "O arquivo fornecido contém todo o conteúdo e os componentes do site.\nIntegre este layout à animação de rolagem já criada, garantindo que todas as seções sejam exibidas progressivamente conforme o usuário percorre a página. Mantenha o design, a estrutura e os elementos ao arquivo original\nADICIONE ELE NO HERO DA PAGINA PARA ASSIM QUE O CLIENTE ENTRAR ELE PASSE PELA EXPERIENCIA DE ROLAR ESSA ANIMAÇAO ANTES DE ENTRAR REALMENTE NO SITE"; return { text: t, label: st.copied === 'acadPrompt' ? 'Prompt copiado' : 'Copiar prompt', copy: function () { self.copyText('acadPrompt', t); self.toastShow('Prompt copiado!'); } }; })(),
       isNichos: st.screen === 'nichos',
+      isFlow: st.screen === 'flow',
+      flow: flowBuilt.flow,
+      flowModal: flowBuilt.flowModal,
+      toast: st.toast,
+      toastOn: !!st.toast,
       nichos: nichos,
       menuOpen: st.menuOpen,
       toggleMenu: function () { self.setState({ menuOpen: !st.menuOpen }); },
@@ -1533,6 +1960,12 @@ class Component extends DCLogic {
       nav: nav,
       goVendas: function () { self.setState({ screen: 'vendas' }); },
       goAcad: function () { self.setState({ screen: 'acad' }); },
+      goNichos: function () { self.setState({ screen: 'nichos' }); },
+      quick: {
+        vendas: sales.length ? sales.length + (sales.length === 1 ? ' venda registrada' : ' vendas registradas') : 'Nenhuma venda registrada ainda',
+        nichos: st.favs.length ? st.favs.length + (st.favs.length === 1 ? ' nicho favorito' : ' nichos favoritos') : '20 nichos disponíveis',
+        acad: doneCount + ' de 4 módulos concluídos'
+      },
       rate: st.rate,
       onRate: function (e) { self.save({ rate: e.target.value }); },
       totalEur: this.money(totalEur),
@@ -1540,10 +1973,23 @@ class Component extends DCLogic {
       count: sales.length,
       sales: shown,
       noSales: shown.length === 0,
+      salesSearch: st.salesSearch || '',
+      salesSort: st.salesSort || 'recentes',
+      onSalesSearch: function (e) { self.setState({ salesSearch: e.target.value, salesLimit: 10 }); },
+      onSalesSort: function (e) { self.setState({ salesSort: e.target.value }); },
+      salesMore: matched.length > shown.length,
+      salesMoreLabel: 'Mostrar mais ' + Math.min(10, matched.length - shown.length) + ' de ' + (matched.length - shown.length) + ' restantes',
+      showMoreSales: function () { self.setState({ salesLimit: limit + 10 }); },
+      salesCountLabel: 'Mostrando ' + shown.length + ' de ' + matched.length + (matched.length === 1 ? ' venda' : ' vendas') + (matched.length !== sales.length ? ' (filtradas de ' + sales.length + ')' : ''),
+      kpis: [
+        { label: 'Total em Euro', value: '€ ' + self.money(totalEur), sub: sales.length + (sales.length === 1 ? ' venda' : ' vendas'), color: '#7C3AED', tint: 'rgba(124,58,237,0.35)', border: 'rgba(167,139,250,0.45)', icon: 'M17 6.5A7 7 0 1 0 17 17.5M4 10h10M4 14h10' },
+        { label: 'Total em Reais', value: 'R$ ' + self.money(totalEur * rate), sub: 'Cotação € 1 = R$ ' + self.money(rate), color: '#0EA5E9', tint: 'rgba(14,165,233,0.3)', border: 'rgba(125,211,252,0.4)', icon: 'M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' },
+        { label: 'Já recebido', value: 'R$ ' + self.money((byStatus.Pago || 0) * rate), sub: (cnt.Pago || 0) + ' pagas · € ' + self.money(byStatus.Pago || 0), color: '#16A34A', tint: 'rgba(22,163,74,0.3)', border: 'rgba(74,222,128,0.4)', icon: 'M20 6 9 17l-5-5' },
+        { label: 'A receber', value: 'R$ ' + self.money((byStatus.Pendente || 0) * rate), sub: (cnt.Pendente || 0) + ' pendentes · ' + (cnt.Negociando || 0) + ' negociando', color: '#D97706', tint: 'rgba(217,119,6,0.3)', border: 'rgba(251,191,36,0.4)', icon: 'M12 6v6l4 2M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z' }
+      ],
       emptyMsg: sales.length === 0 ? 'Nenhuma venda registrada ainda. Clique em “Nova Venda” para começar.' : 'Nenhuma venda com este status.',
       filters: filters,
       goal: goal,
-      onGoal: function (e) { self.save({ goal: e.target.value }); },
       showSearch: st.showSearch,
       toggleSearch: function () { self.setState({ showSearch: !st.showSearch, q: '' }); },
       q: st.q,
@@ -1554,14 +2000,17 @@ class Component extends DCLogic {
       addSale: function () {
         var d = new Date();
         var iso = d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
-        self.save({ filter: 'Todos', sales: st.sales.concat([{ id: Date.now(), nome: '', cliente: '', valor: '', data: iso, status: 'Negociando' }]) });
+        var nid = Date.now();
+        self.save({ filter: 'Todos', sales: [{ id: nid, nome: '', cliente: '', valor: '', data: iso, status: 'Negociando' }].concat(st.sales) });
+        self.setState({ openSale: nid, salesSearch: '', salesSort: 'recentes' });
       },
       modules: modules,
       lessons: lessons,
+      videos: videos,
+      tools: toolSets[st.mod] || [],
       doneCount: doneCount,
       cur: cur,
       onUrl: function (e) { self.setMod('url', e.target.value); },
-      onNotes: function (e) { self.setMod('notes', e.target.value); },
       toggleDone: function () { self.setMod('done', !cm.done); },
       primary: primary,
       checks: checks,
@@ -1569,8 +2018,6 @@ class Component extends DCLogic {
       onCalcValor: function (e) { self.setIn('calc', 'valor', e.target.value); },
       onCalcDominio: function (e) { self.setIn('calc', 'dominio', e.target.value); },
       onCalcHospedagem: function (e) { self.setIn('calc', 'hospedagem', e.target.value); },
-      langs: langs,
-      scripts: scripts,
       showSettings: st.showSettings,
       openSettings: function () { self.setState({ showSettings: true }); },
       closeSettings: function () { self.setState({ showSettings: false, confirmReset: false }); },
