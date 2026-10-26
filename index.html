@@ -501,6 +501,19 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 </div>
 </sc-if>
 <div style="display: flex; flex-direction: column; gap: 8px">
+<button class="btn" onClick="{{ n.genSite }}" disabled="{{ n.aiBusy }}" aria-busy="{{ n.aiLoading }}" style="min-height: 48px; padding: 0 20px; border: 0; border-radius: 999px; background: linear-gradient(135deg, #7C3AED, #DB2777); color: #FFFFFF; font-size: 15px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 10px 26px rgba(219,39,119,0.35); opacity: {{ n.aiOpacity }}">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9zM5 2l.6 1.4L7 4l-1.4.6L5 6l-.6-1.4L3 4l1.4-.6z"></path></svg>
+<span>{{ n.aiLabel }}</span>
+</button>
+<sc-if value="{{ n.aiHasMsg }}" hint-placeholder-val="{{ false }}">
+<div role="status" style="padding: 10px 12px; border-radius: 12px; background: {{ n.aiMsgBg }}; border: 1px solid {{ n.aiMsgBorder }}; color: #FFFFFF; font-size: 13px; line-height: 1.45">{{ n.aiMsg }}</div>
+</sc-if>
+<sc-if value="{{ n.aiDone }}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; gap: 8px; flex-wrap: wrap">
+<button class="btn" onClick="{{ n.openSite }}" style="flex: 1 1 120px; height: 44px; padding: 0 14px; border: 0; border-radius: 999px; background: #16A34A; color: #FFFFFF; font-size: 14px; font-weight: 700; cursor: pointer">Abrir site</button>
+<button class="ghost" onClick="{{ n.downloadSite }}" style="flex: 1 1 120px; height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid #4ADE80; background: transparent; color: #FFFFFF; font-size: 14px; font-weight: 700; cursor: pointer">Baixar HTML</button>
+</div>
+</sc-if>
 <button class="btn" onClick="{{ n.copy }}" style="height: 44px; padding: 0 20px; border: 0; border-radius: 999px; background: {{ n.btnBg }}; color: #FFFFFF; font-size: 14px; font-weight: 700; cursor: pointer">{{ n.copyLabel }}</button>
 <button class="ghost" onClick="{{ n.copyMeta }}" style="height: 44px; padding: 0 20px; border-radius: 999px; border: 1px solid {{ n.btnBg }}; background: transparent; color: #FFFFFF; font-size: 14px; font-weight: 700; cursor: pointer">{{ n.metaLabel }}</button>
 <a class="ghost" href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer" style="height: 44px; padding: 0 20px; border-radius: 999px; border: 1px solid #10A37F; background: rgba(16,163,127,0.14); color: #FFFFFF; font-size: 14px; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px"><span>Entrar no ChatGPT</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg></a>
@@ -1403,6 +1416,51 @@ class Component extends DCLogic {
     };
   }
 
+  genSite(i, prompt) {
+    var self = this;
+    if (self.state.gen && self.state.gen.status === 'loading') return;
+    var client = window.soraAuth;
+    if (!client) { self.setState({ gen: { i: i, status: 'error', msg: 'Disponível no site do Sora, depois de entrar na sua conta.' } }); return; }
+    self.genHtml = '';
+    self.setState({ gen: { i: i, status: 'loading', msg: 'A IA está criando o site com o Meta Prompt deste nicho. Isso leva até 1 minuto, não feche a página.' } });
+    client.auth.getSession().then(function (r) {
+      var s = r && r.data && r.data.session;
+      if (!s) throw new Error('Faça login para criar sites.');
+      return fetch('https://aemnqozofjmvuweyyekp.supabase.co/functions/v1/gerar-site', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', authorization: 'Bearer ' + s.access_token },
+        body: JSON.stringify({ prompt: prompt })
+      });
+    }).then(function (res) {
+      return res.json().catch(function () { return {}; }).then(function (j) {
+        if (!res.ok || !j.html) throw new Error(j.error || 'Não foi possível criar o site agora. Tente de novo.');
+        return j;
+      });
+    }).then(function (j) {
+      self.genHtml = j.html;
+      self.setState({ gen: { i: i, status: 'done', msg: 'Site criado! Clique em “Abrir site” para ver ou em “Baixar HTML” para guardar o arquivo.' } });
+    }).catch(function (e) {
+      var m = e && e.message ? e.message : '';
+      if (/failed to fetch|network|load failed/i.test(m)) m = 'Sem conexão com o servidor. Verifique sua internet e tente de novo.';
+      self.setState({ gen: { i: i, status: 'error', msg: m || 'Não foi possível criar o site agora. Tente de novo.' } });
+    });
+  }
+  openGen() {
+    if (!this.genHtml) return;
+    var url = URL.createObjectURL(new Blob([this.genHtml], { type: 'text/html;charset=utf-8' }));
+    var w = window.open(url, '_blank');
+    if (w) { try { w.opener = null; } catch (e) {} } else this.downloadGen('site');
+    setTimeout(function () { URL.revokeObjectURL(url); }, 60000);
+  }
+  downloadGen(name) {
+    if (!this.genHtml) return;
+    var slug = String(name || 'site').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'site';
+    var url = URL.createObjectURL(new Blob([this.genHtml], { type: 'text/html;charset=utf-8' }));
+    var a = document.createElement('a');
+    a.href = url; a.download = slug + '.html';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 60000);
+  }
   copyText(key, text) {
     var self = this;
     var ok = function () {
@@ -1865,6 +1923,7 @@ class Component extends DCLogic {
     var rootClass = 'sora notranslate' + (cfg.spaceBg ? '' : ' plain') + (cfg.motion ? '' : ' calm');
     var nnq = norm(st.nq);
     var nichos = [];
+    var gen = st.gen || {};
     nichoDefs.forEach(function (d, i) {
       var fav = st.favs.indexOf(i) !== -1;
       if (st.favOnly && !fav) return;
@@ -1902,6 +1961,18 @@ class Component extends DCLogic {
         toggleInfo: function () { self.setState({ infoOpen: st.infoOpen === i ? -1 : i }); },
         metaLabel: st.copied === metaKey ? 'Meta Prompt copiado' : 'Copiar Meta Prompt',
         copyMeta: function () { self.copyText(metaKey, metaPrompt); },
+        aiLoading: gen.i === i && gen.status === 'loading',
+        aiBusy: gen.status === 'loading',
+        aiOpacity: gen.status === 'loading' && gen.i !== i ? '0.5' : '1',
+        aiLabel: gen.i === i && gen.status === 'loading' ? 'Criando o site… (até 1 min)' : (gen.i === i && gen.status === 'done' ? 'Criar outra versão' : 'Criar site com IA'),
+        aiHasMsg: gen.i === i && !!gen.msg,
+        aiMsg: gen.i === i ? gen.msg : '',
+        aiMsgBg: gen.status === 'error' ? 'rgba(220,38,38,0.16)' : (gen.status === 'done' ? 'rgba(34,197,94,0.16)' : 'rgba(124,58,237,0.16)'),
+        aiMsgBorder: gen.status === 'error' ? 'rgba(248,113,113,0.5)' : (gen.status === 'done' ? 'rgba(74,222,128,0.5)' : 'rgba(167,139,250,0.5)'),
+        aiDone: gen.i === i && gen.status === 'done',
+        genSite: function () { self.genSite(i, metaPrompt); },
+        openSite: function () { self.openGen(); },
+        downloadSite: function () { self.downloadGen(nomeLocal); },
         toggleFav: function () {
           self.save({ favs: fav ? st.favs.filter(function (x) { return x !== i; }) : st.favs.concat([i]) });
         }
