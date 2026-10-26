@@ -501,19 +501,10 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 </div>
 </sc-if>
 <div style="display: flex; flex-direction: column; gap: 8px">
-<button class="btn" onClick="{{ n.genSite }}" disabled="{{ n.aiBusy }}" aria-busy="{{ n.aiLoading }}" style="min-height: 48px; padding: 0 20px; border: 0; border-radius: 999px; background: linear-gradient(135deg, #7C3AED, #DB2777); color: #FFFFFF; font-size: 15px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 10px 26px rgba(219,39,119,0.35); opacity: {{ n.aiOpacity }}">
+<button class="btn" onClick="{{ n.openAtelie }}" aria-expanded="{{ n.atOpen }}" aria-controls="atelie" style="min-height: 48px; padding: 0 20px; border: {{ n.atBorder }}; border-radius: 999px; background: linear-gradient(135deg, #7C3AED, #DB2777); color: #FFFFFF; font-size: 15px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 10px 26px rgba(219,39,119,0.35)">
 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9zM5 2l.6 1.4L7 4l-1.4.6L5 6l-.6-1.4L3 4l1.4-.6z"></path></svg>
-<span>{{ n.aiLabel }}</span>
+<span>{{ n.atLabel }}</span>
 </button>
-<sc-if value="{{ n.aiHasMsg }}" hint-placeholder-val="{{ false }}">
-<div role="status" style="padding: 10px 12px; border-radius: 12px; background: {{ n.aiMsgBg }}; border: 1px solid {{ n.aiMsgBorder }}; color: #FFFFFF; font-size: 13px; line-height: 1.45">{{ n.aiMsg }}</div>
-</sc-if>
-<sc-if value="{{ n.aiDone }}" hint-placeholder-val="{{ false }}">
-<div style="display: flex; gap: 8px; flex-wrap: wrap">
-<button class="btn" onClick="{{ n.openSite }}" style="flex: 1 1 120px; height: 44px; padding: 0 14px; border: 0; border-radius: 999px; background: #16A34A; color: #FFFFFF; font-size: 14px; font-weight: 700; cursor: pointer">Abrir site</button>
-<button class="ghost" onClick="{{ n.downloadSite }}" style="flex: 1 1 120px; height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid #4ADE80; background: transparent; color: #FFFFFF; font-size: 14px; font-weight: 700; cursor: pointer">Baixar HTML</button>
-</div>
-</sc-if>
 <button class="btn" onClick="{{ n.copy }}" style="height: 44px; padding: 0 20px; border: 0; border-radius: 999px; background: {{ n.btnBg }}; color: #FFFFFF; font-size: 14px; font-weight: 700; cursor: pointer">{{ n.copyLabel }}</button>
 <button class="ghost" onClick="{{ n.copyMeta }}" style="height: 44px; padding: 0 20px; border-radius: 999px; border: 1px solid {{ n.btnBg }}; background: transparent; color: #FFFFFF; font-size: 14px; font-weight: 700; cursor: pointer">{{ n.metaLabel }}</button>
 <a class="ghost" href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer" style="height: 44px; padding: 0 20px; border-radius: 999px; border: 1px solid #10A37F; background: rgba(16,163,127,0.14); color: #FFFFFF; font-size: 14px; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px"><span>Entrar no ChatGPT</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg></a>
@@ -521,6 +512,85 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 </article>
 </sc-for>
 </div>
+<sc-if value="{{ atl.open }}" hint-placeholder-val="{{ false }}">
+<section id="atelie" aria-labelledby="atelie-title" style="background: linear-gradient(160deg, rgba(124,58,237,0.22), rgba(32,24,72,0.75) 45%); backdrop-filter: blur(16px); border: 2px solid #A78BFA; border-radius: 28px; padding: 22px; display: flex; flex-direction: column; gap: 18px; box-shadow: 0 0 0 4px rgba(124,58,237,0.18), 0 24px 60px rgba(3,8,24,0.55); scroll-margin-top: 90px">
+<div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span style="font-family: Cinzel, Georgia, serif; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; color: #FFE7B3">ATELIÊ DO SITE</span>
+<h2 id="atelie-title" style="margin: 0; font-size: 24px; font-weight: 800; line-height: 1.25">{{ atl.title }}</h2>
+<p style="margin: 0; font-size: 14px; color: #D6D0F0">Preencha os dados e envie as fotos. Quanto mais completo, mais profissional fica o site. Idioma do site: <strong>{{ atl.langName }}</strong> (troque no seletor de idioma acima).</p>
+</div>
+<button class="ghost" onClick="{{ atl.close }}" aria-label="Fechar o Ateliê" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; border: 1px solid #3B2F6B; background: transparent; color: #FFFFFF; font-size: 20px; cursor: pointer">×</button>
+</div>
+
+<div style="background: rgba(20,15,46,0.55); border: 1px solid #3B2F6B; border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 14px">
+<h3 style="margin: 0; font-size: 17px; display: flex; align-items: center; gap: 10px"><span style="width: 30px; height: 30px; border-radius: 10px; background: linear-gradient(135deg, #7C3AED, #DB2777); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0">1</span>Dados da empresa <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.08em; padding: 3px 8px; border-radius: 999px; border: 1px solid rgba(244,114,182,0.6); color: #F9A8D4">OBRIGATÓRIO</span></h3>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr)); gap: 12px">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #B9B2DA"><span>Nome da empresa *</span><input type="text" maxLength="120" placeholder="Ex.: Padaria Lisboa" value="{{ atl.info.nome }}" onChange="{{ atl.onNome }}" style="height: 46px; width: 100%; padding: 0 12px; border-radius: 12px; border: 1px solid {{ atl.b_nome }}; background: #140F2E; color: #FFFFFF; font-size: 15px"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #B9B2DA"><span>Cidade / País *</span><input type="text" maxLength="120" placeholder="Ex.: Lisboa, Portugal" value="{{ atl.info.cidade }}" onChange="{{ atl.onCidade }}" style="height: 46px; width: 100%; padding: 0 12px; border-radius: 12px; border: 1px solid {{ atl.b_cidade }}; background: #140F2E; color: #FFFFFF; font-size: 15px"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #B9B2DA"><span>WhatsApp (com código do país) *</span><input type="tel" maxLength="30" placeholder="+351 912 345 678" value="{{ atl.info.whats }}" onChange="{{ atl.onWhats }}" style="height: 46px; width: 100%; padding: 0 12px; border-radius: 12px; border: 1px solid {{ atl.b_whats }}; background: #140F2E; color: #FFFFFF; font-size: 15px"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #B9B2DA"><span>Instagram ou site atual</span><input type="text" maxLength="200" placeholder="@empresa" value="{{ atl.info.insta }}" onChange="{{ atl.onInsta }}" style="height: 46px; width: 100%; padding: 0 12px; border-radius: 12px; border: 1px solid {{ atl.b_insta }}; background: #140F2E; color: #FFFFFF; font-size: 15px"></label>
+</div>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #B9B2DA"><span>Serviços, diferenciais e informações * (o que faz, preços, horário, endereço)</span><textarea maxLength="1500" value="{{ atl.info.extra }}" onChange="{{ atl.onExtra }}" style="min-height: 96px; width: 100%; padding: 10px 12px; border-radius: 12px; border: 1px solid {{ atl.b_extra }}; background: #140F2E; color: #FFFFFF; font-size: 15px; line-height: 1.5; resize: vertical"></textarea></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #B9B2DA"><span>Cores ou estilo preferido</span><input type="text" maxLength="200" placeholder="Ex.: dourado e preto, elegante e moderno" value="{{ atl.info.estilo }}" onChange="{{ atl.onEstilo }}" style="height: 46px; width: 100%; padding: 0 12px; border-radius: 12px; border: 1px solid {{ atl.b_estilo }}; background: #140F2E; color: #FFFFFF; font-size: 15px"></label>
+</div>
+
+<div style="background: rgba(20,15,46,0.55); border: 1px solid #3B2F6B; border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 14px">
+<h3 style="margin: 0; font-size: 17px; display: flex; align-items: center; gap: 10px"><span style="width: 30px; height: 30px; border-radius: 10px; background: linear-gradient(135deg, #7C3AED, #DB2777); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0">2</span>Fotos da empresa <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.08em; padding: 3px 8px; border-radius: 999px; border: 1px solid rgba(244,114,182,0.6); color: #F9A8D4">OBRIGATÓRIO</span></h3>
+<label style="position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; min-height: 110px; padding: 16px; border-radius: 18px; border: 2px dashed {{ atl.b_fotos }}; background: rgba(13,10,38,0.6); cursor: pointer; text-align: center; color: #D6D0F0; font-size: 14px">
+<input type="file" accept="image/*" multiple onChange="{{ atl.onPhotos }}" style="position: absolute; inset: 0; opacity: 0; cursor: pointer">
+<strong style="color: #FFFFFF">Clique para escolher as fotos</strong>
+<span style="font-size: 12px; color: #B9B2DA">De 1 a 12 fotos (fachada, produtos, equipe, ambiente). A primeira vira a foto principal.</span>
+</label>
+<sc-if value="{{ atl.hasPhotos }}" hint-placeholder-val="{{ false }}">
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 10px">
+<sc-for list="{{ atl.photos }}" as="ph" hint-placeholder-count="3">
+<div style="position: relative; aspect-ratio: 1; border-radius: 14px; overflow: hidden; border: 1px solid #3B2F6B; background: #140F2E">
+<img src="{{ ph.src }}" alt="{{ ph.label }}" style="width: 100%; height: 100%; object-fit: cover; display: block">
+<span style="position: absolute; left: 6px; bottom: 6px; font-size: 11px; font-weight: 700; background: rgba(7,5,26,0.85); padding: 2px 6px; border-radius: 999px">{{ ph.label }}</span>
+<button onClick="{{ ph.remove }}" aria-label="Remover {{ ph.label }}" style="position: absolute; top: 6px; right: 6px; width: 30px; height: 30px; border-radius: 999px; border: 0; background: rgba(7,5,26,0.85); color: #FFFFFF; cursor: pointer; font-size: 16px; line-height: 1">×</button>
+</div>
+</sc-for>
+</div>
+</sc-if>
+</div>
+
+<div style="background: rgba(20,15,46,0.55); border: 1px solid #3B2F6B; border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 14px">
+<h3 style="margin: 0; font-size: 17px; display: flex; align-items: center; gap: 10px"><span style="width: 30px; height: 30px; border-radius: 10px; background: linear-gradient(135deg, #7C3AED, #DB2777); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0">3</span>Efeito premium <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.08em; padding: 3px 8px; border-radius: 999px; border: 1px solid #3B2F6B; color: #B9B2DA">OPCIONAL</span></h3>
+<label style="display: flex; align-items: flex-start; gap: 12px; padding: 14px; border-radius: 16px; border: 1px solid #3B2F6B; background: rgba(13,10,38,0.6); cursor: pointer">
+<input type="checkbox" checked="{{ atl.premium }}" onChange="{{ atl.togglePremium }}" style="width: 22px; height: 22px; margin: 2px 0 0; flex-shrink: 0; accent-color: #7C3AED">
+<span style="display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 15px">Adicionar efeito premium de rolagem (opcional)</strong><span style="font-size: 12px; color: #B9B2DA">Uma animação que avança conforme o cliente rola a página, logo depois do topo do site. Precisa de uma sequência de imagens (frames).</span></span>
+</label>
+<sc-if value="{{ atl.premium }}" hint-placeholder-val="{{ false }}">
+<label style="position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; min-height: 100px; padding: 16px; border-radius: 18px; border: 2px dashed #3B2F6B; background: rgba(13,10,38,0.6); cursor: pointer; text-align: center; color: #D6D0F0; font-size: 14px">
+<input type="file" accept="image/*" multiple onChange="{{ atl.onFrames }}" style="position: absolute; inset: 0; opacity: 0; cursor: pointer">
+<strong style="color: #FFFFFF">Clique para escolher os frames</strong>
+<span style="font-size: 12px; color: #B9B2DA">Selecione todas as imagens da sequência de uma vez (ex.: frame_001.jpg … frame_120.jpg). Ordenadas pelo nome. Até 300.</span>
+</label>
+<span style="font-size: 13px; color: #DDD2FF">{{ atl.framesInfo }}</span>
+<sc-if value="{{ atl.hasStrip }}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px">
+<sc-for list="{{ atl.strip }}" as="fr" hint-placeholder-count="6">
+<img src="{{ fr.src }}" alt="{{ fr.label }}" style="height: 56px; border-radius: 8px; border: 1px solid #3B2F6B; flex-shrink: 0">
+</sc-for>
+</div>
+</sc-if>
+</sc-if>
+</div>
+
+<sc-if value="{{ atl.hasMsg }}" hint-placeholder-val="{{ false }}">
+<div role="status" style="padding: 12px 14px; border-radius: 14px; background: {{ atl.msgBg }}; border: 1px solid {{ atl.msgBorder }}; color: #FFFFFF; font-size: 14px; line-height: 1.45">{{ atl.msg }}</div>
+</sc-if>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center">
+<button class="btn" onClick="{{ atl.generate }}" disabled="{{ atl.busy }}" style="flex: 1 1 240px; min-height: 54px; padding: 0 24px; border: 0; border-radius: 999px; background: linear-gradient(135deg, #7C3AED, #DB2777); color: #FFFFFF; font-size: 16px; font-weight: 800; cursor: pointer; box-shadow: 0 12px 30px rgba(219,39,119,0.35); opacity: {{ atl.goOpacity }}">{{ atl.goLabel }}</button>
+<sc-if value="{{ atl.done }}" hint-placeholder-val="{{ false }}">
+<button class="btn" onClick="{{ atl.openSite }}" style="flex: 1 1 140px; min-height: 54px; padding: 0 18px; border: 0; border-radius: 999px; background: #16A34A; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer">Abrir site</button>
+<button class="ghost" onClick="{{ atl.downloadSite }}" style="flex: 1 1 140px; min-height: 54px; padding: 0 18px; border-radius: 999px; border: 1px solid #4ADE80; background: transparent; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer">Baixar HTML</button>
+</sc-if>
+</div>
+<span style="font-size: 12px; color: #B9B2DA">Leva até 1 minuto. Custa só alguns centavos do saldo da IA. As fotos e os dados ficam só neste navegador.</span>
+</section>
+</sc-if>
 </section>
 </sc-if>
 
@@ -1416,33 +1486,161 @@ class Component extends DCLogic {
     };
   }
 
-  genSite(i, prompt) {
+  openAtelie(i) {
+    var cur = this.state.at;
+    if (!cur || cur.i !== i) { this.atPhotos = []; this.atFrames = []; this.genHtml = ''; }
+    this.setState({ at: Object.assign({ premium: false }, cur && cur.i === i ? cur : {}, { i: i, missing: null }) });
+    setTimeout(function () { var el = document.getElementById('atelie'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 80);
+  }
+  atPatch(patch) { this.setState({ at: Object.assign({}, this.state.at, patch) }); }
+  shrinkImage(file, maxW, quality) {
+    return new Promise(function (resolve, reject) {
+      var url = URL.createObjectURL(file);
+      var img = new Image();
+      img.onload = function () {
+        var sc = Math.min(1, maxW / img.naturalWidth);
+        var w = Math.round(img.naturalWidth * sc), h = Math.round(img.naturalHeight * sc);
+        var c = document.createElement('canvas'); c.width = w; c.height = h;
+        c.getContext('2d').drawImage(img, 0, 0, w, h);
+        URL.revokeObjectURL(url);
+        resolve(c.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = function () { URL.revokeObjectURL(url); reject(new Error('Não consegui ler a imagem ' + file.name)); };
+      img.src = url;
+    });
+  }
+  atAddPhotos(e) {
     var self = this;
-    if (self.state.gen && self.state.gen.status === 'loading') return;
+    var files = Array.prototype.slice.call((e.target && e.target.files) || []).filter(function (f) { return /^image\//.test(f.type); });
+    try { e.target.value = ''; } catch (x) {}
+    self.atPhotos = self.atPhotos || [];
+    var room = Math.max(0, 12 - self.atPhotos.length);
+    var note = files.length > room ? 'Máximo de 12 fotos: usei as primeiras ' + room + '.' : '';
+    files = files.slice(0, room);
+    Promise.all(files.map(function (f) { return self.shrinkImage(f, 1600, 0.82); })).then(function (list) {
+      self.atPhotos = self.atPhotos.concat(list);
+      var miss = Object.assign({}, (self.state.at || {}).missing || {}); delete miss.fotos;
+      self.atPatch({ missing: miss, msg: note, status: note ? 'info' : (self.state.at || {}).status });
+    }).catch(function (err) { self.atPatch({ status: 'error', msg: err.message }); });
+  }
+  atAddFrames(e) {
+    var self = this;
+    var files = Array.prototype.slice.call((e.target && e.target.files) || []).filter(function (f) { return /^image\//.test(f.type); });
+    try { e.target.value = ''; } catch (x) {}
+    files.sort(function (a, b) { return a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }); });
+    var cut = files.length > 300; files = files.slice(0, 300);
+    var out = new Array(files.length), i = 0;
+    self.atPatch({ framesInfo: 'Preparando ' + files.length + ' frames…' });
+    (function next() {
+      if (i >= files.length) {
+        self.atFrames = out.filter(Boolean);
+        self.atPatch({ framesInfo: self.atFrames.length ? self.atFrames.length + ' frames prontos' + (cut ? ' (limite de 300)' : '') + '.' : 'Nenhum frame selecionado.' });
+        return;
+      }
+      self.shrinkImage(files[i], 1280, 0.72).then(function (d) { out[i] = d; }).catch(function () {}).then(function () {
+        i++; if (i % 10 === 0) self.atPatch({ framesInfo: 'Preparando frames… ' + i + '/' + files.length });
+        next();
+      });
+    })();
+  }
+  atPrompt(nicho, info, lang, nPhotos, premium) {
+    var digits = String(info.whats || '').replace(/\D/g, '');
+    var fotos = [];
+    for (var i = 1; i <= nPhotos; i++) fotos.push('- FOTO_' + i + (i === 1 ? ' (foto principal, use no hero)' : ''));
+    return [
+      'Crie o site completo de uma empresa real, pronto para publicar.',
+      '',
+      'DADOS DA EMPRESA',
+      '- Nome: ' + info.nome,
+      '- Nicho: ' + nicho,
+      '- Cidade/País: ' + info.cidade,
+      '- WhatsApp: ' + info.whats + (digits.length >= 8 ? ' (link: https://wa.me/' + digits + ')' : ''),
+      info.insta ? '- Instagram/site atual: ' + info.insta : '',
+      '- Serviços, diferenciais e informações: ' + info.extra,
+      info.estilo ? '- Cores/estilo preferido: ' + info.estilo : '',
+      '- Idioma de TODO o site: ' + lang,
+      '',
+      'FOTOS (OBRIGATÓRIO)',
+      'Use APENAS estas fotos, escrevendo o marcador exatamente como está no src (ex.: <img src="FOTO_2" alt="...">) ou em url(FOTO_1) no CSS:',
+      fotos.join('\n'),
+      'Inclua uma seção de GALERIA com todas as fotos. Não use outras imagens externas.',
+      '',
+      'ESTRUTURA',
+      '- Cabeçalho com nome e menu; HERO com headline forte, subtítulo e botão de WhatsApp',
+      '- Sobre, serviços/produtos, diferenciais, galeria, depoimentos genéricos marcados como exemplo, perguntas frequentes, contato com mapa por link e botão flutuante de WhatsApp',
+      '- Visual premium, responsivo (celular primeiro), animações suaves, textos completos e persuasivos',
+      premium ? '\nEFEITO PREMIUM\nEscreva exatamente a linha <!--SORA_SCROLLSCRUB--> sozinha, logo DEPOIS do fechamento da seção hero e ANTES da próxima seção. Não crie nada no lugar dela.' : ''
+    ].filter(function (l) { return l !== ''; }).join('\n');
+  }
+  scrollScrubHtml(frames) {
+    if (!frames || !frames.length) return '';
+    return '<section class="sora-scrollscrub" aria-label="Animação" style="position:relative;height:250vh;margin:0;padding:0;background:#000">' +
+      '<div style="position:sticky;top:0;height:100vh;width:100%;overflow:hidden"><canvas style="display:block;width:100%;height:100%"></canvas></div></section>\n' +
+      '<script>(function ScrollScrub(frames){var sec=document.currentScript.previousElementSibling;if(!sec||!frames.length)return;' +
+      'var cv=sec.querySelector("canvas"),ctx=cv.getContext("2d"),imgs=frames.map(function(src){var i=new Image();i.decoding="async";i.src=src;return i;}),cur=-1,ticking=false;' +
+      'function size(){var r=window.devicePixelRatio||1;cv.width=Math.round(cv.clientWidth*r);cv.height=Math.round(cv.clientHeight*r);cur=-1;draw();}' +
+      'function index(){var top=sec.getBoundingClientRect().top,range=sec.offsetHeight-window.innerHeight;var p=range>0?Math.min(1,Math.max(0,-top/range)):0;return Math.round(p*(frames.length-1));}' +
+      'function paint(i){var im=imgs[i];if(!im||!im.complete||!im.naturalWidth){for(var k=i;k>=0;k--){if(imgs[k].complete&&imgs[k].naturalWidth){im=imgs[k];break;}}}if(!im||!im.naturalWidth)return;' +
+      'var s=Math.max(cv.width/im.naturalWidth,cv.height/im.naturalHeight),w=im.naturalWidth*s,h=im.naturalHeight*s;ctx.clearRect(0,0,cv.width,cv.height);ctx.drawImage(im,(cv.width-w)/2,(cv.height-h)/2,w,h);}' +
+      'function draw(){ticking=false;var i=index();if(i!==cur){cur=i;paint(i);}}' +
+      'function onScroll(){if(!ticking){ticking=true;requestAnimationFrame(draw);}}' +
+      'window.addEventListener("scroll",onScroll,{passive:true});window.addEventListener("resize",size);imgs[0].onload=size;size();' +
+      'imgs.forEach(function(im,k){im.addEventListener("load",function(){if(k===cur)paint(k);});});' +
+      '})(' + JSON.stringify(frames) + ');<\/script>';
+  }
+  atAssemble(html, photos, frames, premium) {
+    var out = html;
+    for (var i = photos.length; i >= 1; i--) out = out.split('FOTO_' + i).join(photos[i - 1]);
+    out = out.replace(/FOTO_\d+/g, photos[0]);
+    var block = premium ? this.scrollScrubHtml(frames) : '';
+    var marker = /<!--\s*SORA_SCROLLSCRUB\s*-->/i;
+    if (marker.test(out)) out = out.replace(marker, function () { return block; });
+    else if (block) {
+      var m = out.match(/<\/section>/i) || out.match(/<\/header>/i);
+      if (m) { var at = out.indexOf(m[0]) + m[0].length; out = out.slice(0, at) + '\n' + block + out.slice(at); }
+      else out = out.replace(/<\/body>/i, function () { return block + '</body>'; });
+    }
+    return out;
+  }
+  atGenerate(i, nicho, langName) {
+    var self = this, st = self.state, atS = st.at || {};
+    if (atS.status === 'loading') return;
+    var info = Object.assign({}, (st.nichoInfo || {})[i] || {});
+    ['nome', 'whats', 'cidade', 'insta', 'extra', 'estilo'].forEach(function (k) { info[k] = String(info[k] || '').trim(); });
+    var missing = {};
+    ['nome', 'cidade', 'whats', 'extra'].forEach(function (k) { if (!info[k]) missing[k] = true; });
+    var photos = (self.atPhotos || []).slice();
+    if (!photos.length) missing.fotos = true;
+    if (Object.keys(missing).length) {
+      self.atPatch({ missing: missing, status: 'error', msg: missing.fotos && Object.keys(missing).length === 1 ? 'Envie pelo menos 1 foto no passo 2.' : 'Preencha os campos obrigatórios (marcados em vermelho)' + (missing.fotos ? ' e envie pelo menos 1 foto.' : '.') });
+      return;
+    }
     var client = window.soraAuth;
-    if (!client) { self.setState({ gen: { i: i, status: 'error', msg: 'Disponível no site do Sora, depois de entrar na sua conta.' } }); return; }
+    if (!client) { self.atPatch({ status: 'error', msg: 'Disponível no site do Sora, depois de entrar na sua conta.' }); return; }
+    var frames = (self.atFrames || []).slice();
+    var premium = !!atS.premium, usePremium = premium && frames.length > 0;
     self.genHtml = '';
-    self.setState({ gen: { i: i, status: 'loading', msg: 'A IA está criando o site com o Meta Prompt deste nicho. Isso leva até 1 minuto, não feche a página.' } });
+    self.atPatch({ missing: null, status: 'loading', msg: 'A IA está criando o site' + (usePremium ? ' com o efeito premium' : '') + '. Isso leva até 1 minuto, não feche a página.' });
     client.auth.getSession().then(function (r) {
       var s = r && r.data && r.data.session;
       if (!s) throw new Error('Faça login para criar sites.');
       return fetch('https://aemnqozofjmvuweyyekp.supabase.co/functions/v1/gerar-site', {
         method: 'POST',
         headers: { 'content-type': 'application/json', authorization: 'Bearer ' + s.access_token },
-        body: JSON.stringify({ prompt: prompt })
+        body: JSON.stringify({ prompt: self.atPrompt(nicho, info, langName, photos.length, usePremium) })
       });
     }).then(function (res) {
       return res.json().catch(function () { return {}; }).then(function (j) {
         if (!res.ok || !j.html) throw new Error(j.error || 'Não foi possível criar o site agora. Tente de novo.');
-        return j;
+        return j.html;
       });
-    }).then(function (j) {
-      self.genHtml = j.html;
-      self.setState({ gen: { i: i, status: 'done', msg: 'Site criado! Clique em “Abrir site” para ver ou em “Baixar HTML” para guardar o arquivo.' } });
+    }).then(function (html) {
+      self.genHtml = self.atAssemble(html, photos, frames, usePremium);
+      self.atPatch({ status: 'done', msg: 'Site criado' + (usePremium ? ' com o efeito premium de rolagem' : (premium ? ' sem o efeito premium (nenhum frame foi enviado)' : '')) + '! Clique em “Abrir site” para ver ou em “Baixar HTML” para guardar o arquivo.' });
     }).catch(function (e) {
       var m = e && e.message ? e.message : '';
       if (/failed to fetch|network|load failed/i.test(m)) m = 'Sem conexão com o servidor. Verifique sua internet e tente de novo.';
-      self.setState({ gen: { i: i, status: 'error', msg: m || 'Não foi possível criar o site agora. Tente de novo.' } });
+      self.atPatch({ status: 'error', msg: m || 'Não foi possível criar o site agora. Tente de novo.' });
     });
   }
   openGen() {
@@ -1879,6 +2077,58 @@ class Component extends DCLogic {
       it: function (n) { return 'Buongiorno, come sta?\nHo visitato il suo profilo e ho notato che non ha ancora un sito web, e potrebbe perdere clienti per questo.\nCreo siti web per ' + n + ' e vorrei realizzare il suo gratuitamente e senza impegno.\nCreo il sito completo, le mostro il risultato e paga solo se le piace. Se non le piace, non paga nulla.\nPosso prepararle un primo modello in poche ore e inviarglielo. Posso procedere?'; }
     };
     var pl = pitchT[st.pitchLang] ? st.pitchLang : 'pt';
+    var langNames = { pt: 'Português', en: 'English', es: 'Español', fr: 'Français', de: 'Deutsch', it: 'Italiano' };
+    var atS = st.at || {};
+    var atI = typeof atS.i === 'number' ? atS.i : -1;
+    var at = { open: false };
+    if (atI >= 0 && nichoDefs[atI]) {
+      var aInfo = (st.nichoInfo && st.nichoInfo[atI]) || {};
+      var aSet = function (field) {
+        return function (e) {
+          var cur = Object.assign({}, (self.state.nichoInfo || {})[atI] || {});
+          cur[field] = e.target.value;
+          var all = Object.assign({}, self.state.nichoInfo || {});
+          all[atI] = cur;
+          self.save({ nichoInfo: all });
+          var m0 = (self.state.at || {}).missing;
+          if (m0 && m0[field] && String(e.target.value).trim()) { var m1 = Object.assign({}, m0); delete m1[field]; self.atPatch({ missing: m1 }); }
+        };
+      };
+      var miss = atS.missing || {};
+      var bad = function (k) { return miss[k] ? '#F87171' : '#3B2F6B'; };
+      var aPhotos = self.atPhotos || [], aFrames = self.atFrames || [];
+      var step = Math.max(1, Math.ceil(aFrames.length / 12));
+      var busy = atS.status === 'loading';
+      at = {
+        open: true,
+        title: 'Site para ' + (pl === 'pt' ? nichoDefs[atI][0] : nichoNames[pl][atI]),
+        langName: langNames[pl] || 'Português',
+        info: { nome: aInfo.nome || '', whats: aInfo.whats || '', cidade: aInfo.cidade || '', insta: aInfo.insta || '', extra: aInfo.extra || '', estilo: aInfo.estilo || '' },
+        onNome: aSet('nome'), onWhats: aSet('whats'), onCidade: aSet('cidade'), onInsta: aSet('insta'), onExtra: aSet('extra'), onEstilo: aSet('estilo'),
+        b_nome: bad('nome'), b_whats: bad('whats'), b_cidade: bad('cidade'), b_extra: bad('extra'), b_insta: '#3B2F6B', b_estilo: '#3B2F6B', b_fotos: miss.fotos ? '#F87171' : '#3B2F6B',
+        hasPhotos: aPhotos.length > 0,
+        photos: aPhotos.map(function (src, k) {
+          return { src: src, label: k === 0 ? 'Principal' : 'Foto ' + (k + 1), remove: function () { self.atPhotos.splice(k, 1); self.setState({ atV: Date.now() }); } };
+        }),
+        onPhotos: function (e) { self.atAddPhotos(e); },
+        premium: !!atS.premium,
+        togglePremium: function (e) { self.setState({ at: Object.assign({}, self.state.at, { premium: !!e.target.checked }) }); },
+        onFrames: function (e) { self.atAddFrames(e); },
+        framesInfo: atS.framesInfo || (aFrames.length ? aFrames.length + ' frames prontos.' : 'Nenhum frame enviado ainda.'),
+        hasStrip: aFrames.length > 0,
+        strip: aFrames.filter(function (_, k) { return k % step === 0; }).map(function (src, k) { return { src: src, label: 'Frame ' + (k * step + 1) }; }),
+        hasMsg: !!atS.msg, msg: atS.msg || '',
+        msgBg: atS.status === 'error' ? 'rgba(220,38,38,0.16)' : (atS.status === 'done' ? 'rgba(34,197,94,0.16)' : 'rgba(124,58,237,0.16)'),
+        msgBorder: atS.status === 'error' ? 'rgba(248,113,113,0.5)' : (atS.status === 'done' ? 'rgba(74,222,128,0.5)' : 'rgba(167,139,250,0.5)'),
+        busy: busy, goOpacity: busy ? '0.6' : '1',
+        goLabel: busy ? 'Criando o site… (até 1 min)' : (atS.status === 'done' ? '✨ Gerar outra versão' : '✨ Gerar site com IA'),
+        generate: function () { self.atGenerate(atI, pl === 'pt' ? nichoDefs[atI][0] : nichoNames[pl][atI], langNames[pl] || 'Português'); },
+        done: atS.status === 'done',
+        openSite: function () { self.openGen(); },
+        downloadSite: function () { self.downloadGen(aInfo.nome || nichoDefs[atI][0]); },
+        close: function () { self.setState({ at: null }); }
+      };
+    }
     var pitchLangs = [['pt', 'Português'], ['en', 'English'], ['es', 'Español'], ['fr', 'Français'], ['de', 'Deutsch'], ['it', 'Italiano']].map(function (p) {
       var on = pl === p[0];
       return {
@@ -1923,7 +2173,6 @@ class Component extends DCLogic {
     var rootClass = 'sora notranslate' + (cfg.spaceBg ? '' : ' plain') + (cfg.motion ? '' : ' calm');
     var nnq = norm(st.nq);
     var nichos = [];
-    var gen = st.gen || {};
     nichoDefs.forEach(function (d, i) {
       var fav = st.favs.indexOf(i) !== -1;
       if (st.favOnly && !fav) return;
@@ -1961,18 +2210,10 @@ class Component extends DCLogic {
         toggleInfo: function () { self.setState({ infoOpen: st.infoOpen === i ? -1 : i }); },
         metaLabel: st.copied === metaKey ? 'Meta Prompt copiado' : 'Copiar Meta Prompt',
         copyMeta: function () { self.copyText(metaKey, metaPrompt); },
-        aiLoading: gen.i === i && gen.status === 'loading',
-        aiBusy: gen.status === 'loading',
-        aiOpacity: gen.status === 'loading' && gen.i !== i ? '0.5' : '1',
-        aiLabel: gen.i === i && gen.status === 'loading' ? 'Criando o site… (até 1 min)' : (gen.i === i && gen.status === 'done' ? 'Criar outra versão' : 'Criar site com IA'),
-        aiHasMsg: gen.i === i && !!gen.msg,
-        aiMsg: gen.i === i ? gen.msg : '',
-        aiMsgBg: gen.status === 'error' ? 'rgba(220,38,38,0.16)' : (gen.status === 'done' ? 'rgba(34,197,94,0.16)' : 'rgba(124,58,237,0.16)'),
-        aiMsgBorder: gen.status === 'error' ? 'rgba(248,113,113,0.5)' : (gen.status === 'done' ? 'rgba(74,222,128,0.5)' : 'rgba(167,139,250,0.5)'),
-        aiDone: gen.i === i && gen.status === 'done',
-        genSite: function () { self.genSite(i, metaPrompt); },
-        openSite: function () { self.openGen(); },
-        downloadSite: function () { self.downloadGen(nomeLocal); },
+        atOpen: atI === i,
+        atLabel: atI === i ? 'Ateliê aberto abaixo ↓' : 'Criar site com IA',
+        atBorder: atI === i ? '2px solid #FFE7B3' : '0',
+        openAtelie: function () { self.openAtelie(i); },
         toggleFav: function () {
           self.save({ favs: fav ? st.favs.filter(function (x) { return x !== i; }) : st.favs.concat([i]) });
         }
@@ -2078,6 +2319,7 @@ class Component extends DCLogic {
       modules: modules,
       lessons: lessons,
       videos: videos,
+      atl: at,
       tools: toolSets[st.mod] || [],
       doneCount: doneCount,
       cur: cur,
