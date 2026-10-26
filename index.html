@@ -519,6 +519,17 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 <button class="ghost" onClick="{{ radar.close }}" aria-label="Fechar o Radar" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; border: 1px solid #3B2F6B; background: transparent; color: #FFFFFF; font-size: 20px; cursor: pointer">×</button>
 </div>
 
+<sc-if value="{{ radar.soon }}" hint-placeholder-val="{{ true }}">
+<div role="note" style="display: flex; align-items: center; gap: 14px; padding: 16px 18px; border-radius: 20px; background: linear-gradient(135deg, rgba(245,165,36,0.22), rgba(219,39,119,0.16)); border: 1px solid rgba(251,191,36,0.6); box-shadow: 0 12px 30px rgba(245,165,36,0.18)">
+<span aria-hidden="true" style="flex-shrink: 0; width: 46px; height: 46px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; background: rgba(13,10,38,0.55); border: 1px solid rgba(251,191,36,0.45)">🚀</span>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span style="align-self: flex-start; padding: 3px 10px; border-radius: 999px; background: #F59E0B; color: #1A1206; font-size: 11px; font-weight: 800; letter-spacing: 0.1em">EM BREVE</span>
+<strong style="font-size: 16px; color: #FFFFFF">A busca de empresas reais está chegando!</strong>
+<span style="font-size: 14px; color: #F3E8D2; line-height: 1.45">Estamos finalizando a conexão com o Google. Por enquanto, os resultados são só <strong>exemplos</strong> para você conhecer como vai funcionar.</span>
+</div>
+</div>
+</sc-if>
+
 <div style="background: linear-gradient(150deg, rgba(14,165,233,0.16), rgba(32,24,72,0.7) 55%); backdrop-filter: blur(16px); border: 1px solid rgba(125,211,252,0.35); border-radius: 24px; padding: 20px; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 18px 48px rgba(3,8,24,0.45)">
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 14px">
 <label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: #D6D0F0"><span>País</span>
@@ -563,8 +574,8 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 </div>
 <button class="ghost" onClick="{{ radar.refresh }}" style="height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.35); background: transparent; color: #FFFFFF; font-size: 14px; font-weight: 700; cursor: pointer">Buscar de novo</button>
 </div>
-<sc-if value="{{ radar.mock }}" hint-placeholder-val="{{ false }}">
-<div style="padding: 12px 14px; border-radius: 14px; background: rgba(245,165,36,0.14); border: 1px solid rgba(245,165,36,0.5); color: #FFFFFF; font-size: 14px; line-height: 1.5">Modo demonstração: estas são empresas de <strong>exemplo</strong>, para você ver o layout. Para buscar empresas reais, coloque a chave <strong>GOOGLE_PLACES_API_KEY</strong> em Supabase → Edge Functions → Secrets.</div>
+<sc-if value="{{ radar.osm }}" hint-placeholder-val="{{ false }}">
+<div style="padding: 12px 14px; border-radius: 14px; background: rgba(14,165,233,0.12); border: 1px solid rgba(125,211,252,0.45); color: #FFFFFF; font-size: 14px; line-height: 1.5">Empresas reais do <strong>OpenStreetMap</strong> (mapa aberto e gratuito). Antes de abordar, clique em <strong>Ver no Google Maps</strong> para conferir se a empresa ainda funciona e se não tem site.</div>
 </sc-if>
 <sc-if value="{{ radar.empty }}" hint-placeholder-val="{{ false }}">
 <div style="border: 1px dashed #3B2F6B; border-radius: 24px; padding: 36px 20px; text-align: center; color: #D6D0F0">Todas as empresas encontradas já têm site. Tente outra cidade ou outro nicho.</div>
@@ -741,7 +752,7 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 <section class="screen" style="display: flex; flex-direction: column; gap: 20px">
 <div style="display: flex; flex-direction: column; gap: 4px">
 <h1 style="margin: 0; font-size: 30px; font-weight: 700; letter-spacing: -0.02em">Academia de Criação de Sites</h1>
-<p style="margin: 0; color: #B9B2DA">Aprenda do zero a criar e vender sites na Europa · {{ doneCount }} de 2 módulos concluídos</p>
+<p style="margin: 0; color: #B9B2DA">Aprenda do zero a criar e vender sites na Europa · {{ doneCount }} de 3 módulos concluídos</p>
 </div>
 
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 14px">
@@ -1002,6 +1013,7 @@ class Component extends DCLogic {
       salesLimit: 10,
       mods: [
         { url: '', notes: '', done: false },
+        { url: '', notes: '', done: false },
         { url: '', notes: '', done: false }
       ],
       agency: { name: '', logo: '', color: '#7C3AED', themeV: 4, owner: '', contact: '', brandHeader: false, spaceBg: true, motion: true },
@@ -1097,10 +1109,12 @@ class Component extends DCLogic {
           if (saved.radarCache && typeof saved.radarCache === 'object') base.radarCache = saved.radarCache;
           if (saved.radarQ && typeof saved.radarQ === 'object') base.radarQ = Object.assign({}, base.radarQ, saved.radarQ);
           if (Array.isArray(saved.sales)) base.sales = saved.sales;
-          if (Array.isArray(saved.mods) && saved.modsV === 3 && saved.mods.length === 2) base.mods = saved.mods;
+          var blankMod = { url: '', notes: '', done: false };
+          if (Array.isArray(saved.mods) && saved.modsV === 4 && saved.mods.length === 3) base.mods = saved.mods;
+          else if (Array.isArray(saved.mods) && saved.modsV === 3 && saved.mods.length === 2) base.mods = [blankMod, saved.mods[0], saved.mods[1]];
           else if (Array.isArray(saved.mods) && saved.mods.length === 4) {
-            // Academia agora tem só 2 módulos (Domínio e Receber em euro).
-            base.mods = saved.modsV === 2 ? [saved.mods[2], saved.mods[3]] : [saved.mods[1], saved.mods[3]];
+            // Academia: Encontrar Clientes, Domínio e Receber em euro.
+            base.mods = saved.modsV === 2 ? [saved.mods[0], saved.mods[2], saved.mods[3]] : [saved.mods[2], saved.mods[1], saved.mods[3]];
           }
           if (saved.agency && typeof saved.agency === 'object') {
             var oldTheme = saved.agency.themeV !== 4;
@@ -1440,7 +1454,7 @@ class Component extends DCLogic {
   persist() {
     try {
       window.localStorage.setItem(this.KEY, JSON.stringify({
-        rate: this.state.rate, sales: this.state.sales, mods: this.state.mods, modsV: 3,
+        rate: this.state.rate, sales: this.state.sales, mods: this.state.mods, modsV: 4,
         agency: this.state.agency, calc: this.state.calc, goal: this.state.goal, favs: this.state.favs, pitchLang: this.state.pitchLang, nichoInfo: this.state.nichoInfo, radarCache: this.state.radarCache, radarQ: this.state.radarQ, flowVars: this.state.flowVars, flowLang: this.state.flowLang
       }));
     } catch (e) {}
@@ -1663,7 +1677,7 @@ class Component extends DCLogic {
     var key = [q.country, city.toLowerCase(), q.niche].join('|');
     var cache = st.radarCache || {};
     if (!force && cache[key]) { self.setState({ radarView: key, radarError: '' }); return; }
-    var msgs = ['Varrendo ' + city + '…', 'Analisando 20 empresas no Google…', 'Verificando quem não tem site…', 'Separando os leads quentes…'];
+    var msgs = ['Varrendo ' + city + '…', 'Analisando as empresas da região…', 'Verificando quem não tem site…', 'Separando os leads quentes…'];
     var step = 0;
     self.setState({ radarBusy: { city: city, step: 0, msgs: msgs }, radarError: '', radarCityBad: false });
     clearInterval(self.radarTick);
@@ -1676,7 +1690,7 @@ class Component extends DCLogic {
         if (err) { self.setState({ radarBusy: null, radarError: err }); return; }
         var all = Object.assign({}, self.state.radarCache || {});
         var lds = (data.leads || []).map(function (l) { return String(q.niche).indexOf('card:') === 0 ? Object.assign({}, l, { niche: q.niche }) : l; });
-        all[key] = { country: q.country, city: city, niche: q.niche, leads: lds, analyzed: data.analyzed || 0, mock: !!data.mock, at: Date.now() };
+        all[key] = { country: q.country, city: city, niche: q.niche, leads: lds, analyzed: data.analyzed || 0, mock: !!data.mock, source: data.source || 'google', at: Date.now() };
         var keys = Object.keys(all).sort(function (a, b) { return all[b].at - all[a].at; });
         keys.slice(8).forEach(function (k) { delete all[k]; });
         self.save({ radarCache: all });
@@ -1724,6 +1738,7 @@ class Component extends DCLogic {
     if (c.facebook) list.push({ label: 'Facebook', href: c.facebook, bg: 'rgba(37,99,235,0.85)', border: '#60A5FA' });
     if (c.linktree) list.push({ label: 'Linktree', href: c.linktree, bg: 'rgba(22,163,74,0.35)', border: '#4ADE80' });
     if (c.tiktok) list.push({ label: 'TikTok', href: c.tiktok, bg: 'rgba(15,15,25,0.9)', border: '#A78BFA' });
+    if (c.email) list.push({ label: 'E-mail', href: c.email, bg: 'rgba(124,58,237,0.35)', border: '#A78BFA' });
     if (!c.instagram) list.push({ label: 'Procurar Instagram', href: 'https://www.google.com/search?q=' + encodeURIComponent(String(ld.name || '').replace(/\s*\(exemplo\)$/, '') + ' ' + (entry ? entry.city : '') + ' instagram'), bg: 'transparent', border: 'rgba(244,114,182,0.6)' });
     return list;
   }
@@ -1752,21 +1767,21 @@ class Component extends DCLogic {
       refresh: function () { if (entry) { self.save({ radarQ: Object.assign({}, st.radarQ, { country: entry.country, city: entry.city, niche: entry.niche }) }); } setTimeout(function () { self.radarSearch(true); }, 0); },
       busy: !!busy, btnOpacity: busy ? '0.65' : '1',
       btnLabel: busy ? 'Procurando…' : '🔍 Procurar Empresas Sem Site',
-      loadingTitle: busy ? busy.msgs[busy.step] : '', loadingSub: busy ? 'Buscando no Google e filtrando só quem NÃO tem site em ' + busy.city + '.' : '',
+      loadingTitle: busy ? busy.msgs[busy.step] : '', loadingSub: busy ? 'Buscando no mapa e filtrando só quem NÃO tem site em ' + busy.city + '.' : '',
       hasError: !!st.radarError, error: st.radarError || '',
-      hasResult: !busy && !!entry, mock: !!(entry && entry.mock), empty: !!(entry && !entry.leads.length)
+      hasResult: !busy && !!entry, mock: !!(entry && entry.mock), osm: !!(entry && entry.source === 'osm' && entry.leads.length), soon: !(entry && !entry.mock), empty: !!(entry && !entry.leads.length)
     };
     if (entry) {
       var n = entry.leads.length;
       r.counter = 'Encontramos ' + n + (n === 1 ? ' empresa' : ' empresas') + ' sem site em ' + entry.city + (entry.niche === 'todos' ? ' em todos os nichos' : ' no nicho ' + nicheLabel(entry.niche).toLowerCase());
       r.potential = 'Potencial de ' + fmt(n * price) + ' se fechar tudo a ' + fmt(price) + ' cada';
       var dt = new Date(entry.at);
-      r.meta = 'Analisamos ' + entry.analyzed + ' empresas no Google · resultado salvo em ' + dt.toLocaleDateString('pt-BR') + ' ' + dt.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+      r.meta = 'Analisamos ' + entry.analyzed + ' empresas ' + (entry.source === 'osm' ? 'no OpenStreetMap' : 'no Google') + ' · resultado salvo em ' + dt.toLocaleDateString('pt-BR') + ' ' + dt.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
       r.leads = entry.leads.map(function (ld) {
         return {
           name: ld.name, address: ld.address, mapsUrl: ld.mapsUrl, nicheLabel: nicheLabel(ld.niche),
-          ratingLabel: ld.rating ? String(ld.rating.toFixed ? ld.rating.toFixed(1) : ld.rating).replace('.', ',') + ' ★' : 'Sem nota',
-          reviewsLabel: (ld.reviews || 0) + ((ld.reviews || 0) === 1 ? ' avaliação' : ' avaliações'),
+          ratingLabel: ld.rating ? String(ld.rating.toFixed ? ld.rating.toFixed(1) : ld.rating).replace('.', ',') + ' ★' : (ld.reviews == null ? '' : 'Sem nota'),
+          reviewsLabel: ld.reviews == null ? '' : (ld.reviews || 0) + ((ld.reviews || 0) === 1 ? ' avaliação' : ' avaliações'),
           hasPhone: !!ld.phone, noPhone: !ld.phone, phone: ld.phone || '',
           tel: (self.radarContacts(ld, entry).tel) || '#',
           contacts: self.radarContactList(ld, entry),
@@ -1929,6 +1944,321 @@ class Component extends DCLogic {
     }
     return out;
   }
+  // Modelo premium: a IA escreve o conteúdo (JSON) e este modelo monta o visual do site.
+  siteTemplate(d, photos, scrub, year) {
+    d = d || {};
+    photos = (photos || []).filter(Boolean);
+    var esc = function (s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); };
+    var arr = function (a) { return Array.isArray(a) ? a.filter(Boolean) : []; };
+    var o = function (x) { return x && typeof x === 'object' ? x : {}; };
+    var marca = o(d.marca), hero = o(d.hero), sobre = o(d.sobre), serv = o(d.servicos), passos = o(d.passos), faq = o(d.faq),
+      cham = o(d.chamada), cont = o(d.contato), rot = o(d.rotulos), seo = o(d.seo);
+    var tema = ({ atelier: 1, clinica: 1, energia: 1 })[d.tema] ? d.tema : 'atelier';
+  
+    // ---- cores a partir da cor da marca
+    var hex = /^#?[0-9a-f]{6}$/i.test(String(d.cor || '')) ? String(d.cor).replace('#', '') : 'b08d57';
+    var r = parseInt(hex.slice(0, 2), 16) / 255, g = parseInt(hex.slice(2, 4), 16) / 255, b = parseInt(hex.slice(4, 6), 16) / 255;
+    var mx = Math.max(r, g, b), mn = Math.min(r, g, b), H = 0, S = 0, L = (mx + mn) / 2;
+    if (mx !== mn) {
+      var dd = mx - mn; S = L > 0.5 ? dd / (2 - mx - mn) : dd / (mx + mn);
+      H = mx === r ? (g - b) / dd + (g < b ? 6 : 0) : mx === g ? (b - r) / dd + 2 : (r - g) / dd + 4; H *= 60;
+    }
+    H = Math.round(H); S = Math.round(S * 100); L = Math.round(L * 100);
+    var hsl = function (h, s, l) { return 'hsl(' + h + ' ' + Math.max(0, Math.min(100, s)) + '% ' + Math.max(0, Math.min(100, l)) + '%)'; };
+    var acc, accInk, bg, bg2, ink, mute, line, dark, darkInk;
+    if (tema === 'atelier') {
+      acc = hsl(H, Math.max(S, 35), Math.min(Math.max(L, 52), 68)); accInk = hsl(H, 30, 9);
+      bg = hsl(H, Math.min(S, 18), 7); bg2 = hsl(H, Math.min(S, 16), 11); ink = hsl(H, 25, 93); mute = hsl(H, 10, 68); line = hsl(H, 14, 20);
+      dark = bg2; darkInk = ink;
+    } else if (tema === 'clinica') {
+      acc = hsl(H, Math.max(S, 45), Math.min(Math.max(L, 32), 44)); accInk = '#ffffff';
+      bg = hsl(H, 30, 98); bg2 = hsl(H, 40, 94); ink = hsl(H, 30, 13); mute = hsl(H, 12, 38); line = hsl(H, 22, 86);
+      dark = hsl(H, 35, 16); darkInk = hsl(H, 30, 96);
+    } else {
+      acc = hsl(H, Math.max(S, 70), Math.min(Math.max(L, 48), 56)); accInk = L > 62 ? hsl(H, 40, 10) : '#ffffff';
+      bg = hsl(H, 12, 97); bg2 = hsl(H, 20, 92); ink = hsl(H, 25, 8); mute = hsl(H, 8, 36); line = hsl(H, 10, 84);
+      dark = hsl(H, 30, 8); darkInk = hsl(H, 20, 96);
+    }
+    var fonts = {
+      atelier: { url: 'Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..600&family=Hanken+Grotesk:wght@400;500;600', disp: "'Bodoni Moda', Didot, Georgia, serif", body: "'Hanken Grotesk', system-ui, sans-serif" },
+      clinica: { url: 'Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Hanken+Grotesk:wght@400;500;600', disp: "'Bricolage Grotesque', system-ui, sans-serif", body: "'Hanken Grotesk', system-ui, sans-serif" },
+      energia: { url: 'Anton&family=Barlow:wght@400;500;600;700', disp: "Anton, Impact, 'Arial Narrow', sans-serif", body: "Barlow, system-ui, sans-serif" }
+    }[tema];
+  
+    // ---- dados
+    var nome = marca.nome || 'Empresa';
+    var digits = String(cont.whatsapp || cont.telefone || '').replace(/\D/g, '');
+    var wa = digits.length >= 8 ? 'https://wa.me/' + digits : '';
+    var waLink = function (label, cls) { return wa ? '<a class="' + cls + '" href="' + wa + '" target="_blank" rel="noopener">' + esc(label) + '</a>' : ''; };
+    var insta = String(cont.instagram || '').trim();
+    var instaUrl = /^https?:\/\//.test(insta) ? insta : (insta ? 'https://www.instagram.com/' + insta.replace(/^@/, '').replace(/\/.*/, '') : '');
+    var instaLabel = insta ? (/^https?:/.test(insta) ? insta.replace(/^https?:\/\/(www\.)?/, '') : '@' + insta.replace(/^@/, '')) : '';
+    var P = function (i) { return photos.length ? photos[i % photos.length] : ''; };
+    var items = arr(serv.itens).slice(0, 12), steps = arr(passos.itens).slice(0, 4), faqs = arr(faq.itens).slice(0, 6), facts = arr(d.destaques).slice(0, 4);
+    var paras = arr(sobre.paragrafos).slice(0, 4);
+    var mapQ = cont.mapa_busca || cont.endereco || '';
+    var L_ = function (k, def) { return esc(rot[k] || def); };
+  
+    // ---- CSS
+    var css = [
+      ':root{--acc:' + acc + ';--acc-ink:' + accInk + ';--bg:' + bg + ';--bg2:' + bg2 + ';--ink:' + ink + ';--mute:' + mute + ';--line:' + line + ';--dark:' + dark + ';--dark-ink:' + darkInk + ';--disp:' + fonts.disp + ';--body:' + fonts.body + '}',
+      '*,*::before,*::after{box-sizing:border-box}html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}',
+      'body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.65 var(--body);-webkit-font-smoothing:antialiased}',
+      'img{display:block;max-width:100%}a{color:inherit}',
+      'h1,h2,h3{font-family:var(--disp);font-weight:600;margin:0;line-height:1.05;letter-spacing:-0.01em;text-wrap:balance}',
+      'p{margin:0;text-wrap:pretty}',
+      '.wrap{width:min(1180px,100% - 40px);margin-inline:auto}',
+      'section{padding:clamp(72px,10vw,128px) 0}',
+      '.h2{font-size:clamp(34px,5vw,58px)}',
+      '.lead{color:var(--mute);font-size:clamp(17px,1.6vw,19px);max-width:58ch}',
+      '.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:54px;padding:0 28px;border-radius:999px;background:var(--acc);color:var(--acc-ink);font-weight:600;text-decoration:none;font-size:16px;transition:transform .2s ease, filter .2s ease}',
+      '.btn:hover{transform:translateY(-2px);filter:brightness(1.06)}',
+      '.btn.ghost{background:transparent;color:inherit;box-shadow:inset 0 0 0 1.5px currentColor}',
+      ':focus-visible{outline:3px solid var(--acc);outline-offset:3px}',
+      // nav
+      '.nav{position:fixed;inset:0 0 auto;z-index:50;transition:background .3s ease, box-shadow .3s ease}',
+      '.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px;height:76px}',
+      '.brand{font-family:var(--disp);font-size:24px;font-weight:600;text-decoration:none;letter-spacing:-0.01em}',
+      '.links{display:flex;align-items:center;gap:30px;font-size:15px;font-weight:500}.links a{text-decoration:none;opacity:.85}.links a:hover{opacity:1}',
+      '.links .btn{min-height:44px;padding:0 20px;font-size:15px;opacity:1}',
+      '@media (max-width:860px){.links a:not(.btn){display:none}}',
+      '@media (max-width:560px){.links .btn{display:none}.brand{font-size:21px}}',
+      '.brand{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:70vw}.links .btn{white-space:nowrap}',
+      'html,body{overflow-x:clip}',
+      '.nav.solid{background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 1px 0 var(--line)}',
+      // hero base
+      '.hero{position:relative;min-height:100svh;display:flex;padding:0;overflow:hidden}',
+      '.hero h1 span{display:block}',
+      '@media (prefers-reduced-motion:no-preference){.hero .in{animation:rise 1s cubic-bezier(.2,.7,.1,1) both}.hero .in:nth-child(2){animation-delay:.12s}.hero .in:nth-child(3){animation-delay:.24s}.hero .in:nth-child(4){animation-delay:.36s}@keyframes rise{from{opacity:0;transform:translateY(28px)}}}',
+      '.ctas{display:flex;flex-wrap:wrap;gap:12px}',
+      // facts strip
+      '.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0;border-block:1px solid var(--line)}',
+      '.fact{padding:28px 24px;border-inline-start:1px solid var(--line)}.fact:first-child{border-inline-start:0}',
+      '.fact b{display:block;font-family:var(--disp);font-size:22px;font-weight:600;line-height:1.2;margin-bottom:6px}.fact span{color:var(--mute);font-size:15px}',
+      '@media (max-width:640px){.fact{border-inline-start:0;border-top:1px solid var(--line)}.fact:first-child{border-top:0}}',
+      // about
+      '.about{display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(32px,6vw,88px);align-items:center}',
+      '.about figure{margin:0;position:relative}.about img{width:100%;aspect-ratio:4/5;object-fit:cover}',
+      '.about .txt{display:grid;gap:20px}.about .txt p{color:var(--mute);max-width:60ch}',
+      '@media (max-width:860px){.about{grid-template-columns:1fr}}',
+      // services
+      '.svc-head{display:grid;gap:16px;margin-bottom:48px}',
+      // steps (sequência real)
+      '.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:32px;margin-top:48px;counter-reset:s}',
+      '.step{counter-increment:s;display:grid;gap:10px}.step::before{content:counter(s);font-family:var(--disp);font-size:56px;line-height:1;color:var(--acc)}',
+      '.step h3{font-size:24px}.step p{color:var(--mute)}',
+      // gallery
+      '.gal{display:grid;grid-template-columns:repeat(12,1fr);grid-auto-rows:clamp(120px,16vw,220px);gap:12px;margin-top:44px}',
+      '.gal figure{display:block;overflow:hidden;margin:0}.gal img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}.gal figure:hover img{transform:scale(1.04)}',
+      '.gal figure:nth-child(6n+1){grid-column:span 7;grid-row:span 2}.gal figure:nth-child(6n+2){grid-column:span 5;grid-row:span 1}.gal figure:nth-child(6n+3){grid-column:span 5;grid-row:span 1}',
+      '.gal figure:nth-child(6n+4){grid-column:span 4;grid-row:span 1}.gal figure:nth-child(6n+5){grid-column:span 4;grid-row:span 1}.gal figure:nth-child(6n){grid-column:span 4;grid-row:span 1}',
+      '@media (max-width:700px){.gal{grid-template-columns:1fr 1fr;grid-auto-rows:150px}.gal figure:nth-child(n){grid-column:span 1;grid-row:span 1}.gal figure:nth-child(3n+1){grid-column:span 2;grid-row:span 2}}',
+      // faq
+      '.faq{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(32px,6vw,80px);align-items:start}',
+      '@media (max-width:860px){.faq{grid-template-columns:1fr}}',
+      'details{border-top:1px solid var(--line);padding:22px 0}details:last-child{border-bottom:1px solid var(--line)}',
+      'summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:20px;font-weight:600;font-size:18px}summary::-webkit-details-marker{display:none}',
+      'summary::after{content:"+";font-size:26px;line-height:1;color:var(--acc);transition:transform .25s ease}details[open] summary::after{transform:rotate(45deg)}',
+      'details p{color:var(--mute);margin-top:12px;max-width:62ch}',
+      // cta band
+      '.band{background:var(--dark);color:var(--dark-ink);text-align:center}',
+      '.band .wrap{display:grid;justify-items:center;gap:22px}.band p{opacity:.8;max-width:56ch}',
+      '.band h2{font-size:clamp(36px,6vw,72px);max-width:18ch}',
+      // contact
+      '.contact{display:grid;grid-template-columns:1fr 1.15fr;gap:clamp(32px,6vw,72px);align-items:stretch}',
+      '@media (max-width:860px){.contact{grid-template-columns:1fr}}',
+      '.clist{display:grid;gap:22px;margin:28px 0 32px}.clist div{display:grid;gap:2px}.clist dt{font-size:14px;color:var(--mute)}.clist dd{margin:0;font-size:18px;font-weight:500}.clist a{text-decoration:none;border-bottom:1px solid var(--line)}',
+      '.map{min-height:380px;border:0;width:100%;height:100%;filter:grayscale(.2)}',
+      'footer{padding:36px 0 110px;font-size:14px;color:var(--mute);border-top:1px solid var(--line)}footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}',
+      '.float{position:fixed;right:20px;bottom:20px;z-index:60;display:inline-flex;align-items:center;gap:10px;height:58px;padding:0 22px 0 18px;border-radius:999px;background:#1fa855;color:#fff;font-weight:600;text-decoration:none;box-shadow:0 12px 30px rgba(0,0,0,.25)}',
+      '.float svg{width:24px;height:24px}@media (max-width:520px){.float span{display:none}.float{padding:0;width:58px;justify-content:center}}'
+    ];
+  
+    // ---- variações de cada tema
+    if (tema === 'atelier') css.push(
+      'body{font-size:17px}.nav{color:var(--ink)}',
+      '.hero{color:#fff;align-items:flex-end}.hero .bgimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}',
+      '.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.45) 0%,rgba(0,0,0,.05) 35%,rgba(0,0,0,.25) 60%,' + bg + ' 100%)}',
+      '.hero .wrap{position:relative;z-index:1;padding:140px 0 clamp(56px,8vw,96px);display:grid;gap:26px}',
+      '.hero h1{font-size:clamp(52px,9.4vw,138px);font-weight:500;line-height:.95;letter-spacing:-0.02em;max-width:14ch}',
+      '.hero h1 em{font-style:italic;font-weight:400;color:var(--acc)}',
+      '.hero p{font-size:clamp(17px,1.8vw,21px);max-width:46ch;color:rgba(255,255,255,.85)}',
+      '.price{display:grid;grid-template-columns:1fr 1fr;column-gap:72px}',
+      '@media (max-width:860px){.price{grid-template-columns:1fr}}',
+      '.row{display:grid;grid-template-columns:auto 1fr auto;align-items:baseline;gap:14px;padding:22px 0;border-bottom:1px solid var(--line)}',
+      '.row h3{font-size:clamp(22px,2.4vw,28px);font-weight:500}.row .dots{border-bottom:1px dotted var(--mute);opacity:.6;transform:translateY(-6px)}',
+      '.row .pr{font-family:var(--disp);font-size:24px;color:var(--acc)}.row p{grid-column:1/-1;color:var(--mute);font-size:15px;margin-top:4px;max-width:52ch}',
+      '.alt{background:var(--bg2)}',
+      '.about figure::before{content:"";position:absolute;inset:18px -18px -18px 18px;border:1px solid var(--acc);opacity:.55}',
+      '.about img{position:relative}'
+    );
+    if (tema === 'clinica') css.push(
+      '.hero{align-items:center;background:radial-gradient(80% 60% at 90% 10%,var(--bg2),var(--bg))}',
+      '.hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(32px,5vw,72px);align-items:center;padding:120px 0 72px}',
+      '@media (max-width:900px){.hero .wrap{grid-template-columns:1fr;padding-top:110px}}',
+      '.hero .copy{display:grid;gap:24px}',
+      '.hero h1{font-size:clamp(44px,6.4vw,84px);font-weight:700;letter-spacing:-0.035em;line-height:1}',
+      '.hero h1 em{font-style:normal;color:var(--acc)}',
+      '.hero p{font-size:clamp(17px,1.7vw,20px);color:var(--mute);max-width:48ch}',
+      '.hero .pic{position:relative}.hero .pic img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:220px 220px 28px 28px}',
+      '.hero .badge{position:absolute;left:-18px;bottom:28px;background:#fff;color:var(--ink);border-radius:18px;padding:16px 20px;box-shadow:0 18px 40px rgba(0,0,0,.12);display:grid;gap:2px;max-width:260px}',
+      '.hero .badge b{font-size:15px}.hero .badge span{font-size:14px;color:var(--mute)}',
+      '@media (max-width:900px){.hero .badge{left:12px}}',
+      'h2,.h2{letter-spacing:-0.03em;font-weight:700}',
+      '.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}',
+      '.card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:28px;display:grid;gap:10px;align-content:start}',
+      '.card h3{font-size:22px;font-weight:700;letter-spacing:-0.02em}.card p{color:var(--mute);font-size:15.5px}.card .pr{font-weight:700;color:var(--acc);font-size:18px;margin-top:6px}',
+      '.alt{background:var(--bg2)}',
+      '.about img{border-radius:28px}.gal figure{border-radius:18px}.map{border-radius:24px}',
+      '.fact b{font-weight:700;letter-spacing:-0.02em}'
+    );
+    if (tema === 'energia') css.push(
+      'h1,h2,h3{font-weight:400;text-transform:uppercase;letter-spacing:.005em;line-height:.92}',
+      '.brand{text-transform:uppercase;font-size:26px;letter-spacing:.02em}',
+      '.nav:not(.solid){color:#fff}',
+      '.hero{color:#fff;align-items:flex-end;background:var(--dark)}.hero .bgimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55}',
+      '.hero::before{content:"";position:absolute;left:-10%;right:-10%;bottom:-1px;height:34%;background:var(--acc);transform:skewY(-5deg);transform-origin:left bottom;z-index:1}',
+      '.hero .wrap{position:relative;z-index:2;padding:140px 0 clamp(48px,7vw,80px);display:grid;gap:22px}',
+      '.hero h1{font-size:clamp(64px,13vw,190px);max-width:12ch;text-shadow:0 2px 30px rgba(0,0,0,.25)}',
+      '.hero h1 em{font-style:normal;color:var(--acc-ink)}',
+      '.hero p{font-size:clamp(18px,1.9vw,22px);max-width:44ch;font-weight:500;color:var(--acc-ink)}',
+      '.hero .btn{background:var(--dark);color:#fff}.hero .btn.ghost{background:transparent;color:var(--acc-ink)}',
+      '.h2{font-size:clamp(44px,7vw,96px)}',
+      '.bigrows{border-top:3px solid var(--ink)}',
+      '.big{display:grid;grid-template-columns:1fr auto;gap:8px 24px;align-items:center;padding:24px 0;border-bottom:1px solid var(--line)}',
+      '.big h3{font-size:clamp(28px,3.6vw,44px)}.big .pr{font-family:var(--disp);font-size:clamp(28px,3.4vw,42px);color:var(--acc)}.big p{grid-column:1/-1;color:var(--mute);max-width:62ch}',
+      '.alt{background:var(--dark);color:var(--dark-ink)}.alt .lead,.alt p{color:color-mix(in srgb,var(--dark-ink) 75%,transparent)}',
+      '.step::before{font-size:84px}',
+      '.band{background:var(--acc);color:var(--acc-ink)}',
+      '.band .btn{background:var(--dark);color:#fff}',
+      '.fact b{font-size:28px;text-transform:uppercase}'
+    );
+  
+    // ---- HTML
+    var waIcon = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.8-1.2.2-.6.2-1.1.1-1.2l-.4-.2z"/></svg>';
+    var title = String(hero.titulo || nome);
+    // destaca a última parte do título (depois da vírgula ou dos dois pontos) quando existir
+    var tparts = title.split(/([,:—–])\s*/);
+    var titleHtml = tparts.length >= 3 ? '<span>' + esc(tparts[0] + tparts[1]) + '</span><em>' + esc(tparts.slice(2).join(' ')) + '</em>' : esc(title);
+  
+    var nav = '<header class="nav" id="nav"><div class="wrap"><a class="brand" href="#top">' + esc(nome) + '</a><nav class="links" aria-label="Menu">' +
+      (paras.length ? '<a href="#sobre">' + L_('menu_sobre', 'Sobre') + '</a>' : '') +
+      (items.length ? '<a href="#servicos">' + L_('menu_servicos', 'Serviços') + '</a>' : '') +
+      (photos.length > 1 ? '<a href="#galeria">' + L_('menu_galeria', 'Galeria') + '</a>' : '') +
+      '<a href="#contato">' + L_('menu_contato', 'Contato') + '</a>' + waLink(hero.cta || 'WhatsApp', 'btn') + '</nav></div></header>';
+  
+    var heroHtml;
+    if (tema === 'clinica') {
+      heroHtml = '<section class="hero" id="top"><div class="wrap"><div class="copy">' +
+        '<h1 class="in">' + titleHtml + '</h1><p class="in">' + esc(hero.subtitulo) + '</p>' +
+        '<div class="ctas in">' + waLink(hero.cta || 'WhatsApp', 'btn') + (items.length ? '<a class="btn ghost" href="#servicos">' + esc(hero.cta2 || rot.menu_servicos || 'Serviços') + '</a>' : '') + '</div></div>' +
+        (P(0) ? '<div class="pic in"><img src="' + P(0) + '" alt="' + esc(nome) + '">' + (cont.horario ? '<div class="badge"><b>' + esc(cont.horario) + '</b><span>' + esc(cont.endereco || '') + '</span></div>' : '') + '</div>' : '') +
+        '</div></section>';
+    } else {
+      heroHtml = '<section class="hero" id="top">' + (P(0) ? '<img class="bgimg" src="' + P(0) + '" alt="">' : '') +
+        '<div class="wrap"><h1 class="in">' + titleHtml + '</h1><p class="in">' + esc(hero.subtitulo) + '</p>' +
+        '<div class="ctas in">' + waLink(hero.cta || 'WhatsApp', 'btn') + (items.length ? '<a class="btn ghost" href="#servicos">' + esc(hero.cta2 || rot.menu_servicos || 'Serviços') + '</a>' : '') + '</div></div></section>';
+    }
+  
+    var factsHtml = facts.length ? '<div class="wrap facts">' + facts.map(function (f) { return '<div class="fact"><b>' + esc(f.titulo) + '</b><span>' + esc(f.texto) + '</span></div>'; }).join('') + '</div>' : '';
+  
+    var aboutHtml = paras.length ? '<section id="sobre"><div class="wrap about">' + (P(1) ? '<figure><img src="' + P(1) + '" alt="' + esc(nome) + '"></figure>' : '') +
+      '<div class="txt"><h2 class="h2">' + esc(sobre.titulo) + '</h2>' + paras.map(function (p) { return '<p>' + esc(p) + '</p>'; }).join('') + '</div></div></section>' : '';
+  
+    var svcList;
+    if (tema === 'atelier') svcList = '<div class="price">' + items.map(function (s) {
+      return '<div class="row"><h3>' + esc(s.nome) + '</h3>' + (s.preco ? '<span class="dots"></span><span class="pr">' + esc(s.preco) + '</span>' : '<span></span><span></span>') + (s.descricao ? '<p>' + esc(s.descricao) + '</p>' : '') + '</div>';
+    }).join('') + '</div>';
+    else if (tema === 'clinica') svcList = '<div class="cards">' + items.map(function (s) {
+      return '<article class="card"><h3>' + esc(s.nome) + '</h3>' + (s.descricao ? '<p>' + esc(s.descricao) + '</p>' : '') + (s.preco ? '<span class="pr">' + esc(s.preco) + '</span>' : '') + '</article>';
+    }).join('') + '</div>';
+    else svcList = '<div class="bigrows">' + items.map(function (s) {
+      return '<div class="big"><h3>' + esc(s.nome) + '</h3>' + (s.preco ? '<span class="pr">' + esc(s.preco) + '</span>' : '<span></span>') + (s.descricao ? '<p>' + esc(s.descricao) + '</p>' : '') + '</div>';
+    }).join('') + '</div>';
+    var svcHtml = items.length ? '<section id="servicos" class="alt"><div class="wrap"><div class="svc-head"><h2 class="h2">' + esc(serv.titulo) + '</h2>' + (serv.intro ? '<p class="lead">' + esc(serv.intro) + '</p>' : '') + '</div>' + svcList + '</div></section>' : '';
+  
+    var stepsHtml = steps.length >= 2 ? '<section><div class="wrap"><h2 class="h2">' + esc(passos.titulo) + '</h2><div class="steps">' +
+      steps.map(function (s) { return '<div class="step"><h3>' + esc(s.titulo) + '</h3><p>' + esc(s.texto) + '</p></div>'; }).join('') + '</div></div></section>' : '';
+  
+    var galHtml = photos.length > 1 ? '<section id="galeria"' + (tema === 'energia' ? '' : ' class="alt"') + '><div class="wrap"><h2 class="h2">' + L_('galeria_titulo', 'Galeria') + '</h2><div class="gal">' +
+      photos.slice(0, 12).map(function (p, i) { return '<figure><img src="' + p + '" alt="' + esc(nome) + ' ' + (i + 1) + '"></figure>'; }).join('') + '</div></div></section>' : '';
+  
+    var faqHtml = faqs.length ? '<section><div class="wrap faq"><h2 class="h2">' + esc(faq.titulo) + '</h2><div>' +
+      faqs.map(function (f, i) { return '<details' + (i === 0 ? ' open' : '') + '><summary>' + esc(f.pergunta) + '</summary><p>' + esc(f.resposta) + '</p></details>'; }).join('') + '</div></div></section>' : '';
+  
+    var bandHtml = cham.titulo ? '<section class="band"><div class="wrap"><h2>' + esc(cham.titulo) + '</h2>' + (cham.texto ? '<p>' + esc(cham.texto) + '</p>' : '') + waLink(cham.cta || hero.cta || 'WhatsApp', 'btn') + '</div></section>' : '';
+  
+    var cl = [];
+    if (cont.endereco) cl.push('<div><dt>' + L_('endereco', 'Endereço') + '</dt><dd>' + esc(cont.endereco) + '</dd></div>');
+    if (cont.horario) cl.push('<div><dt>' + L_('horario', 'Horário') + '</dt><dd>' + esc(cont.horario) + '</dd></div>');
+    if (cont.telefone) cl.push('<div><dt>' + L_('telefone', 'Telefone / WhatsApp') + '</dt><dd>' + (wa ? '<a href="' + wa + '" target="_blank" rel="noopener">' + esc(cont.telefone) + '</a>' : esc(cont.telefone)) + '</dd></div>');
+    if (instaUrl) cl.push('<div><dt>Instagram</dt><dd><a href="' + esc(instaUrl) + '" target="_blank" rel="noopener">' + esc(instaLabel) + '</a></dd></div>');
+    var contactHtml = '<section id="contato"><div class="wrap contact"><div><h2 class="h2">' + esc(cont.titulo || rot.menu_contato || 'Contato') + '</h2><dl class="clist">' + cl.join('') + '</dl>' + waLink(hero.cta || 'WhatsApp', 'btn') + '</div>' +
+      (mapQ ? '<iframe class="map" title="Mapa" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=' + encodeURIComponent(mapQ) + '&output=embed"></iframe>' : '') + '</div></section>';
+  
+    var foot = '<footer><div class="wrap"><span>© ' + (year || new Date().getFullYear()) + ' ' + esc(nome) + '. ' + L_('direitos', 'Todos os direitos reservados.') + '</span>' + (instaUrl ? '<a href="' + esc(instaUrl) + '" target="_blank" rel="noopener">' + esc(instaLabel) + '</a>' : '') + '</div></footer>';
+    var floatBtn = wa ? '<a class="float" href="' + wa + '" target="_blank" rel="noopener" aria-label="WhatsApp">' + waIcon + '<span>' + L_('whatsapp_flutuante', 'Fale connosco') + '</span></a>' : '';
+  
+    var js = '<script>(function(){var n=document.getElementById("nav");function f(){n.classList.toggle("solid",window.scrollY>40)}f();window.addEventListener("scroll",f,{passive:true});})();<\/script>';
+  
+    return '<!doctype html>\n<html lang="' + esc(d.idioma || 'pt') + '">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n' +
+      '<title>' + esc(seo.titulo || nome) + '</title>\n<meta name="description" content="' + esc(seo.descricao || hero.subtitulo || '') + '">\n' +
+      '<meta property="og:title" content="' + esc(seo.titulo || nome) + '">\n<meta name="theme-color" content="' + esc(bg) + '">\n' +
+      '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n' +
+      '<link href="https://fonts.googleapis.com/css2?family=' + fonts.url + '&display=swap" rel="stylesheet">\n' +
+      '<style>\n' + css.join('\n') + '\n</style>\n</head>\n<body>\n' +
+      nav + '\n<main>\n' + heroHtml + '\n' + (scrub || '') + '\n' + factsHtml + '\n' + aboutHtml + '\n' + svcHtml + '\n' + stepsHtml + '\n' + galHtml + '\n' + faqHtml + '\n' + bandHtml + '\n' + contactHtml + '\n</main>\n' + foot + '\n' + floatBtn + '\n' + js + '\n</body>\n</html>';
+  }
+  atPromptContent(nicho, info, lang, nPhotos) {
+    var digits = String(info.whats || '').replace(/\D/g, '');
+    return [
+      'Escreva o CONTEÚDO do site de uma empresa real. Nós montamos o visual premium; você escolhe o tema, a cor e escreve os textos.',
+      '',
+      'DADOS DA EMPRESA',
+      '- Nome: ' + info.nome,
+      '- Nicho: ' + nicho,
+      '- Cidade/País: ' + info.cidade,
+      '- WhatsApp: ' + info.whats,
+      info.insta ? '- Instagram/site atual: ' + info.insta : '',
+      '- Serviços, diferenciais e informações: ' + info.extra,
+      info.estilo ? '- Cores/estilo preferido pelo cliente: ' + info.estilo : '',
+      '- Idioma de TODOS os textos (inclusive os rótulos): ' + lang,
+      '- Fotos enviadas: ' + nPhotos,
+      '',
+      'TEMA (escolha 1):',
+      '- "atelier": escuro e sofisticado, títulos serifados. Para barbearia, restaurante, advocacia, estética, joalharia, imobiliária de luxo, fotografia, moda.',
+      '- "clinica": claro, limpo e acolhedor. Para dentista, psicólogo, nutricionista, veterinária, contabilidade, escola, limpeza, despachante.',
+      '- "energia": forte e vibrante, títulos grandes e condensados. Para academia, personal trainer, pet shop, oficina, construtora, eventos.',
+      'COR: um hex que combine com o estilo do cliente e o nicho (ex.: dourado #C9A55C para barbearia clássica). Evite cores genéricas.',
+      '',
+      'REGRAS',
+      '- Use só os serviços, preços, horários e endereço dos dados. Não invente preços, prêmios, números, anos, avaliações nem depoimentos.',
+      '- Preço: escreva como o cliente informou (ex.: "€18"). Sem preço informado, deixe "preco" vazio.',
+      '- hero.titulo: até 8 palavras, forte e específico. Se fizer sentido, separe com vírgula a parte final para destaque (ex.: "Barbearia clássica no Chiado, desde 2015").',
+      '- destaques: 3 fatos reais e curtos tirados dos dados (ex.: horário, local, diferencial).',
+      '- passos: 3 passos de como contratar/agendar. faq: 4 a 5 perguntas reais que clientes fazem a esse tipo de negócio, com respostas baseadas nos dados.',
+      '- Botões com verbos claros (ex.: "Marcar pelo WhatsApp").',
+      '',
+      'Responda só com este JSON (todas as chaves):',
+      '{"tema":"atelier|clinica|energia","cor":"#RRGGBB","idioma":"código como pt-PT, pt-BR, es, en, fr, it, de",',
+      '"seo":{"titulo":"","descricao":""},"marca":{"nome":""},',
+      '"hero":{"titulo":"","subtitulo":"","cta":"","cta2":""},',
+      '"destaques":[{"titulo":"","texto":""}],',
+      '"sobre":{"titulo":"","paragrafos":["",""]},',
+      '"servicos":{"titulo":"","intro":"","itens":[{"nome":"","descricao":"","preco":""}]},',
+      '"passos":{"titulo":"","itens":[{"titulo":"","texto":""}]},',
+      '"faq":{"titulo":"","itens":[{"pergunta":"","resposta":""}]},',
+      '"chamada":{"titulo":"","texto":"","cta":""},',
+      '"contato":{"titulo":"","endereco":"","horario":"","mapa_busca":"endereço para o Google Maps"},',
+      '"rotulos":{"menu_sobre":"","menu_servicos":"","menu_galeria":"","menu_contato":"","galeria_titulo":"","whatsapp_flutuante":"","direitos":"","endereco":"","horario":"","telefone":""}}'
+    ].filter(function (l) { return l !== ''; }).join('\n');
+  }
+  atBuildSite(content, info, photos, frames, premium) {
+    var c = content || {};
+    c.contato = Object.assign({}, c.contato || {}, { telefone: info.whats, whatsapp: info.whats, instagram: info.insta && !/^https?:\/\/(www\.)?(facebook|fb)\./i.test(info.insta) ? info.insta : '' });
+    c.marca = Object.assign({}, c.marca || {}, { nome: (c.marca && c.marca.nome) || info.nome });
+    return this.siteTemplate(c, photos, premium ? this.scrollScrubHtml(frames) : '', new Date().getFullYear());
+  }
   atGenerate(i, nicho, langName) {
     var self = this, st = self.state, atS = st.at || {};
     if (atS.status === 'loading') return;
@@ -1947,35 +2277,52 @@ class Component extends DCLogic {
     var frames = (self.atFrames || []).slice();
     var premium = !!atS.premium, usePremium = premium && frames.length > 0;
     self.genHtml = '';
-    self.atPatch({ missing: null, status: 'loading', msg: 'A IA está criando o site' + (usePremium ? ' com o efeito premium' : '') + '. Isso leva até 1 minuto, não feche a página.' });
-    var ask = function () {
+    self.atPatch({ missing: null, status: 'loading', msg: 'A IA está escrevendo o site' + (usePremium ? ' com o efeito premium' : '') + '. Leva uns 20 segundos, não feche a página.' });
+    var call = function (payload) {
       return client.auth.getSession().then(function (r) {
         var s = r && r.data && r.data.session;
         if (!s) throw new Error('Faça login para criar sites.');
         return fetch('https://aemnqozofjmvuweyyekp.supabase.co/functions/v1/gerar-site', {
           method: 'POST',
           headers: { 'content-type': 'application/json', authorization: 'Bearer ' + s.access_token },
-          body: JSON.stringify({ prompt: self.atPrompt(nicho, info, langName, photos.length, usePremium) })
+          body: JSON.stringify(payload)
         });
       }).then(function (res) {
         return res.json().catch(function () { return {}; }).then(function (j) {
-          if (!res.ok || !j.html) throw new Error(j.error || 'Não foi possível criar o site agora. Tente de novo.');
-          return j.html;
+          if (!res.ok || !(j.html || j.content)) throw new Error(j.error || 'Não foi possível criar o site agora. Tente de novo.');
+          return j;
         });
       });
     };
-    ask().then(function (html) {
+    var done = function (html) {
+      self.genHtml = html;
+      self.atPatch({ status: 'done', msg: 'Site criado' + (usePremium ? ' com o efeito premium de rolagem' : (premium ? ' sem o efeito premium (nenhum frame foi enviado)' : '')) + '! Clique em “Abrir site” para ver ou em “Baixar HTML” para guardar o arquivo.' });
+    };
+    var contentPayload = { mode: 'content', prompt: self.atPromptContent(nicho, info, langName, photos.length) };
+    // 1º: modelo premium (a IA escreve só o conteúdo). Se falhar, tenta mais uma vez.
+    var premiumRun = call(contentPayload).catch(function () { return call(contentPayload); });
+    premiumRun.then(function (j) {
+      if (j.content) { done(self.atBuildSite(j.content, info, photos, frames, usePremium)); return null; }
+      return j.html; // servidor antigo: segue no modo HTML
+    }).then(function (html) {
+      if (html === null) return;
+      return self.atLegacy(html, call, nicho, info, langName, photos, frames, usePremium).then(done);
+    }).catch(function (e) {
+      var m = e && e.message ? e.message : '';
+      if (/failed to fetch|network|load failed/i.test(m)) m = 'Sem conexão com o servidor. Verifique sua internet e tente de novo.';
+      self.atPatch({ status: 'error', msg: m || 'Não foi possível criar o site agora. Tente de novo.' });
+    });
+  }
+  atLegacy(html, call, nicho, info, langName, photos, frames, usePremium) {
+    var self = this;
+    var ask = function () { return call({ prompt: self.atPrompt(nicho, info, langName, photos.length, usePremium) }).then(function (j) { return j.html || ''; }); };
+    return Promise.resolve(html).then(function (html) {
       if (self.atComplete(html)) return html;
       // Veio cortado: tenta mais uma vez; se de novo vier cortado, conserta o que veio.
       self.atPatch({ msg: 'Quase pronto… a IA está caprichando no acabamento (mais uns segundos).' });
       return ask().then(function (h2) { return self.atComplete(h2) ? h2 : (h2.length > html.length ? h2 : html); }, function () { return html; });
     }).then(function (html) {
-      self.genHtml = self.atAssemble(html, photos, frames, usePremium);
-      self.atPatch({ status: 'done', msg: 'Site criado' + (usePremium ? ' com o efeito premium de rolagem' : (premium ? ' sem o efeito premium (nenhum frame foi enviado)' : '')) + '! Clique em “Abrir site” para ver ou em “Baixar HTML” para guardar o arquivo.' });
-    }).catch(function (e) {
-      var m = e && e.message ? e.message : '';
-      if (/failed to fetch|network|load failed/i.test(m)) m = 'Sem conexão com o servidor. Verifique sua internet e tente de novo.';
-      self.atPatch({ status: 'error', msg: m || 'Não foi possível criar o site agora. Tente de novo.' });
+      return self.atAssemble(html, photos, frames, usePremium);
     });
   }
   openGen() {
@@ -2119,10 +2466,12 @@ class Component extends DCLogic {
     });
 
     var defs = [
+      { title: 'Como Encontrar Clientes', desc: 'Onde encontrar negócios na Europa que precisam de um site, como fazer a primeira abordagem e como apresentar a sua proposta.' },
       { title: 'Como Configurar o Domínio', desc: 'Como registrar o domínio, apontar o DNS, ativar o certificado SSL e deixar o site do cliente no ar.' },
       { title: 'Como Fechar a Venda e Receber em Euro', desc: 'Como definir o preço, formalizar o acordo, emitir a cobrança e receber o pagamento em euro com conversão para reais.' }
     ];
     var lessonSets = [
+      ['Escolhendo o nicho e o país', 'Onde achar empresas sem site', 'Primeira abordagem e follow-up'],
       ['Como comprar o domínio', 'Como configurar o domínio', 'Ativando o SSL e conferindo tudo'],
       ['Apresentando o modelo ao cliente', 'Definindo o preço e fechando o acordo', 'Recebendo em euro e convertendo para reais']
     ];
@@ -2130,11 +2479,13 @@ class Component extends DCLogic {
     // Vídeos de cada módulo, na ordem em que devem ser assistidos.
     var COVER = './assets/7e0d5c3ea156370423746d166261c508.webp';
     var videoSets = [
+      [{ name: 'Como Encontrar Clientes', url: 'https://www.youtube.com/watch?v=uRWHB_cOW14' }],
       [{ name: 'Como comprar o domínio', url: 'https://youtu.be/S5f9drsaVXA' }, { name: 'Como configurar o domínio', url: 'https://youtu.be/yFtwRGdXPO0' }],
       [{ name: 'Como receber em euro', url: 'https://youtube.com/shorts/-NB6YFhlPBA' }]
     ];
     function moduleVideos(i) { return videoSets[i] || []; }
     var modLooks = [
+      { color: '#7C3AED', tint: 'rgba(124,58,237,0.55)', icon: 'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75' },
       { color: '#0EA5E9', tint: 'rgba(14,165,233,0.5)', icon: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20' },
       { color: '#D97706', tint: 'rgba(217,119,6,0.5)', icon: 'M17 6.5A7 7 0 1 0 17 17.5M4 10h10M4 14h10' }
     ];
@@ -2171,7 +2522,7 @@ class Component extends DCLogic {
     });
 
     var cm = st.mods[st.mod];
-    var covers = ['./assets/7e0d5c3ea156370423746d166261c508.webp', './assets/7e0d5c3ea156370423746d166261c508.webp'];
+    var covers = ['./assets/7e0d5c3ea156370423746d166261c508.webp', './assets/7e0d5c3ea156370423746d166261c508.webp', './assets/7e0d5c3ea156370423746d166261c508.webp'];
     var vids = moduleVideos(st.mod);
     var vi = Math.min(st.lesson, Math.max(vids.length - 1, 0));
     var videoUrl = vids[vi] ? vids[vi].url : '';
@@ -2205,6 +2556,7 @@ class Component extends DCLogic {
     };
 
     var checkDefs = [
+      ['Nicho e país escolhidos', 'Lista com empresas sem site montada', 'Primeiras abordagens enviadas'],
       ['Domínio registrado', 'Site publicado e DNS apontado', 'Certificado SSL ativo'],
       ['Modelo apresentado ao cliente', 'Preço e acordo fechados', 'Pagamento em euro recebido']
     ];
@@ -2223,13 +2575,13 @@ class Component extends DCLogic {
       };
     });
     var toolSets = {
-      1: [
+      2: [
           { name: 'Wise', what: 'Conta internacional para receber em euro e converter para reais', domain: 'App Store · Wise', url: 'https://apps.apple.com/br/app/wise-conta-international/id612261027', color: '#65A30D', tint: 'rgba(132,204,22,0.28)', border: 'rgba(190,242,100,0.5)', icon: 'M3 7h18v12H3zM3 11h18M7 15h4M16 3l-4 4-4-4' }
       ]
     };
     cur.hasTools = !!toolSets[st.mod];
-    cur.toolsTitle = st.mod === 1 ? 'App para receber em euro' : 'Sites que você vai usar';
-    cur.toolsHint = st.mod === 1 ? 'Baixe no celular e crie sua conta para receber dos clientes na Europa.' : 'Clique para abrir. Deixe essas abas abertas enquanto assiste à aula.';
+    cur.toolsTitle = st.mod === 2 ? 'App para receber em euro' : 'Sites que você vai usar';
+    cur.toolsHint = st.mod === 2 ? 'Baixe no celular e crie sua conta para receber dos clientes na Europa.' : 'Clique para abrir. Deixe essas abas abertas enquanto assiste à aula.';
     cur.showPrompt = false;
     cur.numLabel = '0' + (st.mod + 1);
     cur.multi = vids.length > 1;
@@ -2608,7 +2960,7 @@ class Component extends DCLogic {
       quick: {
         vendas: sales.length ? sales.length + (sales.length === 1 ? ' venda registrada' : ' vendas registradas') : 'Nenhuma venda registrada ainda',
         nichos: st.favs.length ? st.favs.length + (st.favs.length === 1 ? ' nicho favorito' : ' nichos favoritos') : '20 nichos disponíveis',
-        acad: doneCount + ' de 2 módulos concluídos'
+        acad: doneCount + ' de 3 módulos concluídos'
       },
       rate: st.rate,
       onRate: function (e) { self.save({ rate: e.target.value }); },
