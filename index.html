@@ -684,6 +684,13 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 </sc-if>
 </div>
 
+<sc-if value="{{ atl.hasQuota }}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding: 12px 16px; border-radius: 16px; background: {{ atl.quotaBg }}; border: 1px solid {{ atl.quotaBorder }}">
+<span style="padding: 3px 10px; border-radius: 999px; background: {{ atl.quotaChipBg }}; color: {{ atl.quotaChipInk }}; font-size: 11px; font-weight: 800; letter-spacing: 0.08em">{{ atl.quotaPlan }}</span>
+<strong style="font-size: 14px; color: #FFFFFF">{{ atl.quotaLabel }}</strong>
+<span style="font-size: 12px; color: #B9B2DA">{{ atl.quotaHint }}</span>
+</div>
+</sc-if>
 <sc-if value="{{ atl.hasMsg }}" hint-placeholder-val="{{ false }}">
 <div role="status" style="padding: 12px 14px; border-radius: 14px; background: {{ atl.msgBg }}; border: 1px solid {{ atl.msgBorder }}; color: #FFFFFF; font-size: 14px; line-height: 1.45">{{ atl.msg }}</div>
 </sc-if>
@@ -1720,6 +1727,7 @@ class Component extends DCLogic {
     var nl = this.radarNicheLabel(ld.niche);
     var extra = 'Endereço: ' + ld.address + (ld.rating ? '\nNota no Google: ' + Number(ld.rating).toFixed(1).replace('.', ',') + ' (' + ld.reviews + ' avaliações)' : '') + '\nNicho: ' + nl;
     this.atPhotos = []; this.atFrames = []; this.genHtml = '';
+    this.loadQuota();
     this.setState({ at: { i: -2, premium: false, missing: null, custom: { nicho: nl, langName: c[2], info: { nome: String(ld.name || '').replace(/\s*\(exemplo\)$/, ''), whats: ld.phone || '', cidade: entry.city + ', ' + c[1].replace(/^\S+\s/, ''), insta: (this.radarContacts(ld, entry).instagram || this.radarContacts(ld, entry).facebook || ''), extra: extra, estilo: '' } } } });
     setTimeout(function () { var el = document.getElementById('atelie'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 80);
   }
@@ -1795,9 +1803,22 @@ class Component extends DCLogic {
     var cur = this.state.at;
     if (!cur || cur.i !== i) { this.atPhotos = []; this.atFrames = []; this.genHtml = ''; }
     this.setState({ at: Object.assign({ premium: false }, cur && cur.i === i ? cur : {}, { i: i, missing: null }) });
+    this.loadQuota();
     setTimeout(function () { var el = document.getElementById('atelie'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 80);
   }
   atPatch(patch) { this.setState({ at: Object.assign({}, this.state.at, patch) }); }
+  loadQuota() {
+    // Plano Mensal = sites ilimitados; Vitalício = 17 criações por mês (o servidor é quem conta e bloqueia).
+    var self = this, client = window.soraAuth;
+    if (!client) return;
+    client.auth.getSession().then(function (r) {
+      var s = r && r.data && r.data.session; if (!s) return null;
+      return fetch('https://aemnqozofjmvuweyyekp.supabase.co/functions/v1/gerar-site', {
+        method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer ' + s.access_token },
+        body: JSON.stringify({ mode: 'quota' })
+      }).then(function (res) { return res.json().catch(function () { return {}; }); });
+    }).then(function (j) { if (j && j.quota) self.setState({ siteQuota: j.quota }); }).catch(function () {});
+  }
   shrinkImage(file, maxW, quality) {
     return new Promise(function (resolve, reject) {
       var url = URL.createObjectURL(file);
@@ -2462,6 +2483,9 @@ class Component extends DCLogic {
     }
     var client = window.soraAuth;
     if (!client) { self.atPatch({ status: 'error', msg: 'Disponível no site do Sora, depois de entrar na sua conta.' }); return; }
+    var q = st.siteQuota;
+    if (q && q.limit && q.used >= q.limit) { self.atPatch({ status: 'error', msg: 'Você já usou as ' + q.limit + ' criações de site deste mês do plano Vitalício. Novas criações liberam no dia 1º do próximo mês. Para criar sites ilimitados, use o plano Mensal.' }); return; }
+    var genId = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
     var frames = (self.atFrames || []).slice();
     var premium = !!atS.premium, usePremium = premium && frames.length > 0;
     self.genHtml = '';
@@ -2473,10 +2497,11 @@ class Component extends DCLogic {
         return fetch('https://aemnqozofjmvuweyyekp.supabase.co/functions/v1/gerar-site', {
           method: 'POST',
           headers: { 'content-type': 'application/json', authorization: 'Bearer ' + s.access_token },
-          body: JSON.stringify(payload)
+          body: JSON.stringify(Object.assign({ genId: genId }, payload))
         });
       }).then(function (res) {
         return res.json().catch(function () { return {}; }).then(function (j) {
+          if (j && j.quota) self.setState({ siteQuota: j.quota });
           if (!res.ok || !(j.html || j.content)) throw new Error(j.error || 'Não foi possível criar o site agora. Tente de novo.');
           return j;
         });
@@ -2988,6 +3013,13 @@ class Component extends DCLogic {
         msgBg: atS.status === 'error' ? 'rgba(220,38,38,0.16)' : (atS.status === 'done' ? 'rgba(34,197,94,0.16)' : 'rgba(124,58,237,0.16)'),
         msgBorder: atS.status === 'error' ? 'rgba(248,113,113,0.5)' : (atS.status === 'done' ? 'rgba(74,222,128,0.5)' : 'rgba(167,139,250,0.5)'),
         busy: busy, goOpacity: busy ? '0.6' : '1',
+        hasQuota: !!st.siteQuota,
+        quotaPlan: st.siteQuota && st.siteQuota.limit ? 'PLANO VITALÍCIO' : 'PLANO MENSAL',
+        quotaLabel: !st.siteQuota ? '' : (st.siteQuota.limit ? Math.max(0, st.siteQuota.limit - st.siteQuota.used) + ' de ' + st.siteQuota.limit + ' criações de site restantes este mês' : 'Criações de site ilimitadas'),
+        quotaHint: st.siteQuota && st.siteQuota.limit ? 'Renova todo dia 1º. Cada clique em “Gerar” conta 1 criação.' : '',
+        quotaBg: st.siteQuota && st.siteQuota.limit && st.siteQuota.used >= st.siteQuota.limit ? 'rgba(220,38,38,0.14)' : 'rgba(124,58,237,0.12)',
+        quotaBorder: st.siteQuota && st.siteQuota.limit && st.siteQuota.used >= st.siteQuota.limit ? 'rgba(248,113,113,0.5)' : 'rgba(167,139,250,0.45)',
+        quotaChipBg: st.siteQuota && st.siteQuota.limit ? '#F59E0B' : '#22C55E', quotaChipInk: '#140F2E',
         goLabel: busy ? 'Criando o site… (até 1 min)' : (atS.status === 'done' ? '✨ Gerar outra versão' : '✨ Gerar site com IA'),
         generate: function () { if (atC) self.atGenerate(-2, atC.nicho, atC.langName); else self.atGenerate(atI, pl === 'pt' ? nichoDefs[atI][0] : nichoNames[pl][atI], langNames[pl] || 'Português'); },
         done: atS.status === 'done',
