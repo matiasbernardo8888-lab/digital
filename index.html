@@ -977,18 +977,6 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 </div>
 
 <div style="background: #140F2E; border: 1px solid #3B2F6B; border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 14px">
-<h3 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #C9B8FF">Suporte</h3>
-<div style="display: flex; flex-direction: column; gap: 2px">
-<span style="font-size: 13px; font-weight: 500; color: #B9B2DA">WhatsApp do suporte</span>
-<span style="font-size: 18px; font-weight: 700; color: #FFFFFF">+55 (33) 99192-5305</span>
-</div>
-<a class="btn" href="https://wa.me/5533991925305" target="_blank" rel="noopener" style="align-self: flex-start; height: 48px; padding: 0 22px; border-radius: 999px; background: #1F8F4E; color: #FFFFFF; font-size: 15px; font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 10px">
-<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.3 7.4L3 21l2.1-5.6A8.4 8.4 0 1 1 21 11.5z"></path></svg>
-<span>Falar com o suporte no WhatsApp</span>
-</a>
-</div>
-
-<div style="background: #140F2E; border: 1px solid #3B2F6B; border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 14px">
 <h3 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #C9B8FF">Dados</h3>
 <span style="font-size: 13px; color: #B9B2DA">Apaga vendas, progresso da Academia, links, favoritos e configurações deste navegador e deixa o site zerado.</span>
 <button class="ghost" onClick="{{ cfg.reset }}" style="align-self: flex-start; height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid #F5A524; background: transparent; color: #FFD58A; font-size: 14px; font-weight: 600; cursor: pointer">{{ cfg.resetLabel }}</button>
@@ -2860,8 +2848,7 @@ class Component extends DCLogic {
       { label: 'Barra de metas (10K, 100K, 1 Milhão)', kind: 'Seção', go: jump({ screen: 'dash' }) },
       { label: 'Dicas de Nichos que Mais Vendem', kind: 'Seção', go: jump({ screen: 'nichos' }) },
       { label: 'Gerador de Prompts para Google Flow', kind: 'Seção', go: jump({ screen: 'flow' }) },
-      { label: 'Configurações', kind: 'Configuração', go: jump({ showSettings: true }) },
-      { label: 'Suporte no WhatsApp', kind: 'Suporte', go: jump({ showSettings: true }) }
+      { label: 'Configurações', kind: 'Configuração', go: jump({ showSettings: true }) }
     ];
     st.sales.forEach(function (x) {
       if (x.nome || x.cliente) index.push({ label: (x.nome || 'Sem nome') + ' — ' + (x.cliente || ''), kind: 'Venda · ' + x.status, go: jump({ screen: 'vendas', filter: 'Todos' }) });
