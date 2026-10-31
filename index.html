@@ -238,8 +238,8 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 <img src="./assets/c72681ac444c254449d98a7ddb3eec1f.webp" alt="" loading="lazy" decoding="async" width="200" height="200" style="display: block; width: 100%; height: auto; filter: drop-shadow(0 0 16px rgba(124,58,237,0.55)) drop-shadow(0 12px 20px rgba(0,0,0,0.45))">
 <canvas class="rev-coins"></canvas>
 </div>
-<div style="font-size: clamp(38px, 7vw, 60px); font-weight: 800; line-height: 1.1; letter-spacing: -0.01em; color: #FFFFFF; text-shadow: 0 0 30px rgba(255,214,140,0.35)">€ {{ rev.total }}</div>
-<div style="font-size: 14px; color: #DCD6F5; text-align: center">{{ rev.sub }}</div>
+<div style="font-size: clamp(38px, 7vw, 60px); font-weight: 800; line-height: 1.1; letter-spacing: -0.01em; color: #FFFFFF; text-shadow: 0 0 30px rgba(255,214,140,0.35)">R$ {{ rev.totalBrl }}</div>
+<div style="font-size: 14px; color: #DCD6F5; text-align: center">{{ rev.sub }} <span style="font-size: 11px; color: #9C94C4">• € {{ rev.total }}</span></div>
 <canvas class="rev-canvas" role="img" aria-label="{{ rev.aria }}" style="display: block; width: 100%; height: 210px"></canvas>
 <div style="width: 100%; display: flex; justify-content: space-between; gap: 8px; font-size: 13px; color: #D6D0F0">
 <sc-for list="{{ rev.labels }}" as="lb" hint-placeholder-count="5">
@@ -1372,8 +1372,9 @@ class Component extends DCLogic {
     var names = { '1': 'hoje', '7': 'nos últimos 7 dias', '30': 'nos últimos 30 dias', all: 'desde o início' };
     return {
       total: this.money(total),
-      sub: c + (c === 1 ? ' venda ' : ' vendas ') + names[per] + ' • Convertido: R$ ' + this.money(total * rate),
-      aria: 'Gráfico de faturamento acumulado ' + names[per] + ': € ' + this.money(total),
+      totalBrl: this.money(total * rate),
+      sub: c + (c === 1 ? ' venda ' : ' vendas ') + names[per],
+      aria: 'Gráfico de faturamento acumulado ' + names[per] + ': R$ ' + this.money(total * rate) + ' (€ ' + this.money(total) + ')',
       labels: labels, trend: trend,
       trendColor: dir > 0 ? '#4ADE80' : dir < 0 ? '#FFB454' : '#DCD6F5',
       trendIcon: dir > 0 ? 'M7 17 17 7M9 7h8v8' : dir < 0 ? 'M7 7l10 10M17 9v8H9' : 'M5 12h14',
