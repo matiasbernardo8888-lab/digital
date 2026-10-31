@@ -1072,6 +1072,7 @@ class Component extends DCLogic {
       revPeriod: '30',
       pitchLang: 'pt',
       promptLang: 'pt',
+      revAdj: 0,
       nq: '',
       goal: '10000',
       filter: 'Todos',
@@ -1139,6 +1140,7 @@ class Component extends DCLogic {
           if (typeof saved.goal === 'string') base.goal = saved.goal;
           if (typeof saved.pitchLang === 'string') base.pitchLang = saved.pitchLang;
           if (typeof saved.promptLang === 'string') base.promptLang = saved.promptLang;
+          if (typeof saved.revAdj === 'number') base.revAdj = Math.max(0, Math.floor(saved.revAdj));
           if (Array.isArray(saved.favs)) base.favs = saved.favs;
           if (saved.flowVars && typeof saved.flowVars === 'object') base.flowVars = saved.flowVars;
           if (typeof saved.flowLang === 'string') base.flowLang = saved.flowLang;
@@ -1169,6 +1171,16 @@ class Component extends DCLogic {
 
   componentDidMount() {
     var self = this;
+    this.revKeyFn = function (e) {
+      if (e.ctrlKey || e.metaKey || e.altKey || e.repeat) return;
+      var t = e.target, tag = t && t.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (t && t.isContentEditable)) return;
+      if (self.state.screen !== 'dash') return;
+      var k = String(e.key || '').toLowerCase(), n = self.state.revAdj || 0;
+      if (k === 'l') self.save({ revAdj: n + 1 });
+      else if (k === 'j' && n > 0) self.save({ revAdj: n - 1 });
+    };
+    window.addEventListener('keydown', this.revKeyFn);
     var motion = this.state.agency.motion !== false;
     if (!motion) {
       this.setState({ typed: this.PHRASE.length });
@@ -1195,6 +1207,7 @@ class Component extends DCLogic {
   }
 
   componentWillUnmount() {
+    if (this.revKeyFn) window.removeEventListener('keydown', this.revKeyFn);
     if (this.typeTimer) clearInterval(this.typeTimer);
     if (this.gsapTick && window.gsap) window.gsap.ticker.remove(this.gsapTick);
     if (this.raf) window.cancelAnimationFrame(this.raf);
@@ -1319,6 +1332,8 @@ class Component extends DCLogic {
     var fmt = function (d) { var x = new Date(d * 864e5); return ('0' + x.getUTCDate()).slice(-2) + ' ' + months[x.getUTCMonth()]; };
     var dated = [];
     st.sales.forEach(function (x) { var d = dayN(x.data), v = self.num(x.valor); if (d !== null && d <= today && v > 0) dated.push({ d: d, v: v }); });
+    // Atalho L/J no Dashboard: cada toque soma/tira uma venda de € 176,87 (só na tela, não grava nas Vendas).
+    for (var ka = 0; ka < (st.revAdj || 0); ka++) dated.push({ d: today, v: 176.87 });
     var sum = function (a, b) { var t = 0; dated.forEach(function (x) { if (x.d >= a && x.d <= b) t += x.v; }); return t; };
     var cnt = function (a, b) { var t = 0; dated.forEach(function (x) { if (x.d >= a && x.d <= b) t += 1; }); return t; };
     var grand = 0;
@@ -1493,7 +1508,7 @@ class Component extends DCLogic {
     try {
       window.localStorage.setItem(this.KEY, JSON.stringify({
         rate: this.state.rate, sales: this.state.sales, mods: this.state.mods, modsV: 4,
-        agency: this.state.agency, calc: this.state.calc, goal: this.state.goal, favs: this.state.favs, pitchLang: this.state.pitchLang, promptLang: this.state.promptLang, nichoInfo: this.state.nichoInfo, radarCache: this.state.radarCache, radarQ: this.state.radarQ, flowVars: this.state.flowVars, flowLang: this.state.flowLang
+        agency: this.state.agency, calc: this.state.calc, goal: this.state.goal, favs: this.state.favs, pitchLang: this.state.pitchLang, promptLang: this.state.promptLang, revAdj: this.state.revAdj, nichoInfo: this.state.nichoInfo, radarCache: this.state.radarCache, radarQ: this.state.radarQ, flowVars: this.state.flowVars, flowLang: this.state.flowLang
       }));
     } catch (e) {}
   }
