@@ -514,7 +514,7 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 <div style="display: flex; flex-direction: column; gap: 4px">
 <span style="font-family: Cinzel, Georgia, serif; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; color: #7DD3FC">PROSPECÇÃO</span>
 <h2 id="radar-title" style="margin: 0; font-size: 26px; font-weight: 800; letter-spacing: -0.01em">Radar de Empresas Sem Site</h2>
-<p style="margin: 0; color: #B9B2DA">Encontre no Google empresas que ainda não têm site e gere o site delas em 1 clique.</p>
+<p style="margin: 0; color: #B9B2DA">Encontre empresas na sua cidade que ainda não têm site e gere o site delas em 1 clique.</p>
 </div>
 <button class="ghost" onClick="{{ radar.close }}" aria-label="Fechar o Radar" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; border: 1px solid #3B2F6B; background: transparent; color: #FFFFFF; font-size: 20px; cursor: pointer">×</button>
 </div>
@@ -1145,7 +1145,7 @@ class Component extends DCLogic {
           if (saved.flowVars && typeof saved.flowVars === 'object') base.flowVars = saved.flowVars;
           if (typeof saved.flowLang === 'string') base.flowLang = saved.flowLang;
           if (saved.nichoInfo && typeof saved.nichoInfo === 'object') base.nichoInfo = saved.nichoInfo;
-          if (saved.radarCache && typeof saved.radarCache === 'object') base.radarCache = saved.radarCache;
+          if (saved.radarCache && typeof saved.radarCache === 'object') { base.radarCache = {}; Object.keys(saved.radarCache).forEach(function (k) { var e = saved.radarCache[k]; if (e && !e.mock) base.radarCache[k] = e; }); }
           if (saved.radarQ && typeof saved.radarQ === 'object') base.radarQ = Object.assign({}, base.radarQ, saved.radarQ);
           if (Array.isArray(saved.sales)) base.sales = saved.sales;
           var blankMod = { url: '', notes: '', done: false };
@@ -1823,7 +1823,7 @@ class Component extends DCLogic {
       btnLabel: busy ? 'Procurando…' : '🔍 Procurar Empresas Sem Site',
       loadingTitle: busy ? busy.msgs[busy.step] : '', loadingSub: busy ? 'Buscando no mapa e filtrando só quem NÃO tem site em ' + busy.city + '.' : '',
       hasError: !!st.radarError, error: st.radarError || '',
-      hasResult: !busy && !!entry, mock: !!(entry && entry.mock), osm: !!(entry && entry.source === 'osm' && entry.leads.length), soon: !(entry && !entry.mock), empty: !!(entry && !entry.leads.length)
+      hasResult: !busy && !!entry, mock: !!(entry && entry.mock), osm: !!(entry && entry.source === 'osm' && entry.leads.length), soon: !!(entry && entry.mock), empty: !!(entry && !entry.leads.length)
     };
     if (entry) {
       var n = entry.leads.length;
