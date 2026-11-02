@@ -662,7 +662,27 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 </div>
 
 <div style="background: rgba(20,15,46,0.55); border: 1px solid #3B2F6B; border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 14px">
-<h3 style="margin: 0; font-size: 17px; display: flex; align-items: center; gap: 10px"><span style="width: 30px; height: 30px; border-radius: 10px; background: linear-gradient(135deg, #7C3AED, #DB2777); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0">3</span>Efeito premium <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.08em; padding: 3px 8px; border-radius: 999px; border: 1px solid #3B2F6B; color: #B9B2DA">OPCIONAL</span></h3>
+<h3 style="margin: 0; font-size: 17px; display: flex; align-items: center; gap: 10px"><span style="width: 30px; height: 30px; border-radius: 10px; background: linear-gradient(135deg, #7C3AED, #DB2777); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0">3</span>Modelo do site <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.08em; padding: 3px 8px; border-radius: 999px; border: 1px solid #3B2F6B; color: #B9B2DA">7 MODELOS</span></h3>
+<p style="margin: 0; font-size: 13px; color: #B9B2DA">Escolha o visual ou deixe a IA escolher pelo nicho. Depois de criar, dá para trocar de modelo na hora, sem gastar outra criação.</p>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(min(150px, 100%), 1fr)); gap: 10px">
+<sc-for list="{{ atl.models }}" as="md" hint-placeholder-count="8">
+<button onClick="{{ md.pick }}" aria-label="Modelo {{ md.name }}" style="display: flex; flex-direction: column; gap: 0; padding: 0; overflow: hidden; border-radius: 16px; border: 1.5px solid {{ md.border }}; box-shadow: {{ md.ring }}; background: rgba(13,10,38,0.6); color: #FFFFFF; cursor: pointer; text-align: left">
+<span aria-hidden="true" style="position: relative; display: flex; flex-direction: column; justify-content: flex-end; gap: 6px; height: 86px; padding: 12px; background: {{ md.bg }}; color: {{ md.ink }}">
+<span style="font-family: {{ md.font }}; font-size: 30px; line-height: 1">{{ md.sample }}</span>
+<span style="display: flex; gap: 5px; align-items: center"><span style="width: 34px; height: 8px; border-radius: 999px; background: {{ md.acc }}"></span><span style="width: 18px; height: 8px; border-radius: 999px; background: {{ md.ink }}; opacity: 0.35"></span></span>
+</span>
+<span style="display: flex; flex-direction: column; gap: 2px; padding: 10px 12px 12px">
+<strong style="font-size: 14px">{{ md.name }}</strong>
+<span style="font-size: 12px; color: #B9B2DA; line-height: 1.35">{{ md.desc }}</span>
+<span style="font-size: 12px; font-weight: 700; color: {{ md.checkInk }}; margin-top: 4px">{{ md.check }}</span>
+</span>
+</button>
+</sc-for>
+</div>
+</div>
+
+<div style="background: rgba(20,15,46,0.55); border: 1px solid #3B2F6B; border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 14px">
+<h3 style="margin: 0; font-size: 17px; display: flex; align-items: center; gap: 10px"><span style="width: 30px; height: 30px; border-radius: 10px; background: linear-gradient(135deg, #7C3AED, #DB2777); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0">4</span>Efeito premium <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.08em; padding: 3px 8px; border-radius: 999px; border: 1px solid #3B2F6B; color: #B9B2DA">OPCIONAL</span></h3>
 <label style="display: flex; align-items: flex-start; gap: 12px; padding: 14px; border-radius: 16px; border: 1px solid #3B2F6B; background: rgba(13,10,38,0.6); cursor: pointer">
 <input type="checkbox" checked="{{ atl.premium }}" onChange="{{ atl.togglePremium }}" style="width: 22px; height: 22px; margin: 2px 0 0; flex-shrink: 0; accent-color: #7C3AED">
 <span style="display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 15px">Adicionar efeito premium de rolagem (opcional)</strong><span style="font-size: 12px; color: #B9B2DA">Uma animação que avança conforme o cliente rola a página, logo depois do topo do site. Precisa de uma sequência de imagens (frames).</span></span>
@@ -701,6 +721,17 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 <button class="ghost" onClick="{{ atl.downloadSite }}" style="flex: 1 1 140px; min-height: 54px; padding: 0 18px; border-radius: 999px; border: 1px solid #4ADE80; background: transparent; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer">Baixar HTML</button>
 </sc-if>
 </div>
+<sc-if value="{{ atl.canRetheme }}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 16px; border-radius: 18px; border: 1px solid rgba(74,222,128,0.45); background: rgba(34,197,94,0.08)">
+<strong style="font-size: 15px">Ver o mesmo site em outro modelo</strong>
+<span style="font-size: 13px; color: #D6D0F0">Troca na hora, com os mesmos textos e fotos. Não gasta criação.</span>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{ atl.rethemes }}" as="rt" hint-placeholder-count="7">
+<button onClick="{{ rt.pick }}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px 0 6px; border-radius: 999px; border: 1.5px solid {{ rt.border }}; background: rgba(13,10,38,0.6); color: #FFFFFF; font-size: 14px; font-weight: 700; cursor: pointer"><span aria-hidden="true" style="width: 32px; height: 32px; border-radius: 999px; background: {{ rt.bg }}; color: {{ rt.acc }}; display: inline-flex; align-items: center; justify-content: center; font-family: {{ rt.font }}; font-size: 15px; border: 1px solid rgba(255,255,255,0.18)">A</span>{{ rt.label }}</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
 <span style="font-size: 12px; color: #B9B2DA">Leva até 1 minuto. Custa só alguns centavos do saldo da IA. As fotos e os dados ficam só neste navegador.</span>
 </section>
 </sc-if>
@@ -1073,6 +1104,7 @@ class Component extends DCLogic {
       pitchLang: 'pt',
       promptLang: 'pt',
       revAdj: 0,
+      siteModel: 'auto',
       nq: '',
       goal: '10000',
       filter: 'Todos',
@@ -1142,6 +1174,7 @@ class Component extends DCLogic {
           if (typeof saved.promptLang === 'string') base.promptLang = saved.promptLang;
           if (typeof saved.revAdj === 'number') base.revAdj = Math.max(0, Math.floor(saved.revAdj));
           if (Array.isArray(saved.favs)) base.favs = saved.favs;
+          if (typeof saved.siteModel === 'string') base.siteModel = saved.siteModel;
           if (saved.flowVars && typeof saved.flowVars === 'object') base.flowVars = saved.flowVars;
           if (typeof saved.flowLang === 'string') base.flowLang = saved.flowLang;
           if (saved.nichoInfo && typeof saved.nichoInfo === 'object') base.nichoInfo = saved.nichoInfo;
@@ -1508,7 +1541,7 @@ class Component extends DCLogic {
     try {
       window.localStorage.setItem(this.KEY, JSON.stringify({
         rate: this.state.rate, sales: this.state.sales, mods: this.state.mods, modsV: 4,
-        agency: this.state.agency, calc: this.state.calc, goal: this.state.goal, favs: this.state.favs, pitchLang: this.state.pitchLang, promptLang: this.state.promptLang, revAdj: this.state.revAdj, nichoInfo: this.state.nichoInfo, radarCache: this.state.radarCache, radarQ: this.state.radarQ, flowVars: this.state.flowVars, flowLang: this.state.flowLang
+        agency: this.state.agency, calc: this.state.calc, goal: this.state.goal, favs: this.state.favs, pitchLang: this.state.pitchLang, promptLang: this.state.promptLang, revAdj: this.state.revAdj, siteModel: this.state.siteModel, nichoInfo: this.state.nichoInfo, radarCache: this.state.radarCache, radarQ: this.state.radarQ, flowVars: this.state.flowVars, flowLang: this.state.flowLang
       }));
     } catch (e) {}
   }
@@ -2020,7 +2053,7 @@ class Component extends DCLogic {
     var o = function (x) { return x && typeof x === 'object' ? x : {}; };
     var marca = o(d.marca), hero = o(d.hero), sobre = o(d.sobre), serv = o(d.servicos), passos = o(d.passos), faq = o(d.faq),
       cham = o(d.chamada), cont = o(d.contato), rot = o(d.rotulos), seo = o(d.seo), ben = o(d.beneficios), dic = o(d.dicas);
-    var tema = ({ atelier: 1, clinica: 1, energia: 1 })[d.tema] ? d.tema : 'atelier';
+    var tema = ({ atelier: 1, clinica: 1, energia: 1, luxo: 1, natural: 1, moderno: 1, editorial: 1 })[d.tema] ? d.tema : 'atelier';
   
     // ---- cores a partir da cor da marca
     var hex = /^#?[0-9a-f]{6}$/i.test(String(d.cor || '')) ? String(d.cor).replace('#', '') : 'b08d57';
@@ -2041,6 +2074,22 @@ class Component extends DCLogic {
       acc = hsl(H, Math.max(S, 50), Math.min(Math.max(L, 34), 44)); accInk = '#ffffff'; acc2 = hsl((H + 28) % 360, 70, 62);
       bg = hsl(H, 30, 98.5); bg2 = hsl(H, 45, 95); card = '#ffffff'; ink = hsl(H, 35, 12); mute = hsl(H, 12, 38); line = hsl(H, 25, 88);
       dark = hsl(H, 45, 14); darkInk = hsl(H, 30, 96);
+    } else if (tema === 'luxo') {
+      acc = hsl(H, Math.max(S, 40), Math.min(Math.max(L, 55), 70)); accInk = hsl(H, 30, 8); acc2 = hsl(H, Math.max(S, 40), 82);
+      bg = hsl(H, 8, 4); bg2 = hsl(H, 8, 7); card = hsl(H, 8, 9); ink = hsl(H, 20, 93); mute = hsl(H, 8, 66); line = hsl(H, 10, 18);
+      dark = hsl(H, 8, 3); darkInk = ink;
+    } else if (tema === 'natural') {
+      acc = hsl(H, Math.min(Math.max(S, 30), 55), Math.min(Math.max(L, 32), 42)); accInk = '#ffffff'; acc2 = hsl((H + 35) % 360, 45, 72);
+      bg = hsl(40, 40, 96); bg2 = hsl(H, 25, 92); card = hsl(40, 50, 99); ink = hsl(H, 25, 15); mute = hsl(H, 10, 38); line = hsl(H, 18, 86);
+      dark = hsl(H, 30, 16); darkInk = hsl(40, 40, 94);
+    } else if (tema === 'moderno') {
+      acc = hsl(H, Math.max(S, 80), Math.min(Math.max(L, 55), 64)); accInk = hsl(H, 50, 8); acc2 = hsl((H + 60) % 360, 90, 66);
+      bg = hsl(232, 35, 6); bg2 = hsl(232, 30, 9); card = 'rgba(255,255,255,.045)'; ink = hsl(232, 30, 96); mute = hsl(232, 12, 72); line = 'rgba(255,255,255,.1)';
+      dark = hsl(232, 40, 4); darkInk = ink;
+    } else if (tema === 'editorial') {
+      acc = hsl(H, Math.max(S, 60), Math.min(Math.max(L, 40), 50)); accInk = '#ffffff'; acc2 = acc;
+      bg = '#fbfaf7'; bg2 = hsl(40, 20, 94); card = '#ffffff'; ink = '#141414'; mute = '#56544f'; line = 'rgba(20,20,20,.14)';
+      dark = '#141414'; darkInk = '#fbfaf7';
     } else {
       acc = hsl(H, Math.max(S, 75), Math.min(Math.max(L, 48), 56)); accInk = L > 62 ? hsl(H, 40, 10) : '#ffffff'; acc2 = hsl((H + 40) % 360, 90, 60);
       bg = hsl(H, 10, 97); bg2 = hsl(H, 18, 92); card = '#ffffff'; ink = hsl(H, 25, 8); mute = hsl(H, 8, 36); line = hsl(H, 10, 84);
@@ -2049,7 +2098,11 @@ class Component extends DCLogic {
     var fonts = {
       atelier: { url: 'Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..600&family=Hanken+Grotesk:wght@400;500;600', disp: "'Bodoni Moda', Didot, Georgia, serif", body: "'Hanken Grotesk', system-ui, sans-serif" },
       clinica: { url: 'Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Hanken+Grotesk:wght@400;500;600', disp: "'Bricolage Grotesque', system-ui, sans-serif", body: "'Hanken Grotesk', system-ui, sans-serif" },
-      energia: { url: 'Anton&family=Barlow:wght@400;500;600;700', disp: "Anton, Impact, 'Arial Narrow', sans-serif", body: "Barlow, system-ui, sans-serif" }
+      energia: { url: 'Anton&family=Barlow:wght@400;500;600;700', disp: "Anton, Impact, 'Arial Narrow', sans-serif", body: "Barlow, system-ui, sans-serif" },
+      luxo: { url: 'Cormorant+Garamond:ital,wght@0,400..700;1,400..600&family=Montserrat:wght@400;500;600', disp: "'Cormorant Garamond', Garamond, Georgia, serif", body: "Montserrat, system-ui, sans-serif" },
+      natural: { url: 'Fraunces:opsz,wght@9..144,400..700&family=Nunito+Sans:opsz,wght@6..12,400..700', disp: "Fraunces, Georgia, serif", body: "'Nunito Sans', system-ui, sans-serif" },
+      moderno: { url: 'Space+Grotesk:wght@500..700&family=Inter:wght@400;500;600', disp: "'Space Grotesk', system-ui, sans-serif", body: "Inter, system-ui, sans-serif" },
+      editorial: { url: 'Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600', disp: "'Instrument Serif', Georgia, serif", body: "'Inter Tight', system-ui, sans-serif" }
     }[tema];
   
     // ---- ícones (o conteúdo escolhe pelo nome)
@@ -2280,7 +2333,7 @@ class Component extends DCLogic {
       '@media (max-width:900px){.hero .wrap{grid-template-columns:1fr;padding-top:118px}}',
       '.hero .copy{display:grid;gap:26px}',
       '.hero h1{font-size:clamp(44px,6.4vw,86px);font-weight:700;letter-spacing:-0.035em;line-height:1}',
-      '.hero h1 em{font-style:normal;background:linear-gradient(100deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent}',
+      '.hero h1 em{font-style:normal}.hero h1 em .w span{background:linear-gradient(100deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent;padding-right:.04em}',
       '.hero p{font-size:clamp(17px,1.7vw,20px);color:var(--mute);max-width:48ch}',
       '.hero .pic{position:relative}.hero .pic .ph{overflow:hidden;border-radius:240px 240px 32px 32px;box-shadow:0 40px 80px rgba(0,0,0,.18)}.hero .pic img{width:100%;aspect-ratio:4/5;object-fit:cover;animation:kb 9s var(--ease) both}',
       '.hero .badge{position:absolute;left:-26px;bottom:34px;background:#fff;color:var(--ink);border-radius:20px;padding:16px 20px;box-shadow:0 20px 44px rgba(0,0,0,.14);display:flex;gap:12px;align-items:center;max-width:280px;animation:fl 5s ease-in-out infinite}',
@@ -2312,6 +2365,91 @@ class Component extends DCLogic {
       '.fact b{font-size:28px;text-transform:uppercase}'
     );
   
+    var badgeCss = [
+      '.hero .badge{position:absolute;left:-26px;bottom:34px;background:var(--card);color:var(--ink);border-radius:20px;padding:16px 20px;box-shadow:0 20px 44px rgba(0,0,0,.14);display:flex;gap:12px;align-items:center;max-width:280px;animation:fl 5s ease-in-out infinite;z-index:2}',
+      '.hero .badge .bx{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,var(--acc) 14%,transparent);color:var(--acc);flex-shrink:0}',
+      '.hero .badge b{font-size:15px;display:block}.hero .badge span{font-size:13.5px;color:var(--mute)}',
+      '.hero .badge2{left:auto;right:-18px;top:40px;bottom:auto;animation-delay:-2.5s}',
+      '@keyframes fl{50%{transform:translateY(-12px)}}',
+      '@media (max-width:900px){.hero .badge{left:10px}.hero .badge2{right:10px}}'
+    ];
+    if (tema === 'luxo') css.push(
+      '.nav{color:#fff}.nav.solid{color:var(--ink)}',
+      '.hero{color:#fff;align-items:center;justify-content:center;text-align:center}.hero .bgimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:kb 12s var(--ease) both;filter:saturate(.85)}',
+      '.hero::after{content:"";position:absolute;inset:0;background:radial-gradient(80% 70% at 50% 45%,rgba(0,0,0,.35),rgba(0,0,0,.82)),linear-gradient(180deg,transparent 72%,' + bg + ')}',
+      '.hero .wrap{position:relative;z-index:2;padding:140px 0 120px;display:grid;gap:26px;justify-items:center}',
+      '.hero h1{font-size:clamp(50px,8.6vw,124px);font-weight:500;line-height:.98;max-width:16ch}',
+      '.hero h1 em{font-style:italic;color:var(--acc)}',
+      '.hero p{font-size:clamp(17px,1.7vw,20px);max-width:52ch;color:rgba(255,255,255,.82);margin-inline:auto}',
+      '.hero .eyebrow::after{content:"";width:28px;height:1.5px;background:currentColor}',
+      '.ctas{justify-content:center}',
+      '.btn{border-radius:2px;letter-spacing:.16em;text-transform:uppercase;font-size:13px;min-height:54px}.btn.ghost{box-shadow:inset 0 0 0 1px currentColor}',
+      '.head{margin-inline:auto;text-align:center;justify-items:center}.eyebrow{letter-spacing:.3em}',
+      '.sv,.ben,.fact,.tip,.ci,.form,.about .ph,.gal button,.map,.about .ph2{border-radius:3px}',
+      '.svc{grid-template-columns:1fr;gap:0;max-width:920px;margin-inline:auto;border-top:1px solid var(--line)}',
+      '.sv{grid-template-columns:auto 1fr auto;align-items:baseline;gap:6px 22px;background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:26px 4px}',
+      '.sv:hover{transform:none;box-shadow:none;border-color:var(--acc)}',
+      '.sv .n{grid-row:span 2}.sv h3{font-size:30px;font-weight:500}.sv p{grid-column:2}.sv .pr{grid-column:3;grid-row:1;margin:0}.sv .go{grid-column:3;grid-row:2;justify-self:end}',
+      '@media (max-width:640px){.sv{grid-template-columns:auto 1fr}.sv .pr,.sv .go{grid-column:2;grid-row:auto;justify-self:start}}',
+      '.about figure::before{content:"";position:absolute;inset:-14px;border:1px solid var(--acc);opacity:.5}',
+      '.alt{background:var(--bg2)}h2,.h2{font-weight:500}.mq span{font-style:italic}',
+      '.facts .fact{text-align:center;justify-items:center;background:transparent;border-color:var(--line)}'
+    );
+    if (tema === 'natural') css.push.apply(css, badgeCss.concat([
+      '.hero{align-items:center;background:var(--bg)}.hero .blob{display:none}',
+      '.hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,5vw,80px);align-items:center;padding:130px 0 90px}',
+      '@media (max-width:900px){.hero .wrap{grid-template-columns:1fr;padding-top:118px}}',
+      '.hero .copy{display:grid;gap:24px}',
+      '.hero h1{font-size:clamp(44px,6.6vw,92px);font-weight:600;letter-spacing:-0.02em;line-height:1.02}',
+      '.hero h1 em{font-style:italic;font-weight:400;color:var(--acc)}',
+      '.hero p{font-size:clamp(17px,1.7vw,20px);color:var(--mute);max-width:46ch}',
+      '.hero .pic{position:relative;z-index:0}.hero .pic .ph{overflow:hidden;border-radius:999px 999px 40px 40px}.hero .pic img{width:100%;aspect-ratio:4/5;object-fit:cover;animation:kb 10s var(--ease) both}',
+      '.hero .pic::before{content:"";position:absolute;right:-30px;bottom:-30px;width:70%;height:70%;border-radius:46% 54% 40% 60%/55% 45% 55% 45%;background:var(--acc2);opacity:.5;z-index:-1;animation:bl2 12s ease-in-out infinite alternate}',
+      '@keyframes bl2{to{transform:translate(-30px,20px) rotate(12deg)}}',
+      '.sv,.ben,.fact,.tip,.ci,.form{border-radius:32px}.about .ph{border-radius:200px 200px 32px 32px}.gal button,.map{border-radius:28px}',
+      '.ben,.sv,.fact,.tip{box-shadow:0 18px 40px color-mix(in srgb,var(--ink) 7%,transparent);border-color:transparent}',
+      '.alt{background:var(--bg2)}section.alt{border-radius:48px;margin-inline:clamp(6px,2vw,24px)}',
+      'h2,.h2{font-weight:600;letter-spacing:-0.02em}'
+    ]));
+    if (tema === 'moderno') css.push(
+      'body{background:radial-gradient(60% 50% at 85% 0%,color-mix(in srgb,var(--acc) 24%,transparent),transparent 70%),radial-gradient(50% 40% at 0% 35%,color-mix(in srgb,var(--acc2) 16%,transparent),transparent 70%),var(--bg);background-attachment:fixed}',
+      '.nav.solid{background:color-mix(in srgb,var(--bg) 72%,transparent)}',
+      '.hero{align-items:center;text-align:center;flex-direction:column;justify-content:center}',
+      '.hero .wrap{position:relative;z-index:1;display:grid;justify-items:center;gap:26px;padding:150px 0 40px}',
+      '.hero h1{font-size:clamp(46px,7.6vw,112px);font-weight:700;letter-spacing:-0.045em;line-height:.98;max-width:15ch}',
+      '.hero h1 em{font-style:normal}.hero h1 em .w span{background:linear-gradient(100deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent;padding-right:.04em}',
+      '.hero p{font-size:clamp(17px,1.7vw,20px);color:var(--mute);max-width:52ch}',
+      '.ctas{justify-content:center}',
+      '.hero .eyebrow{padding:8px 16px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04);letter-spacing:.06em;text-transform:none;font-size:14px;color:var(--ink)}.hero .eyebrow::before{width:8px;height:8px;border-radius:50%;background:var(--acc);box-shadow:0 0 12px var(--acc)}',
+      '.show{width:min(1100px,100% - 40px);margin:10px auto 80px;border-radius:28px;padding:8px;background:linear-gradient(140deg,color-mix(in srgb,var(--acc) 70%,transparent),rgba(255,255,255,.06) 45%,color-mix(in srgb,var(--acc2) 60%,transparent));transform:perspective(1400px) rotateX(14deg) translateY(30px);opacity:.4;transition:transform 1.4s var(--ease) .5s,opacity 1.4s var(--ease) .5s;position:relative;z-index:1}',
+      'body.ready .show{transform:perspective(1400px) rotateX(0);opacity:1}',
+      '.show img{width:100%;aspect-ratio:16/8;object-fit:cover;border-radius:21px}',
+      '.sv,.ben,.fact,.tip,.ci,.form{background:rgba(255,255,255,.045);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-color:var(--line)}',
+      '.btn{background:linear-gradient(100deg,var(--acc),var(--acc2));color:var(--acc-ink)}.btn.ghost{background:transparent;color:inherit}',
+      'h2,.h2{font-weight:700;letter-spacing:-0.035em}',
+      '.alt{background:rgba(255,255,255,.02)}.mq{background:transparent}',
+      '.form input,.form select,.form textarea{background:rgba(255,255,255,.05)}.form option{color:#111}',
+      '.top{background:var(--bg2)}.hero .scroll{display:none}'
+    );
+    if (tema === 'editorial') css.push(
+      '.hero{display:block;min-height:auto;padding:0}',
+      '.hero .wrap{padding:140px 0 34px;display:grid;gap:26px}',
+      '.hero h1{font-size:clamp(56px,11vw,172px);font-weight:400;line-height:.9;letter-spacing:-0.03em;max-width:13ch}',
+      '.hero h1 em{font-style:italic;color:var(--acc)}',
+      '.hero .meta{display:flex;flex-wrap:wrap;justify-content:space-between;gap:22px;align-items:flex-end;border-top:1px solid var(--ink);padding-top:22px}',
+      '.hero p{font-size:clamp(18px,1.8vw,22px);max-width:50ch;color:var(--mute)}',
+      '.show{width:min(1180px,100% - 40px);margin:0 auto;overflow:hidden}.show img{width:100%;aspect-ratio:21/9;object-fit:cover;animation:kb 10s var(--ease) both}',
+      '@media (max-width:700px){.show img{aspect-ratio:4/3}}',
+      'h1,h2,h3{font-weight:400}.h2{font-size:clamp(44px,6.6vw,96px)}h3{letter-spacing:-0.01em}',
+      '.btn{border-radius:0;background:var(--ink);color:var(--bg)}.btn.ghost{background:transparent;color:var(--ink)}',
+      '.sv,.ben,.fact,.tip,.ci,.form,.about .ph,.about .ph2,.gal button,.map{border-radius:0}',
+      '.svc{gap:0;border-top:1px solid var(--ink)}.sv{border:0;border-bottom:1px solid var(--line);background:transparent}.sv:hover{transform:none;box-shadow:none;background:var(--bg2)}',
+      '.bens{gap:0;border-top:1px solid var(--ink)}.ben{border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent}.ben:hover{transform:none;box-shadow:none}.ben::before{display:none}',
+      '.eyebrow{color:var(--ink)}.eyebrow::before{background:var(--acc);height:9px;width:9px;border-radius:50%}',
+      '.head{max-width:none;border-top:1px solid var(--ink);padding-top:20px}',
+      '.alt{background:var(--bg2)}.mq span{font-style:italic}.scroll{display:none}'
+    );
+
     // ---- HTML
     var waIcon = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.8-1.2.2-.6.2-1.1.1-1.2l-.4-.2z"/></svg>';
     var title = String(hero.titulo || nome);
@@ -2336,7 +2474,16 @@ class Component extends DCLogic {
     var intro = '<div class="intro" aria-hidden="true"><b>' + String(nome).split(/\s+/).map(function (w, i) { return '<span style="animation-delay:' + (i * 0.08) + 's">' + esc(w) + '</span>'; }).join(' ') + '</b><i></i></div>';
   
     var heroHtml;
-    if (tema === 'clinica') {
+    var ctasHtml = waLink(hero.cta || 'WhatsApp', 'btn') + (items.length ? '<a class="btn ghost" href="#servicos">' + esc(hero.cta2 || rot.menu_servicos || 'Serviços') + '</a>' : '');
+    if (tema === 'moderno') {
+      heroHtml = '<section class="hero" id="top"><div class="wrap">' + (hero.etiqueta ? '<span class="eyebrow fade">' + esc(hero.etiqueta) + '</span>' : '') +
+        '<h1>' + titleHtml + '</h1><p class="fade">' + esc(hero.subtitulo) + '</p><div class="ctas fade">' + ctasHtml + '</div></div>' +
+        (P(0) ? '<div class="show"><img src="' + P(0) + '" alt="' + esc(nome) + '"></div>' : '') + '</section>';
+    } else if (tema === 'editorial') {
+      heroHtml = '<section class="hero" id="top"><div class="wrap">' + (hero.etiqueta ? '<span class="eyebrow fade">' + esc(hero.etiqueta) + '</span>' : '') +
+        '<h1>' + titleHtml + '</h1><div class="meta fade"><p>' + esc(hero.subtitulo) + '</p><div class="ctas">' + ctasHtml + '</div></div></div>' +
+        (P(0) ? '<div class="show fade"><img src="' + P(0) + '" alt="' + esc(nome) + '"></div>' : '') + '</section>';
+    } else if (tema === 'clinica' || tema === 'natural') {
       heroHtml = '<section class="hero" id="top"><span class="blob b1"></span><span class="blob b2"></span><div class="wrap"><div class="copy">' +
         (hero.etiqueta ? '<span class="eyebrow fade">' + esc(hero.etiqueta) + '</span>' : '') +
         '<h1>' + titleHtml + '</h1><p class="fade">' + esc(hero.subtitulo) + '</p>' +
@@ -2441,7 +2588,7 @@ class Component extends DCLogic {
       '<style>\n' + css.join('\n') + '\n</style>\n</head>\n<body>\n' + intro + '\n<div class="prog" id="prog"></div>\n' +
       nav + '\n<main>\n' + heroHtml + '\n' + mqHtml + '\n' + (scrub || '') + '\n' + factsHtml + '\n' + aboutHtml + '\n' + bensHtml + '\n' + svcHtml + '\n' + stepsHtml + '\n' + galHtml + '\n' + tipsHtml + '\n' + faqHtml + '\n' + bandHtml + '\n' + contactHtml + '\n</main>\n' + foot + '\n' + floatBtn + '\n' + topBtn + '\n' + js + '\n</body>\n</html>';
   }
-  atPromptContent(nicho, info, lang, nPhotos) {
+  atPromptContent(nicho, info, lang, nPhotos, model) {
     var pouco = String(info.extra || '').length < 400;
     return [
       'Escreva o CONTEÚDO completo do site de uma empresa real. Nós montamos o visual premium; você escolhe o tema, a cor e escreve todos os textos.',
@@ -2464,10 +2611,8 @@ class Component extends DCLogic {
       '- Não coloque links nem citações de fontes nos textos.',
       '- Se o cliente não informou serviços, liste de 5 a 6 serviços típicos desse nicho, sem preço.',
       '',
-      'TEMA (escolha 1):',
-      '- "atelier": escuro e sofisticado, títulos serifados. Para barbearia, restaurante, advocacia, estética, joalharia, imobiliária de luxo, fotografia, moda.',
-      '- "clinica": claro, limpo e acolhedor. Para dentista, psicólogo, nutricionista, veterinária, contabilidade, escola, limpeza, despachante.',
-      '- "energia": forte e vibrante, títulos grandes e condensados. Para academia, personal trainer, pet shop, oficina, construtora, eventos.',
+      model && model !== 'auto' ? 'TEMA: use obrigatoriamente "' + model + '" (o cliente escolheu este modelo). Escolha uma cor que combine com ele.' : 'TEMA (escolha o que mais combina com o nicho e o estilo do cliente):',
+      model && model !== 'auto' ? '' : '- "atelier": escuro e sofisticado, títulos serifados. Para barbearia, restaurante, estética, fotografia, moda.\n- "luxo": preto e dourado, centralizado e elegante. Para joalharia, imobiliária de luxo, advocacia, hotel, estética premium, eventos.\n- "clinica": claro, limpo e acolhedor. Para dentista, psicólogo, contabilidade, escola, despachante.\n- "natural": tons de creme e verde, formas arredondadas. Para nutricionista, spa, massagem, pet shop, veterinária, produtos naturais, café.\n- "energia": forte e vibrante, títulos grandes e condensados. Para academia, personal trainer, oficina, construtora.\n- "moderno": escuro com gradientes e vidro, visual de tecnologia. Para agência, tecnologia, escola de idiomas, consultoria, eventos, estúdio.\n- "editorial": branco, tipografia grande estilo revista. Para arquitetura, design de interiores, fotografia, moda, boutique, restaurante de autor.',
       'COR: um hex que combine com o estilo do cliente e o nicho (ex.: dourado #C9A55C para barbearia clássica, azul #0E6BA8 para clínica). Evite cores genéricas.',
       'ÍCONES (use só estes nomes): dente, tesoura, coracao, estrela, escudo, relogio, folha, brilho, conversa, mapa, calendario, check, pessoas, casa, carro, haltere, pata, pasta, camera, telefone, globo, ferramenta, livro, xicara, sorriso, raio, alvo.',
       '',
@@ -2481,7 +2626,7 @@ class Component extends DCLogic {
       '- chamada: título forte para o fim da página. Botões com verbos claros (ex.: "Marcar pelo WhatsApp").',
       '',
       'Responda só com este JSON (todas as chaves):',
-      '{"tema":"atelier|clinica|energia","cor":"#RRGGBB","idioma":"código como pt-PT, pt-BR, es, en, fr, it, de","slogan":"",',
+      '{"tema":"atelier|luxo|clinica|natural|energia|moderno|editorial","cor":"#RRGGBB","idioma":"código como pt-PT, pt-BR, es, en, fr, it, de","slogan":"",',
       '"seo":{"titulo":"","descricao":""},"marca":{"nome":""},',
       '"hero":{"etiqueta":"","titulo":"","subtitulo":"","cta":"","cta2":""},',
       '"destaques":[{"titulo":"","texto":"","icone":""}],',
@@ -2496,7 +2641,7 @@ class Component extends DCLogic {
       '"rotulos":{"menu_sobre":"","menu_servicos":"","menu_galeria":"","menu_faq":"","menu_contato":"","menu":"","galeria_titulo":"","whatsapp_flutuante":"","direitos":"","endereco":"","horario":"","telefone":"","saber_mais":"","quero":"ex.: Olá! Tenho interesse em","voltar_topo":"","form_titulo":"","form_texto":"","form_nome":"","form_servico":"","form_mensagem":"","form_enviar":"","form_ola":"ex.: Olá! Sou","duvida_cta":""}}'
     ].filter(function (l) { return l !== ''; }).join('\n');
   }
-  atBuildSite(content, info, photos, frames, premium) {
+  atBuildSite(content, info, photos, frames, premium, model) {
     // Limpa o que veio da pesquisa: links de fonte [site](url), numeração duplicada etc.
     var clean = function (v) {
       if (typeof v === 'string') return v.replace(/\s*\[[^\]]{1,80}\]\(https?:[^)]+\)/g, '').replace(/\s*\(?https?:\/\/\S+\)?/g, '').replace(/\s{2,}/g, ' ').trim();
@@ -2512,7 +2657,30 @@ class Component extends DCLogic {
     if (c.rotulos) { if (String(c.rotulos.form_ola || '').length > 16) c.rotulos.form_ola = ''; if (String(c.rotulos.quero || '').length < 6 || String(c.rotulos.quero).length > 40) c.rotulos.quero = ''; }
     c.contato = Object.assign({}, c.contato || {}, { telefone: info.whats, whatsapp: info.whats, instagram: info.insta && !/^https?:\/\/(www\.)?(facebook|fb)\./i.test(info.insta) ? info.insta : '' });
     c.marca = Object.assign({}, c.marca || {}, { nome: (c.marca && c.marca.nome) || info.nome });
+    if (model && model !== 'auto') c.tema = model;
+    this.atLast = { content: c, photos: photos, frames: frames, premium: premium };
     return this.siteTemplate(c, photos, premium ? this.scrollScrubHtml(frames) : '', new Date().getFullYear());
+  }
+  siteModels() {
+    return [
+      { id: 'auto', name: 'A IA escolhe', desc: 'O melhor modelo para o nicho', bg: 'linear-gradient(135deg, #7C3AED, #DB2777)', ink: '#FFFFFF', acc: '#FFE7B3', font: 'system-ui, sans-serif', sample: '✨' },
+      { id: 'atelier', name: 'Ateliê', desc: 'Escuro, sofisticado, foto em tela cheia', bg: '#14110D', ink: '#F3EBDD', acc: '#C9A55C', font: "'Bodoni Moda', Didot, Georgia, serif", sample: 'Aa' },
+      { id: 'luxo', name: 'Luxo', desc: 'Preto e dourado, centralizado', bg: '#080706', ink: '#F1E9DA', acc: '#D4AF37', font: "'Cormorant Garamond', Garamond, Georgia, serif", sample: 'Aa' },
+      { id: 'clinica', name: 'Clínica', desc: 'Claro, limpo e confiável', bg: '#F4F8FC', ink: '#10233A', acc: '#0E6BA8', font: "'Bricolage Grotesque', system-ui, sans-serif", sample: 'Aa' },
+      { id: 'natural', name: 'Natural', desc: 'Creme e verde, formas suaves', bg: '#F7F3EA', ink: '#1F2A1E', acc: '#4F7A4A', font: 'Fraunces, Georgia, serif', sample: 'Aa' },
+      { id: 'energia', name: 'Energia', desc: 'Forte, vibrante, títulos enormes', bg: '#F3F3F1', ink: '#111111', acc: '#FF4D1A', font: "Anton, Impact, 'Arial Narrow', sans-serif", sample: 'AA' },
+      { id: 'moderno', name: 'Moderno', desc: 'Escuro com gradiente e vidro', bg: '#0B0E1A', ink: '#EEF0FF', acc: '#7C5CFF', font: "'Space Grotesk', system-ui, sans-serif", sample: 'Aa' },
+      { id: 'editorial', name: 'Editorial', desc: 'Branco, estilo revista', bg: '#FBFAF7', ink: '#141414', acc: '#C2410C', font: "'Instrument Serif', Georgia, serif", sample: 'Aa' }
+    ];
+  }
+  atRetheme(id) {
+    var L = this.atLast;
+    if (!L || !L.content) return;
+    var c = Object.assign({}, L.content, { tema: id });
+    this.genHtml = this.siteTemplate(c, L.photos, L.premium ? this.scrollScrubHtml(L.frames) : '', new Date().getFullYear());
+    this.atLast = Object.assign({}, L, { content: c });
+    var m = this.siteModels().filter(function (x) { return x.id === id; })[0];
+    this.atPatch({ status: 'done', shown: id, msg: 'Pronto! Agora o site está no modelo “' + (m ? m.name : id) + '”. Mesmos textos e fotos, sem gastar uma criação. Clique em “Abrir site” para ver.' });
   }
   atGenerate(i, nicho, langName) {
     var self = this, st = self.state, atS = st.at || {};
@@ -2557,11 +2725,12 @@ class Component extends DCLogic {
       self.genHtml = html;
       self.atPatch({ status: 'done', msg: 'Site criado' + (usePremium ? ' com o efeito premium de rolagem' : (premium ? ' sem o efeito premium (nenhum frame foi enviado)' : '')) + '! Clique em “Abrir site” para ver ou em “Baixar HTML” para guardar o arquivo.' });
     };
-    var contentPayload = { mode: 'content', research: true, prompt: self.atPromptContent(nicho, info, langName, photos.length) };
+    var model = st.siteModel || 'auto';
+    var contentPayload = { mode: 'content', research: true, prompt: self.atPromptContent(nicho, info, langName, photos.length, model) };
     // 1º: modelo premium (a IA escreve só o conteúdo). Se falhar, tenta mais uma vez.
     var premiumRun = call(contentPayload).catch(function () { return call(contentPayload); });
     premiumRun.then(function (j) {
-      if (j.content) { done(self.atBuildSite(j.content, info, photos, frames, usePremium)); return null; }
+      if (j.content) { done(self.atBuildSite(j.content, info, photos, frames, usePremium, model)); return null; }
       return j.html; // servidor antigo: segue no modo HTML
     }).then(function (html) {
       if (html === null) return;
@@ -3054,6 +3223,15 @@ class Component extends DCLogic {
           return { src: src, label: k === 0 ? 'Principal' : 'Foto ' + (k + 1), remove: function () { self.atPhotos.splice(k, 1); self.setState({ atV: Date.now() }); } };
         }),
         onPhotos: function (e) { self.atAddPhotos(e); },
+        models: self.siteModels().map(function (m) {
+          var on = (st.siteModel || 'auto') === m.id;
+          return Object.assign({}, m, { border: on ? '#A78BFA' : '#3B2F6B', ring: on ? '0 0 0 3px rgba(167,139,250,0.45)' : 'none', check: on ? '✓ Selecionado' : 'Escolher', checkInk: on ? '#C9B8FF' : '#8C84B4', pick: function () { self.save({ siteModel: m.id }); } });
+        }),
+        canRetheme: atS.status === 'done' && !!(self.atLast && self.atLast.content),
+        rethemes: self.siteModels().filter(function (m) { return m.id !== 'auto'; }).map(function (m) {
+          var cur = self.atLast && self.atLast.content && self.atLast.content.tema === m.id;
+          return { name: m.name, bg: m.bg, ink: m.ink, acc: m.acc, font: m.font, border: cur ? '#4ADE80' : '#3B2F6B', label: cur ? '✓ ' + m.name : m.name, pick: function () { self.atRetheme(m.id); } };
+        }),
         premium: !!atS.premium,
         togglePremium: function (e) { self.setState({ at: Object.assign({}, self.state.at, { premium: !!e.target.checked }) }); },
         onFrames: function (e) { self.atAddFrames(e); },
