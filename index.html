@@ -523,9 +523,16 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 <div role="note" style="display: flex; align-items: center; gap: 14px; padding: 16px 18px; border-radius: 20px; background: linear-gradient(135deg, rgba(245,165,36,0.22), rgba(219,39,119,0.16)); border: 1px solid rgba(251,191,36,0.6); box-shadow: 0 12px 30px rgba(245,165,36,0.18)">
 <span aria-hidden="true" style="flex-shrink: 0; width: 46px; height: 46px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; background: rgba(13,10,38,0.55); border: 1px solid rgba(251,191,36,0.45)">🚀</span>
 <div style="display: flex; flex-direction: column; gap: 4px">
-<span style="align-self: flex-start; padding: 3px 10px; border-radius: 999px; background: #F59E0B; color: #1A1206; font-size: 11px; font-weight: 800; letter-spacing: 0.1em">EM BREVE</span>
-<strong style="font-size: 16px; color: #FFFFFF">A busca de empresas reais está chegando!</strong>
-<span style="font-size: 14px; color: #F3E8D2; line-height: 1.45">Estamos finalizando a conexão com o Google. Por enquanto, os resultados são só <strong>exemplos</strong> para você conhecer como vai funcionar.</span>
+<sc-if value="{{ radar.preview }}" hint-placeholder-val="{{ true }}">
+<span style="align-self: flex-start; padding: 3px 10px; border-radius: 999px; background: #F59E0B; color: #1A1206; font-size: 11px; font-weight: 800; letter-spacing: 0.1em">MODO PRÉVIA</span>
+<strong style="font-size: 16px; color: #FFFFFF">Estes resultados são só exemplos</strong>
+<span style="font-size: 14px; color: #F3E8D2; line-height: 1.45">Você está vendo a prévia do design, sem login. No site do SORA, com a sua conta, a busca encontra <strong>empresas reais</strong> sem site.</span>
+</sc-if>
+<sc-if value="{{ radar.live }}" hint-placeholder-val="{{ false }}">
+<span style="align-self: flex-start; padding: 3px 10px; border-radius: 999px; background: #F59E0B; color: #1A1206; font-size: 11px; font-weight: 800; letter-spacing: 0.1em">EXEMPLOS</span>
+<strong style="font-size: 16px; color: #FFFFFF">A busca real não respondeu desta vez</strong>
+<span style="font-size: 14px; color: #F3E8D2; line-height: 1.45">Mostramos <strong>exemplos</strong> no lugar. Tente buscar de novo em alguns segundos.</span>
+</sc-if>
 </div>
 </div>
 </sc-if>
@@ -642,12 +649,17 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 </div>
 
 <div style="background: rgba(20,15,46,0.55); border: 1px solid #3B2F6B; border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 14px">
-<h3 style="margin: 0; font-size: 17px; display: flex; align-items: center; gap: 10px"><span style="width: 30px; height: 30px; border-radius: 10px; background: linear-gradient(135deg, #7C3AED, #DB2777); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0">2</span>Fotos da empresa <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.08em; padding: 3px 8px; border-radius: 999px; border: 1px solid rgba(244,114,182,0.6); color: #F9A8D4">OBRIGATÓRIO</span></h3>
+<h3 style="margin: 0; font-size: 17px; display: flex; align-items: center; gap: 10px"><span style="width: 30px; height: 30px; border-radius: 10px; background: linear-gradient(135deg, #7C3AED, #DB2777); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0">2</span>Fotos da empresa <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.08em; padding: 3px 8px; border-radius: 999px; border: 1px solid #3B2F6B; color: #B9B2DA">OPCIONAL</span></h3>
+<p style="margin: 0; font-size: 13px; color: #D6D0F0">Tem fotos da empresa? Envie abaixo. <strong style="color: #FFE7B3">Não tem?</strong> Deixe em branco: ao gerar o site, a IA cria automaticamente 5 fotos do nicho em alta qualidade.</p>
 <label style="position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; min-height: 110px; padding: 16px; border-radius: 18px; border: 2px dashed {{ atl.b_fotos }}; background: rgba(13,10,38,0.6); cursor: pointer; text-align: center; color: #D6D0F0; font-size: 14px">
 <input type="file" accept="image/*" multiple onChange="{{ atl.onPhotos }}" style="position: absolute; inset: 0; opacity: 0; cursor: pointer">
 <strong style="color: #FFFFFF">Clique para escolher as fotos</strong>
-<span style="font-size: 12px; color: #B9B2DA">De 1 a 12 fotos (fachada, produtos, equipe, ambiente). A primeira vira a foto principal.</span>
+<span style="font-size: 12px; color: #B9B2DA">Até 12 fotos (fachada, produtos, equipe, ambiente). A primeira vira a foto principal.</span>
 </label>
+<button onClick="{{ atl.aiPhotos }}" disabled="{{ atl.aiBusy }}" style="min-height: 48px; padding: 0 18px; border-radius: 999px; border: 1px solid #A78BFA; background: rgba(124,58,237,0.18); color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer; opacity: {{ atl.aiOpacity }}">{{ atl.aiLabel }}</button>
+<sc-if value="{{ atl.hasAiMsg }}" hint-placeholder-val="{{ false }}">
+<span role="status" style="font-size: 13px; color: #C9B8FF">{{ atl.aiMsg }}</span>
+</sc-if>
 <sc-if value="{{ atl.hasPhotos }}" hint-placeholder-val="{{ false }}">
 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 10px">
 <sc-for list="{{ atl.photos }}" as="ph" hint-placeholder-count="3">
@@ -830,7 +842,7 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 <section class="screen" style="display: flex; flex-direction: column; gap: 20px">
 <div style="display: flex; flex-direction: column; gap: 4px">
 <h1 style="margin: 0; font-size: 30px; font-weight: 700; letter-spacing: -0.02em">Academia de Criação de Sites</h1>
-<p style="margin: 0; color: #B9B2DA">Aprenda do zero a criar e vender sites na Europa · {{ doneCount }} de 3 módulos concluídos</p>
+<p style="margin: 0; color: #B9B2DA">Aprenda do zero a criar e vender sites na Europa · {{ doneCount }} de 2 módulos concluídos</p>
 </div>
 
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 14px">
@@ -1079,7 +1091,6 @@ class Component extends DCLogic {
       salesLimit: 10,
       mods: [
         { url: '', notes: '', done: false },
-        { url: '', notes: '', done: false },
         { url: '', notes: '', done: false }
       ],
       agency: { name: '', logo: '', color: '#7C3AED', themeV: 4, owner: '', contact: '', brandHeader: false, spaceBg: true, motion: true },
@@ -1182,12 +1193,13 @@ class Component extends DCLogic {
           if (saved.radarQ && typeof saved.radarQ === 'object') base.radarQ = Object.assign({}, base.radarQ, saved.radarQ);
           if (Array.isArray(saved.sales)) base.sales = saved.sales;
           var blankMod = { url: '', notes: '', done: false };
-          if (Array.isArray(saved.mods) && saved.modsV === 4 && saved.mods.length === 3) base.mods = saved.mods;
-          else if (Array.isArray(saved.mods) && saved.modsV === 3 && saved.mods.length === 2) base.mods = [blankMod, saved.mods[0], saved.mods[1]];
+          // Academia: 1) Domínio e 2) Fechar a venda e receber em euro.
+          if (Array.isArray(saved.mods) && (saved.modsV === 5 || saved.modsV === 3) && saved.mods.length === 2) base.mods = saved.mods;
+          else if (Array.isArray(saved.mods) && saved.modsV === 4 && saved.mods.length === 3) base.mods = [saved.mods[1], saved.mods[2]];
           else if (Array.isArray(saved.mods) && saved.mods.length === 4) {
-            // Academia: Encontrar Clientes, Domínio e Receber em euro.
-            base.mods = saved.modsV === 2 ? [saved.mods[0], saved.mods[2], saved.mods[3]] : [saved.mods[2], saved.mods[1], saved.mods[3]];
+            base.mods = saved.modsV === 2 ? [saved.mods[2], saved.mods[3]] : [saved.mods[1], saved.mods[3]];
           }
+          base.mods = base.mods.map(function (m) { return m || blankMod; });
           if (saved.agency && typeof saved.agency === 'object') {
             var oldTheme = saved.agency.themeV !== 4;
             base.agency = Object.assign(base.agency, saved.agency);
@@ -1540,7 +1552,7 @@ class Component extends DCLogic {
   persist() {
     try {
       window.localStorage.setItem(this.KEY, JSON.stringify({
-        rate: this.state.rate, sales: this.state.sales, mods: this.state.mods, modsV: 4,
+        rate: this.state.rate, sales: this.state.sales, mods: this.state.mods, modsV: 5,
         agency: this.state.agency, calc: this.state.calc, goal: this.state.goal, favs: this.state.favs, pitchLang: this.state.pitchLang, promptLang: this.state.promptLang, revAdj: this.state.revAdj, siteModel: this.state.siteModel, nichoInfo: this.state.nichoInfo, radarCache: this.state.radarCache, radarQ: this.state.radarQ, flowVars: this.state.flowVars, flowLang: this.state.flowLang
       }));
     } catch (e) {}
@@ -1776,7 +1788,7 @@ class Component extends DCLogic {
         if (err) { self.setState({ radarBusy: null, radarError: err }); return; }
         var all = Object.assign({}, self.state.radarCache || {});
         var lds = (data.leads || []).map(function (l) { return String(q.niche).indexOf('card:') === 0 ? Object.assign({}, l, { niche: q.niche }) : l; });
-        all[key] = { country: q.country, city: city, niche: q.niche, leads: lds, analyzed: data.analyzed || 0, mock: !!data.mock, source: data.source || 'google', at: Date.now() };
+        all[key] = { country: q.country, city: city, niche: q.niche, leads: lds, analyzed: data.analyzed || 0, mock: !!data.mock, preview: !!data.preview, source: data.source || 'google', at: Date.now() };
         var keys = Object.keys(all).sort(function (a, b) { return all[b].at - all[a].at; });
         keys.slice(8).forEach(function (k) { delete all[k]; });
         self.save({ radarCache: all });
@@ -1784,7 +1796,7 @@ class Component extends DCLogic {
       }, wait);
     };
     var client = window.soraAuth;
-    if (!client) { finish({ mock: true, analyzed: 20, leads: self.radarMock(city, q.country, q.niche) }); return; }
+    if (!client) { finish({ mock: true, preview: true, analyzed: 20, leads: self.radarMock(city, q.country, q.niche) }); return; }
     client.auth.getSession().then(function (r) {
       var sess = r && r.data && r.data.session;
       if (!sess) throw new Error('Faça login para usar o Radar.');
@@ -1856,7 +1868,7 @@ class Component extends DCLogic {
       btnLabel: busy ? 'Procurando…' : '🔍 Procurar Empresas Sem Site',
       loadingTitle: busy ? busy.msgs[busy.step] : '', loadingSub: busy ? 'Buscando no mapa e filtrando só quem NÃO tem site em ' + busy.city + '.' : '',
       hasError: !!st.radarError, error: st.radarError || '',
-      hasResult: !busy && !!entry, mock: !!(entry && entry.mock), osm: !!(entry && entry.source === 'osm' && entry.leads.length), soon: !!(entry && entry.mock), empty: !!(entry && !entry.leads.length)
+      hasResult: !busy && !!entry, mock: !!(entry && entry.mock), osm: !!(entry && entry.source === 'osm' && entry.leads.length), soon: !!(entry && entry.mock), preview: !!(entry && entry.preview), live: !!(entry && entry.mock && !entry.preview), empty: !!(entry && !entry.leads.length)
     };
     if (entry) {
       var n = entry.leads.length;
@@ -1910,8 +1922,47 @@ class Component extends DCLogic {
         URL.revokeObjectURL(url);
         resolve(c.toDataURL('image/jpeg', quality));
       };
-      img.onerror = function () { URL.revokeObjectURL(url); reject(new Error('Não consegui ler a imagem ' + file.name)); };
+      img.onerror = function () { URL.revokeObjectURL(url); reject(new Error('Não consegui ler a imagem ' + (file.name || ''))); };
       img.src = url;
+    });
+  }
+  // Chama a função gerar-site com a sessão do usuário.
+  atApi(payload) {
+    var client = window.soraAuth;
+    if (!client) return Promise.reject(new Error('Disponível no site do Sora, depois de entrar na sua conta.'));
+    return client.auth.getSession().then(function (r) {
+      var s = r && r.data && r.data.session;
+      if (!s) throw new Error('Faça login para criar sites.');
+      return fetch('https://aemnqozofjmvuweyyekp.supabase.co/functions/v1/gerar-site', {
+        method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer ' + s.access_token }, body: JSON.stringify(payload)
+      });
+    }).then(function (res) {
+      return res.json().catch(function () { return {}; }).then(function (j) {
+        if (!res.ok) throw new Error(j.error || 'Não foi possível falar com o servidor agora.');
+        return j;
+      });
+    });
+  }
+  // Cria fotos do nicho com IA (alta qualidade) quando o cliente não tem fotos. Ilustrativas: o usuário pode trocar depois.
+  atAiPhotos(nicho, info, genId) {
+    var self = this;
+    var shots = ['hero', 'servico', 'detalhe', 'ambiente', 'cliente'];
+    self.atAiUrls = self.atAiUrls || {};
+    var got = 0;
+    self.atPatch({ aiBusy: true, aiMsg: 'A IA está criando 5 fotos do nicho em alta qualidade… (0 de 5)' });
+    return Promise.all(shots.map(function (shot) {
+      return self.atApi({ mode: 'photo', shot: shot, nicho: nicho, cidade: info.cidade || '', estilo: info.estilo || '', genId: genId || '' })
+        .then(function (j) { return fetch(j.image).then(function (r) { return r.blob(); }); })
+        .then(function (blob) { return self.shrinkImage(blob, 2048, 0.9); })
+        .then(function (d) { got += 1; self.atPatch({ aiMsg: 'A IA está criando 5 fotos do nicho em alta qualidade… (' + got + ' de 5)' }); return d; })
+        .catch(function (e) { console.warn('foto IA', shot, e && e.message); return ''; });
+    })).then(function (list) {
+      list = list.filter(Boolean);
+      list.forEach(function (d) { self.atAiUrls[d.slice(-40)] = 1; });
+      self.atPhotos = (self.atPhotos || []).concat(list).slice(0, 12);
+      var miss = Object.assign({}, (self.state.at || {}).missing || {}); delete miss.fotos;
+      self.atPatch({ aiBusy: false, missing: miss, aiMsg: list.length ? list.length + ' fotos criadas pela IA. São ilustrativas: troque pelas fotos reais da empresa quando tiver.' : 'Não consegui criar as fotos agora. Tente de novo ou envie as suas.' });
+      return list;
     });
   }
   atAddPhotos(e) {
@@ -2690,11 +2741,12 @@ class Component extends DCLogic {
     var missing = {};
     ['nome', 'cidade', 'whats', 'extra'].forEach(function (k) { if (!info[k]) missing[k] = true; });
     var photos = (self.atPhotos || []).slice();
-    if (!photos.length) missing.fotos = true;
     if (Object.keys(missing).length) {
-      self.atPatch({ missing: missing, status: 'error', msg: missing.fotos && Object.keys(missing).length === 1 ? 'Envie pelo menos 1 foto no passo 2.' : 'Preencha os campos obrigatórios (marcados em vermelho)' + (missing.fotos ? ' e envie pelo menos 1 foto.' : '.') });
+      self.atPatch({ missing: missing, status: 'error', msg: 'Preencha os campos obrigatórios (marcados em vermelho).' });
       return;
     }
+    if (atS.aiBusy) { self.atPatch({ status: 'error', msg: 'Espere a IA terminar de criar as fotos.' }); return; }
+    var aiPhotos = !photos.length;
     var client = window.soraAuth;
     if (!client) { self.atPatch({ status: 'error', msg: 'Disponível no site do Sora, depois de entrar na sua conta.' }); return; }
     var q = st.siteQuota;
@@ -2703,7 +2755,9 @@ class Component extends DCLogic {
     var frames = (self.atFrames || []).slice();
     var premium = !!atS.premium, usePremium = premium && frames.length > 0;
     self.genHtml = '';
-    self.atPatch({ missing: null, status: 'loading', msg: 'A IA está pesquisando o nicho e escrevendo o site' + (usePremium ? ' com o efeito premium' : '') + '. Leva uns 30 segundos, não feche a página.' });
+    self.atPatch({ missing: null, status: 'loading', msg: 'A IA está pesquisando o nicho e escrevendo o site' + (aiPhotos ? ', e criando as fotos do nicho' : '') + (usePremium ? ' com o efeito premium' : '') + '. Leva até 1 minuto, não feche a página.' });
+    // Sem fotos do cliente: a IA cria fotos do nicho ao mesmo tempo que escreve o site.
+    var photosRun = aiPhotos ? self.atAiPhotos(nicho, info, genId) : Promise.resolve(photos);
     var call = function (payload) {
       return client.auth.getSession().then(function (r) {
         var s = r && r.data && r.data.session;
@@ -2723,13 +2777,14 @@ class Component extends DCLogic {
     };
     var done = function (html) {
       self.genHtml = html;
-      self.atPatch({ status: 'done', msg: 'Site criado' + (usePremium ? ' com o efeito premium de rolagem' : (premium ? ' sem o efeito premium (nenhum frame foi enviado)' : '')) + '! Clique em “Abrir site” para ver ou em “Baixar HTML” para guardar o arquivo.' });
+      self.atPatch({ status: 'done', msg: 'Site criado' + (usePremium ? ' com o efeito premium de rolagem' : (premium ? ' sem o efeito premium (nenhum frame foi enviado)' : '')) + '! Clique em “Abrir site” para ver ou em “Baixar HTML” para guardar o arquivo.' + (aiPhotos ? (photos.length ? ' As fotos foram criadas pela IA (ilustrativas): troque pelas fotos reais da empresa quando tiver.' : ' Não consegui criar as fotos agora: envie fotos e gere de novo.') : '') });
     };
     var model = st.siteModel || 'auto';
-    var contentPayload = { mode: 'content', research: true, prompt: self.atPromptContent(nicho, info, langName, photos.length, model) };
+    var contentPayload = { mode: 'content', research: true, prompt: self.atPromptContent(nicho, info, langName, photos.length || 5, model) };
     // 1º: modelo premium (a IA escreve só o conteúdo). Se falhar, tenta mais uma vez.
     var premiumRun = call(contentPayload).catch(function () { return call(contentPayload); });
-    premiumRun.then(function (j) {
+    Promise.all([premiumRun, photosRun]).then(function (both) {
+      var j = both[0]; photos = both[1] || [];
       if (j.content) { done(self.atBuildSite(j.content, info, photos, frames, usePremium, model)); return null; }
       return j.html; // servidor antigo: segue no modo HTML
     }).then(function (html) {
@@ -2899,12 +2954,10 @@ class Component extends DCLogic {
     });
 
     var defs = [
-      { title: 'Como Encontrar Clientes', desc: 'Onde encontrar negócios na Europa que precisam de um site, como fazer a primeira abordagem e como apresentar a sua proposta.' },
       { title: 'Como Configurar o Domínio', desc: 'Como registrar o domínio, apontar o DNS, ativar o certificado SSL e deixar o site do cliente no ar.' },
       { title: 'Como Fechar a Venda e Receber em Euro', desc: 'Como definir o preço, formalizar o acordo, emitir a cobrança e receber o pagamento em euro com conversão para reais.' }
     ];
     var lessonSets = [
-      ['Escolhendo o nicho e o país', 'Onde achar empresas sem site', 'Primeira abordagem e follow-up'],
       ['Como comprar o domínio', 'Como configurar o domínio', 'Ativando o SSL e conferindo tudo'],
       ['Apresentando o modelo ao cliente', 'Definindo o preço e fechando o acordo', 'Recebendo em euro e convertendo para reais']
     ];
@@ -2912,13 +2965,11 @@ class Component extends DCLogic {
     // Vídeos de cada módulo, na ordem em que devem ser assistidos.
     var COVER = './assets/7e0d5c3ea156370423746d166261c508.webp';
     var videoSets = [
-      [{ name: 'Como Encontrar Clientes', url: 'https://www.youtube.com/watch?v=uRWHB_cOW14' }],
       [{ name: 'Como comprar o domínio', url: 'https://youtu.be/S5f9drsaVXA' }, { name: 'Como configurar o domínio', url: 'https://youtu.be/yFtwRGdXPO0' }],
       [{ name: 'Como receber em euro', url: 'https://youtube.com/shorts/-NB6YFhlPBA' }]
     ];
     function moduleVideos(i) { return videoSets[i] || []; }
     var modLooks = [
-      { color: '#7C3AED', tint: 'rgba(124,58,237,0.55)', icon: 'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75' },
       { color: '#0EA5E9', tint: 'rgba(14,165,233,0.5)', icon: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20' },
       { color: '#D97706', tint: 'rgba(217,119,6,0.5)', icon: 'M17 6.5A7 7 0 1 0 17 17.5M4 10h10M4 14h10' }
     ];
@@ -2955,7 +3006,7 @@ class Component extends DCLogic {
     });
 
     var cm = st.mods[st.mod];
-    var covers = ['./assets/7e0d5c3ea156370423746d166261c508.webp', './assets/7e0d5c3ea156370423746d166261c508.webp', './assets/7e0d5c3ea156370423746d166261c508.webp'];
+    var covers = ['./assets/7e0d5c3ea156370423746d166261c508.webp', './assets/7e0d5c3ea156370423746d166261c508.webp'];
     var vids = moduleVideos(st.mod);
     var vi = Math.min(st.lesson, Math.max(vids.length - 1, 0));
     var videoUrl = vids[vi] ? vids[vi].url : '';
@@ -2989,7 +3040,6 @@ class Component extends DCLogic {
     };
 
     var checkDefs = [
-      ['Nicho e país escolhidos', 'Lista com empresas sem site montada', 'Primeiras abordagens enviadas'],
       ['Domínio registrado', 'Site publicado e DNS apontado', 'Certificado SSL ativo'],
       ['Modelo apresentado ao cliente', 'Preço e acordo fechados', 'Pagamento em euro recebido']
     ];
@@ -3008,13 +3058,13 @@ class Component extends DCLogic {
       };
     });
     var toolSets = {
-      2: [
+      1: [
           { name: 'Wise', what: 'Conta internacional para receber em euro e converter para reais', domain: 'App Store · Wise', url: 'https://apps.apple.com/br/app/wise-conta-international/id612261027', color: '#65A30D', tint: 'rgba(132,204,22,0.28)', border: 'rgba(190,242,100,0.5)', icon: 'M3 7h18v12H3zM3 11h18M7 15h4M16 3l-4 4-4-4' }
       ]
     };
     cur.hasTools = !!toolSets[st.mod];
-    cur.toolsTitle = st.mod === 2 ? 'App para receber em euro' : 'Sites que você vai usar';
-    cur.toolsHint = st.mod === 2 ? 'Baixe no celular e crie sua conta para receber dos clientes na Europa.' : 'Clique para abrir. Deixe essas abas abertas enquanto assiste à aula.';
+    cur.toolsTitle = st.mod === 1 ? 'App para receber em euro' : 'Sites que você vai usar';
+    cur.toolsHint = st.mod === 1 ? 'Baixe no celular e crie sua conta para receber dos clientes na Europa.' : 'Clique para abrir. Deixe essas abas abertas enquanto assiste à aula.';
     cur.showPrompt = false;
     cur.numLabel = '0' + (st.mod + 1);
     cur.multi = vids.length > 1;
@@ -3220,9 +3270,16 @@ class Component extends DCLogic {
         b_nome: bad('nome'), b_whats: bad('whats'), b_cidade: bad('cidade'), b_extra: bad('extra'), b_insta: '#3B2F6B', b_estilo: '#3B2F6B', b_fotos: miss.fotos ? '#F87171' : '#3B2F6B',
         hasPhotos: aPhotos.length > 0,
         photos: aPhotos.map(function (src, k) {
-          return { src: src, label: k === 0 ? 'Principal' : 'Foto ' + (k + 1), remove: function () { self.atPhotos.splice(k, 1); self.setState({ atV: Date.now() }); } };
+          return { src: src, label: (k === 0 ? 'Principal' : 'Foto ' + (k + 1)) + ((self.atAiUrls || {})[src.slice(-40)] ? ' · IA' : ''), remove: function () { self.atPhotos.splice(k, 1); self.setState({ atV: Date.now() }); } };
         }),
         onPhotos: function (e) { self.atAddPhotos(e); },
+        aiBusy: !!atS.aiBusy, hasAiMsg: !!atS.aiMsg, aiMsg: atS.aiMsg || '', aiOpacity: atS.aiBusy ? '0.6' : '1',
+        aiLabel: atS.aiBusy ? 'Criando fotos com IA…' : (aPhotos.length ? '✨ Criar mais fotos do nicho com IA' : '✨ Criar fotos do nicho com IA'),
+        aiPhotos: function () {
+          if (atS.aiBusy || busy) return;
+          var nm = atC ? atC.nicho : (pl === 'pt' ? nichoDefs[atI][0] : nichoNames[pl][atI]);
+          self.atAiPhotos(nm, Object.assign({}, aInfo));
+        },
         models: self.siteModels().map(function (m) {
           var on = (st.siteModel || 'auto') === m.id;
           return Object.assign({}, m, { border: on ? '#A78BFA' : '#3B2F6B', ring: on ? '0 0 0 3px rgba(167,139,250,0.45)' : 'none', check: on ? '✓ Selecionado' : 'Escolher', checkInk: on ? '#C9B8FF' : '#8C84B4', pick: function () { self.save({ siteModel: m.id }); } });
@@ -3438,7 +3495,7 @@ class Component extends DCLogic {
       quick: {
         vendas: sales.length ? sales.length + (sales.length === 1 ? ' venda registrada' : ' vendas registradas') : 'Nenhuma venda registrada ainda',
         nichos: st.favs.length ? st.favs.length + (st.favs.length === 1 ? ' nicho favorito' : ' nichos favoritos') : '20 nichos disponíveis',
-        acad: doneCount + ' de 3 módulos concluídos'
+        acad: doneCount + ' de 2 módulos concluídos'
       },
       rate: st.rate,
       onRate: function (e) { self.save({ rate: e.target.value }); },
