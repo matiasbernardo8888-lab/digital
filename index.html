@@ -617,6 +617,22 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 <div style="margin-top: auto; display: flex; flex-direction: column; gap: 8px">
 <a class="ghost" href="{{ ld.mapsUrl }}" target="_blank" rel="noopener noreferrer" style="height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid #3B2F6B; background: #140F2E; color: #FFFFFF; font-size: 14px; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px">Ver no Google Maps</a>
 <button class="btn" onClick="{{ ld.gen }}" style="min-height: 48px; padding: 0 16px; border: 0; border-radius: 999px; background: linear-gradient(135deg, #7C3AED, #DB2777); color: #FFFFFF; font-size: 14px; font-weight: 800; cursor: pointer; box-shadow: 0 10px 26px rgba(219,39,119,0.35)">✨ Gerar Site Pra Essa Empresa em 1 Clique</button>
+<button class="ghost" onClick="{{ ld.msg.toggle }}" aria-expanded="{{ ld.msg.open }}" style="min-height: 48px; padding: 0 16px; border-radius: 999px; border: 1px solid #22C55E; background: rgba(22,163,74,0.16); color: #FFFFFF; font-size: 14px; font-weight: 800; cursor: pointer">{{ ld.msg.toggleLabel }}</button>
+<sc-if value="{{ ld.msg.open }}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 14px; border-radius: 16px; background: rgba(13,10,38,0.7); border: 1px solid rgba(74,222,128,0.5)">
+<span style="font-size: 12px; font-weight: 800; letter-spacing: 0.08em; color: #86EFAC">MENSAGEM EM {{ ld.msg.lang }} · MODELO GRÁTIS, SÓ PAGA SE GOSTAR</span>
+<div style="white-space: pre-wrap; font-size: 14px; line-height: 1.55; color: #E9E4FF; max-height: 260px; overflow: auto">{{ ld.msg.text }}</div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-if value="{{ ld.msg.hasWa }}" hint-placeholder-val="{{ true }}">
+<a href="{{ ld.msg.waHref }}" target="_blank" rel="noopener noreferrer" style="flex: 1 1 180px; min-height: 44px; padding: 0 14px; border-radius: 999px; background: #16A34A; color: #FFFFFF; font-size: 14px; font-weight: 800; text-decoration: none; display: inline-flex; align-items: center; justify-content: center">Enviar no WhatsApp</a>
+</sc-if>
+<button onClick="{{ ld.msg.copy }}" style="flex: 1 1 160px; min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid #4ADE80; background: {{ ld.msg.copyBg }}; color: #FFFFFF; font-size: 14px; font-weight: 800; cursor: pointer">{{ ld.msg.copyLabel }}</button>
+<sc-if value="{{ ld.msg.hasInsta }}" hint-placeholder-val="{{ false }}">
+<a href="{{ ld.msg.instaHref }}" onClick="{{ ld.msg.copyInsta }}" target="_blank" rel="noopener noreferrer" style="flex: 1 1 160px; min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid #F472B6; color: #FFFFFF; font-size: 14px; font-weight: 800; text-decoration: none; display: inline-flex; align-items: center; justify-content: center">Copiar e abrir Instagram</a>
+</sc-if>
+</div>
+</div>
+</sc-if>
 </div>
 </article>
 </sc-for>
@@ -1822,6 +1838,22 @@ class Component extends DCLogic {
     this.setState({ at: { i: -2, premium: false, missing: null, custom: { nicho: nl, langName: c[2], info: { nome: String(ld.name || '').replace(/\s*\(exemplo\)$/, ''), whats: ld.phone || '', cidade: entry.city + ', ' + c[1].replace(/^\S+\s/, ''), insta: (this.radarContacts(ld, entry).instagram || this.radarContacts(ld, entry).facebook || ''), extra: extra, estilo: '' } } } });
     setTimeout(function () { var el = document.getElementById('atelie'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 80);
   }
+  // Mensagem pronta para a empresa achada no Radar, no idioma do país dela (modelo grátis, só paga se gostar).
+  radarPitch(ld, entry) {
+    var T = {
+      'pt-BR': ['🇧🇷 Português', 'Olá, {EMP}! Tudo bem? 👋\n\nEncontrei vocês aqui em {CID} e vi que ainda não têm um site.\n\nHoje a maioria dos clientes pesquisa no Google antes de escolher onde ir. Um site profissional, com os seus serviços, fotos e um botão de WhatsApp, faz vocês serem encontrados com mais facilidade e passa muito mais confiança.\n\nPor isso quero criar um modelo do site de vocês 100% gratuito. Vocês veem o site pronto e só pagam se gostarem. Se não gostarem, não pagam nada.\n\nPosso preparar e te mandar ainda hoje?'],
+      'pt-PT': ['🇵🇹 Português', 'Olá, {EMP}! Tudo bem? 👋\n\nEncontrei-vos aqui em {CID} e reparei que ainda não têm site.\n\nHoje a maioria dos clientes pesquisa no Google antes de escolher onde ir. Um site profissional, com os vossos serviços, fotos e um botão de WhatsApp, faz com que vos encontrem mais facilmente e transmite muito mais confiança.\n\nPor isso gostava de criar um modelo do vosso site 100% gratuito. Veem o site pronto e só pagam se gostarem. Se não gostarem, não pagam nada.\n\nPosso prepará-lo e enviar-vos ainda hoje?'],
+      es: ['🇪🇸 Español', '¡Hola, {EMP}! ¿Qué tal? 👋\n\nLos encontré aquí en {CID} y vi que todavía no tienen página web.\n\nHoy la mayoría de los clientes busca en Google antes de decidir a dónde ir. Una web profesional, con sus servicios, fotos y un botón de WhatsApp, hace que los encuentren más fácilmente y transmite mucha más confianza.\n\nPor eso me gustaría crearles un modelo de su web 100% gratis. Lo ven terminado y solo pagan si les gusta. Si no les gusta, no pagan nada.\n\n¿Se lo preparo y se lo envío hoy mismo?'],
+      en: ['🇬🇧 English', 'Hi {EMP}, how are you? 👋\n\nI came across your business here in {CID} and noticed you don\'t have a website yet.\n\nThese days most customers search on Google before deciding where to go. A professional website with your services, photos and a WhatsApp button helps people find you and builds much more trust.\n\nThat\'s why I\'d like to create a model of your website 100% free. You see it finished and only pay if you like it. If you don\'t, you pay nothing.\n\nShall I prepare it and send it to you today?'],
+      fr: ['🇫🇷 Français', 'Bonjour {EMP}, comment allez-vous ? 👋\n\nJe vous ai trouvés ici à {CID} et j’ai remarqué que vous n’avez pas encore de site web.\n\nAujourd’hui, la plupart des clients cherchent sur Google avant de choisir où aller. Un site professionnel, avec vos services, des photos et un bouton WhatsApp, vous rend plus facile à trouver et inspire beaucoup plus confiance.\n\nC’est pourquoi j’aimerais vous créer une maquette de votre site 100 % gratuite. Vous la voyez terminée et vous ne payez que si elle vous plaît. Sinon, vous ne payez rien.\n\nJe vous la prépare et vous l’envoie dès aujourd’hui ?'],
+      it: ['🇮🇹 Italiano', 'Buongiorno {EMP}, come state? 👋\n\nVi ho trovati qui a {CID} e ho notato che non avete ancora un sito web.\n\nOggi la maggior parte dei clienti cerca su Google prima di scegliere dove andare. Un sito professionale, con i vostri servizi, le foto e un pulsante WhatsApp, vi fa trovare più facilmente e trasmette molta più fiducia.\n\nPer questo vorrei creare un modello del vostro sito 100% gratuito. Lo vedete finito e pagate solo se vi piace. Altrimenti, non pagate nulla.\n\nVe lo preparo e ve lo invio già oggi?'],
+      de: ['🇩🇪 Deutsch', 'Hallo {EMP}, wie geht es Ihnen? 👋\n\nIch bin hier in {CID} auf Ihr Unternehmen gestoßen und habe gesehen, dass Sie noch keine Website haben.\n\nHeute suchen die meisten Kunden bei Google, bevor sie sich entscheiden. Eine professionelle Website mit Ihren Leistungen, Fotos und einem WhatsApp-Button sorgt dafür, dass man Sie leichter findet, und schafft viel mehr Vertrauen.\n\nDeshalb möchte ich Ihnen einen Entwurf Ihrer Website 100 % kostenlos erstellen. Sie sehen ihn fertig und zahlen nur, wenn er Ihnen gefällt. Wenn nicht, zahlen Sie nichts.\n\nDarf ich ihn vorbereiten und Ihnen noch heute schicken?']
+    };
+    var lang = { BR: 'pt-BR', PT: 'pt-PT', ES: 'es', MX: 'es', AR: 'es', US: 'en', GB: 'en', FR: 'fr', IT: 'it', DE: 'de' }[entry.country] || 'en';
+    var t = T[lang];
+    var name = String(ld.name || '').replace(/\s*\(exemplo\)$/, '');
+    return { lang: t[0], text: t[1].replace('{EMP}', name).replace('{CID}', entry.city || '') };
+  }
   radarContacts(ld, entry) {
     // Resultados antigos (sem "contacts") ganham os contatos a partir do telefone.
     if (ld.contacts) return ld.contacts;
@@ -1884,7 +1916,25 @@ class Component extends DCLogic {
           hasPhone: !!ld.phone, noPhone: !ld.phone, phone: ld.phone || '',
           tel: (self.radarContacts(ld, entry).tel) || '#',
           contacts: self.radarContactList(ld, entry),
-          gen: function () { self.openAtelieLead(ld, entry); }
+          gen: function () { self.openAtelieLead(ld, entry); },
+          msg: (function () {
+            var key = 'msg:' + (ld.id || ld.name);
+            var open = st.radarMsg === key;
+            var pitch = open ? self.radarPitch(ld, entry) : { lang: '', text: '' };
+            var c = self.radarContacts(ld, entry);
+            var copied = st.copied === key;
+            return {
+              open: open, lang: pitch.lang, text: pitch.text,
+              toggleLabel: open ? 'Fechar mensagem' : '💬 Mensagem pronta para esta empresa',
+              toggle: function () { self.setState({ radarMsg: open ? '' : key, copied: '' }); },
+              hasWa: !!c.whatsapp, waHref: c.whatsapp ? c.whatsapp + '?text=' + encodeURIComponent(pitch.text) : '#',
+              hasInsta: !!c.instagram, instaHref: c.instagram || '#',
+              copyLabel: copied ? '✓ Mensagem copiada' : 'Copiar mensagem',
+              copyBg: copied ? '#16A34A' : 'transparent',
+              copy: function () { self.copyText(key, pitch.text); },
+              copyInsta: function () { self.copyText(key, pitch.text); }
+            };
+          })()
         };
       });
     } else { r.leads = []; r.counter = ''; r.potential = ''; r.meta = ''; }
