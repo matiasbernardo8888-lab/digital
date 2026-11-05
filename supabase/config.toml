@@ -1,0 +1,12 @@
+# Projeto Supabase do Sora (sora-saas). Usado só pelo deploy automático das Edge Functions.
+project_id = "aemnqozofjmvuweyyekp"
+
+# As funções conferem o login/token sozinhas (o webhook da Applyfy chega sem login).
+[functions.gerar-site]
+verify_jwt = false
+
+[functions.prospeccao]
+verify_jwt = false
+
+[functions.applyfy-webhook]
+verify_jwt = false
