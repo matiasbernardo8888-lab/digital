@@ -3,6 +3,10 @@
     {
       "source": "/nova-fabrica",
       "destination": "/nova-fabrica.html"
+    },
+    {
+      "source": "/s/:slug",
+      "destination": "/ver.html"
     }
   ],
   "headers": [

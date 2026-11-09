@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Prévia do site</title>
+<meta property="og:title" content="Prévia do seu novo site">
+<meta property="og:description" content="Modelo gratuito: você só paga se gostar.">
+<style>
+  html, body { margin: 0; height: 100%; background: #0d0a26; }
+  iframe { position: fixed; inset: 0; width: 100%; height: 100%; border: 0; background: #fff; }
+  .msg { position: fixed; inset: 0; display: grid; place-items: center; padding: 24px; text-align: center; color: #e9e4ff; font: 500 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .spin { width: 36px; height: 36px; margin: 0 auto 14px; border-radius: 50%; border: 3px solid #3b2f6b; border-top-color: #a78bfa; animation: r 0.9s linear infinite; }
+  @keyframes r { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<div class="msg" id="msg"><div><div class="spin" aria-hidden="true"></div>Carregando o site…</div></div>
+<script>
+(function () {
+  var msg = document.getElementById('msg');
+  var fail = function (t) { msg.innerHTML = '<div>' + t + '</div>'; };
+  var m = location.pathname.match(/\/s\/([a-z0-9]{8,32})\/?$/) || (location.search.match(/[?&]s=([a-z0-9]{8,32})/) || []);
+  var slug = m && m[1];
+  if (!slug) { fail('Link inválido.'); return; }
+  fetch('https://aemnqozofjmvuweyyekp.supabase.co/storage/v1/object/public/sites/' + slug + '.html', { cache: 'no-store' })
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); })
+    .then(function (html) {
+      var t = html.match(/<title>([^<]{1,120})<\/title>/i);
+      if (t) document.title = t[1].replace(/&amp;/g, '&');
+      // O site roda isolado (sandbox sem acesso a este domínio), com links, formulários e WhatsApp liberados.
+      var f = document.createElement('iframe');
+      f.setAttribute('sandbox', 'allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation');
+      f.setAttribute('title', document.title);
+      f.srcdoc = html;
+      document.body.appendChild(f);
+      msg.remove();
+    })
+    .catch(function () { fail('Não encontramos este site. O link pode ter expirado ou estar incompleto.'); });
+})();
+</script>
+</body>
+</html>

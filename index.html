@@ -752,6 +752,27 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 <button class="ghost" onClick="{{ atl.downloadSite }}" style="flex: 1 1 140px; min-height: 54px; padding: 0 18px; border-radius: 999px; border: 1px solid #4ADE80; background: transparent; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer">Baixar HTML</button>
 </sc-if>
 </div>
+<sc-if value="{{ atl.shareShow }}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 16px; border-radius: 18px; border: 1px solid rgba(250,204,21,0.55); background: rgba(250,204,21,0.08)">
+<strong style="font-size: 15px">🔗 Link da proposta para a empresa</strong>
+<span role="status" style="font-size: 13px; color: {{ atl.shareMsgColor }}">{{ atl.shareMsg }}</span>
+<sc-if value="{{ atl.shareOk }}" hint-placeholder-val="{{ false }}">
+<input type="text" readonly value="{{ atl.shareUrl }}" aria-label="Link da proposta" onFocus="this.select()" style="height: 46px; width: 100%; padding: 0 14px; border-radius: 12px; border: 1px solid #3B2F6B; background: #140F2E; color: #FFE7B3; font-size: 15px; font-weight: 700">
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<button onClick="{{ atl.copyShare }}" style="flex: 1 1 140px; min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid #FACC15; background: transparent; color: #FFFFFF; font-size: 14px; font-weight: 800; cursor: pointer">{{ atl.copyShareLabel }}</button>
+<a href="{{ atl.shareUrl }}" target="_blank" rel="noopener noreferrer" style="flex: 1 1 140px; min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid #3B2F6B; color: #FFFFFF; font-size: 14px; font-weight: 800; text-decoration: none; display: inline-flex; align-items: center; justify-content: center">Abrir link</a>
+<sc-if value="{{ atl.shareWa }}" hint-placeholder-val="{{ false }}">
+<a href="{{ atl.shareWaHref }}" target="_blank" rel="noopener noreferrer" style="flex: 1 1 180px; min-height: 44px; padding: 0 14px; border-radius: 999px; background: #16A34A; color: #FFFFFF; font-size: 14px; font-weight: 800; text-decoration: none; display: inline-flex; align-items: center; justify-content: center">Enviar no WhatsApp da empresa</a>
+</sc-if>
+<button onClick="{{ atl.copyShareMsg }}" style="flex: 1 1 200px; min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid #4ADE80; background: transparent; color: #FFFFFF; font-size: 14px; font-weight: 800; cursor: pointer">{{ atl.copyShareMsgLabel }}</button>
+</div>
+<span style="font-size: 12px; color: #B9B2DA">No link aparece uma faixa “modelo gratuito, só paga se gostar”. Coloque o seu WhatsApp em Configurações (engrenagem) → Links de proposta para o botão “Quero este site” chamar você.</span>
+</sc-if>
+<sc-if value="{{ atl.shareRetry }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ atl.retryShare }}" style="align-self: flex-start; min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid #FACC15; background: transparent; color: #FFFFFF; font-size: 14px; font-weight: 800; cursor: pointer">Tentar de novo</button>
+</sc-if>
+</div>
+</sc-if>
 <sc-if value="{{ atl.canRetheme }}" hint-placeholder-val="{{ false }}">
 <div style="display: flex; flex-direction: column; gap: 10px; padding: 16px; border-radius: 18px; border: 1px solid rgba(74,222,128,0.45); background: rgba(34,197,94,0.08)">
 <strong style="font-size: 15px">Ver o mesmo site em outro modelo</strong>
@@ -1076,6 +1097,15 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 <button class="ghost" onClick="{{ closeSettings }}" aria-label="Fechar" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 999px; border: 1px solid #3B2F6B; background: transparent; color: #D6D0F0; cursor: pointer; display: flex; align-items: center; justify-content: center">
 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg>
 </button>
+</div>
+
+<div style="background: #140F2E; border: 1px solid #3B2F6B; border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<h3 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #C9B8FF">Links de proposta</h3>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #B9B2DA">
+<span>Seu WhatsApp (com código do país) ou e-mail</span>
+<input type="text" inputmode="tel" autocomplete="tel" placeholder="Ex.: +55 33 99999-9999" value="{{ cfg.contact }}" onInput="{{ cfg.onContact }}" style="height: 46px; width: 100%; padding: 0 14px; border-radius: 12px; border: 1px solid #3B2F6B; background: #0D0A26; color: #FFFFFF; font-size: 15px">
+</label>
+<span style="font-size: 12px; color: #B9B2DA">No link da proposta, o botão “Quero este site” chama você neste contato.</span>
 </div>
 
 <div style="background: #140F2E; border: 1px solid #3B2F6B; border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 14px">
@@ -2786,6 +2816,55 @@ class Component extends DCLogic {
       { id: 'editorial', name: 'Editorial', desc: 'Branco, estilo revista', bg: '#FBFAF7', ink: '#141414', acc: '#C2410C', font: "'Instrument Serif', Georgia, serif", sample: 'Aa' }
     ];
   }
+  // ---- Link da proposta: publica o site criado num link para mandar à empresa ----
+  shareTexts(lang) {
+    var k = String(lang || 'pt').toLowerCase();
+    var T = {
+      pt: { bar: 'Este é um modelo gratuito do novo site de {EMP}. Gostou? Só paga se gostar.', btn: 'Quero este site', msg: 'Olá! Como combinado, preparei um modelo gratuito do site da {EMP}:\n{LINK}\n\nSe gostar, é só me dizer que eu coloco no ar. Se não gostar, não paga nada.' },
+      es: { bar: 'Este es un modelo gratuito de la nueva web de {EMP}. ¿Le gusta? Solo paga si le gusta.', btn: 'Quiero esta web', msg: '¡Hola! Como le comenté, preparé un modelo gratuito de la web de {EMP}:\n{LINK}\n\nSi le gusta, me avisa y la publico. Si no le gusta, no paga nada.' },
+      en: { bar: 'This is a free preview of the new website for {EMP}. Like it? You only pay if you do.', btn: 'I want this website', msg: 'Hi! As promised, I prepared a free preview of the website for {EMP}:\n{LINK}\n\nIf you like it, just let me know and I\'ll put it online. If not, you pay nothing.' },
+      fr: { bar: 'Voici une maquette gratuite du nouveau site de {EMP}. Elle vous plaît ? Vous ne payez que si elle vous plaît.', btn: 'Je veux ce site', msg: 'Bonjour ! Comme convenu, j’ai préparé une maquette gratuite du site de {EMP} :\n{LINK}\n\nSi elle vous plaît, dites-le-moi et je la mets en ligne. Sinon, vous ne payez rien.' },
+      it: { bar: 'Questo è un modello gratuito del nuovo sito di {EMP}. Vi piace? Pagate solo se vi piace.', btn: 'Voglio questo sito', msg: 'Buongiorno! Come promesso, ho preparato un modello gratuito del sito di {EMP}:\n{LINK}\n\nSe vi piace, ditemelo e lo metto online. Altrimenti non pagate nulla.' },
+      de: { bar: 'Dies ist ein kostenloser Entwurf der neuen Website von {EMP}. Gefällt sie Ihnen? Sie zahlen nur, wenn ja.', btn: 'Ich will diese Website', msg: 'Hallo! Wie besprochen habe ich einen kostenlosen Entwurf der Website von {EMP} vorbereitet:\n{LINK}\n\nWenn er Ihnen gefällt, sagen Sie Bescheid und ich stelle ihn online. Wenn nicht, zahlen Sie nichts.' }
+    };
+    return T[k.slice(0, 2)] || T.pt;
+  }
+  atShareHtml(html, lang, empresa) {
+    var t = this.shareTexts(lang), ag = this.state.agency || {};
+    var esc = function (v) { return String(v || '').replace(/[&<>"]/g, function (ch) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]; }); };
+    var contact = String(ag.contact || '').trim(), digits = contact.replace(/\D/g, ''), href = '';
+    if (/@/.test(contact)) href = 'mailto:' + contact;
+    else if (digits.length >= 8) href = 'https://wa.me/' + digits + '?text=' + encodeURIComponent(t.btn + ' (' + (empresa || '') + ')');
+    var bar = '<div id="sora-proposta" style="position:fixed;left:12px;right:12px;bottom:12px;z-index:2147483647;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px 16px;padding:12px 16px;border-radius:16px;background:rgba(17,17,24,.92);color:#fff;font:600 14px/1.4 system-ui,-apple-system,Segoe UI,sans-serif;box-shadow:0 12px 30px rgba(0,0,0,.35);backdrop-filter:blur(8px)">' +
+      '<span style="text-align:center">' + esc(t.bar.replace('{EMP}', empresa || '')) + '</span>' +
+      (href ? '<a href="' + esc(href) + '" target="_blank" rel="noopener" style="padding:9px 16px;border-radius:999px;background:#22C55E;color:#fff;text-decoration:none;font-weight:800">' + esc(t.btn) + '</a>' : '') +
+      '<button type="button" onclick="this.parentNode.remove()" aria-label="Fechar" style="border:0;background:transparent;color:#bbb;font-size:20px;cursor:pointer;line-height:1">×</button></div>';
+    return /<\/body>/i.test(html) ? html.replace(/<\/body>(?![\s\S]*<\/body>)/i, bar + '</body>') : html + bar;
+  }
+  atShare() {
+    var self = this, client = window.soraAuth, html = self.genHtml, L = self.atLast || {}, c = L.content || {};
+    if (!html) return;
+    if (!client) { self.atPatch({ share: { status: 'error', msg: 'O link da proposta funciona no site do Sora, com a sua conta.' } }); return; }
+    var info = self.atShareInfo || {};
+    var empresa = (c.marca && c.marca.nome) || info.nome || '';
+    var lang = c.idioma || 'pt';
+    if (!self.atShareSlug) {
+      var a = new Uint8Array(12); (window.crypto || {}).getRandomValues ? crypto.getRandomValues(a) : a.forEach(function (_, k) { a[k] = Math.random() * 256; });
+      self.atShareSlug = Array.prototype.map.call(a, function (x) { return 'abcdefghijkmnpqrstuvwxyz23456789'[x % 32]; }).join('');
+    }
+    var slug = self.atShareSlug, base = /^https?:/.test(location.origin) && !/claude|localhost|127\.0\.0\.1/.test(location.host) ? location.origin : 'https://digital-one-zeta.vercel.app';
+    var url = base + '/s/' + slug;
+    self.atPatch({ share: { status: 'loading', url: '', msg: 'Criando o link da proposta…' } });
+    var body = new Blob([self.atShareHtml(html, lang, empresa)], { type: 'text/plain;charset=utf-8' });
+    client.storage.from('sites').upload(slug + '.html', body, { upsert: true, contentType: 'text/plain;charset=utf-8', cacheControl: '60' }).then(function (res) {
+      if (res && res.error) throw res.error;
+      var t = self.shareTexts(lang);
+      self.atPatch({ share: { status: 'ok', url: url, msg: 'Link pronto! Mande para a empresa. Se trocar o modelo, o link atualiza sozinho.', text: t.msg.replace('{EMP}', empresa).replace('{LINK}', url), whats: String(info.whats || '').replace(/\D/g, '') } });
+    }).catch(function (e) {
+      var m = String((e && e.message) || e || '');
+      self.atPatch({ share: { status: 'error', msg: /row-level|policy|Unauthorized|403/i.test(m) ? 'Só assinantes ativos podem criar links de proposta.' : 'Não consegui criar o link agora. Tente de novo.' } });
+    });
+  }
   atRetheme(id) {
     var L = this.atLast;
     if (!L || !L.content) return;
@@ -2793,6 +2872,7 @@ class Component extends DCLogic {
     this.genHtml = this.siteTemplate(c, L.photos, L.premium ? this.scrollScrubHtml(L.frames) : '', new Date().getFullYear());
     this.atLast = Object.assign({}, L, { content: c });
     var m = this.siteModels().filter(function (x) { return x.id === id; })[0];
+    if ((this.state.at || {}).share) this.atShare();
     this.atPatch({ status: 'done', shown: id, msg: 'Pronto! Agora o site está no modelo “' + (m ? m.name : id) + '”. Mesmos textos e fotos, sem gastar uma criação. Clique em “Abrir site” para ver.' });
   }
   atGenerate(i, nicho, langName) {
@@ -2839,6 +2919,8 @@ class Component extends DCLogic {
     };
     var done = function (html) {
       self.genHtml = html;
+      self.atShareSlug = ''; self.atShareInfo = { nome: info.nome || '', whats: info.whats || '' };
+      setTimeout(function () { self.atShare(); }, 50);
       self.atPatch({ status: 'done', msg: 'Site criado' + (usePremium ? ' com o efeito premium de rolagem' : (premium ? ' sem o efeito premium (nenhum frame foi enviado)' : '')) + '! Clique em “Abrir site” para ver ou em “Baixar HTML” para guardar o arquivo.' + (aiPhotos ? (photos.length ? ' As fotos foram criadas pela IA (ilustrativas): troque pelas fotos reais da empresa quando tiver.' : ' Não consegui criar as fotos agora: envie fotos e gere de novo.') : '') });
     };
     var model = st.siteModel || 'auto';
@@ -3347,6 +3429,18 @@ class Component extends DCLogic {
           return Object.assign({}, m, { border: on ? '#A78BFA' : '#3B2F6B', ring: on ? '0 0 0 3px rgba(167,139,250,0.45)' : 'none', check: on ? '✓ Selecionado' : 'Escolher', checkInk: on ? '#C9B8FF' : '#8C84B4', pick: function () { self.save({ siteModel: m.id }); } });
         }),
         canRetheme: atS.status === 'done' && !!(self.atLast && self.atLast.content),
+        shareShow: atS.status === 'done' && !!atS.share,
+        shareOk: !!(atS.share && atS.share.status === 'ok'), shareNotOk: !(atS.share && atS.share.status === 'ok'),
+        shareUrl: atS.share ? atS.share.url || '' : '', shareMsg: atS.share ? atS.share.msg || '' : '',
+        shareMsgColor: atS.share && atS.share.status === 'error' ? '#FCA5A5' : '#D6D0F0',
+        shareRetry: atS.share && atS.share.status === 'error',
+        retryShare: function () { self.atShare(); },
+        copyShareLabel: st.copied === 'share' ? '✓ Link copiado' : 'Copiar link',
+        copyShare: function () { self.copyText('share', atS.share ? atS.share.url : ''); },
+        copyShareMsgLabel: st.copied === 'sharemsg' ? '✓ Mensagem copiada' : 'Copiar mensagem com o link',
+        copyShareMsg: function () { self.copyText('sharemsg', atS.share ? atS.share.text : ''); },
+        shareWa: !!(atS.share && atS.share.whats && atS.share.whats.length >= 8),
+        shareWaHref: atS.share && atS.share.whats ? 'https://wa.me/' + atS.share.whats + '?text=' + encodeURIComponent(atS.share.text || '') : '#',
         rethemes: self.siteModels().filter(function (m) { return m.id !== 'auto'; }).map(function (m) {
           var cur = self.atLast && self.atLast.content && self.atLast.content.tema === m.id;
           return { name: m.name, bg: m.bg, ink: m.ink, acc: m.acc, font: m.font, border: cur ? '#4ADE80' : '#3B2F6B', label: cur ? '✓ ' + m.name : m.name, pick: function () { self.atRetheme(m.id); } };
