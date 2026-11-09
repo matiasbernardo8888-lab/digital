@@ -457,52 +457,47 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 </sc-if>
 
 <sc-if value="{{ isNichos }}" hint-placeholder-val="{{ false }}">
-<section class="screen" style="display: flex; flex-direction: column; gap: 20px">
-<div style="display: flex; flex-direction: column; gap: 4px">
-<h1 style="margin: 0; font-size: 30px; font-weight: 700; letter-spacing: -0.02em">Dicas de Nichos que Mais Vendem</h1>
-<p style="margin: 0; color: #B9B2DA">20 nichos em ordem de chance de venda, com ticket baixo para fechar mais fácil.</p>
-</div>
-<div style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px">
-<label style="flex: 1 1 260px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #B9B2DA">
-<span>Buscar nicho</span>
-<input type="search" placeholder="Ex.: advogado, restaurante, pet..." value="{{ nq }}" onChange="{{ onNq }}" style="height: 48px; width: 100%; padding: 0 16px; border-radius: 999px; border: 1px solid #3B2F6B; background: #140F2E; color: #FFFFFF; font-size: 15px">
-</label>
-<button onClick="{{ toggleFavOnly }}" style="height: 48px; padding: 0 18px; border-radius: 999px; border: 1px solid {{ favOnlyBorder }}; background: {{ favOnlyBg }}; color: #FFFFFF; font-size: 14px; font-weight: 600; cursor: pointer">{{ favOnlyLabel }}</button>
+<section class="screen" style="display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px">
+<h1 style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.02em">Nichos que Mais Vendem</h1>
+<span style="font-size: 13px; color: #B9B2DA">20 nichos em ordem de chance de venda</span>
 </div>
 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px">
-<span style="font-size: 13px; font-weight: 500; color: #B9B2DA">Idioma do site:</span>
-<sc-for list="{{ pitchLangs }}" as="pl" hint-placeholder-count="3">
-<button onClick="{{ pl.pick }}" style="height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid {{ pl.border }}; background: {{ pl.bg }}; color: #FFFFFF; font-size: 14px; font-weight: 600; cursor: pointer">{{ pl.label }}</button>
-</sc-for>
+<input type="search" aria-label="Buscar nicho" placeholder="Buscar nicho: advogado, pet..." value="{{ nq }}" onChange="{{ onNq }}" style="flex: 1 1 220px; height: 44px; min-width: 0; padding: 0 16px; border-radius: 999px; border: 1px solid #3B2F6B; background: #140F2E; color: #FFFFFF; font-size: 15px">
+<button onClick="{{ toggleFavOnly }}" style="height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid {{ favOnlyBorder }}; background: {{ favOnlyBg }}; color: #FFFFFF; font-size: 13px; font-weight: 600; cursor: pointer">{{ favOnlyLabel }}</button>
+<select aria-label="Idioma do site" value="{{ pitchLangValue }}" onChange="{{ onPitchLang }}" style="height: 44px; padding: 0 12px; border-radius: 999px; border: 1px solid #3B2F6B; background: #140F2E; color: #FFFFFF; font-size: 13px; font-weight: 600; cursor: pointer">
+<option value="pt">🌐 Site em Português</option>
+<option value="en">🌐 Site em English</option>
+<option value="es">🌐 Site em Español</option>
+<option value="fr">🌐 Site em Français</option>
+<option value="de">🌐 Site em Deutsch</option>
+<option value="it">🌐 Site em Italiano</option>
+</select>
 </div>
 <sc-if value="{{ noNichos }}" hint-placeholder-val="{{ false }}">
-<div style="border: 1px dashed #3B2F6B; border-radius: 24px; padding: 40px 24px; text-align: center; color: #B9B2DA">Nenhum nicho encontrado.</div>
+<div style="border: 1px dashed #3B2F6B; border-radius: 20px; padding: 28px 20px; text-align: center; color: #B9B2DA">Nenhum nicho encontrado.</div>
 </sc-if>
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(290px, 100%), 1fr)); gap: 14px">
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr)); gap: 10px">
 <sc-for list="{{ nichos }}" as="n" hint-placeholder-count="6">
-<article style="background: rgba(32,24,72,0.6); backdrop-filter: blur(16px); border: 1px solid #3B2F6B; border-radius: 24px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
-<div style="display: flex; align-items: center; justify-content: space-between; gap: 10px">
+<article style="background: rgba(32,24,72,0.6); border: 1px solid #3B2F6B; border-radius: 18px; padding: 12px 12px 12px 14px; display: flex; flex-direction: column; gap: 10px">
 <div style="display: flex; align-items: center; gap: 10px">
-<span style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 999px; background: #140F2E; border: 1px solid #3B2F6B; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #DDD2FF">{{ n.rank }}</span>
-<span style="height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid {{ n.badgeColor }}; color: {{ n.badgeColor }}; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; display: flex; align-items: center">{{ n.badge }}</span>
+<span style="width: 30px; height: 30px; flex-shrink: 0; border-radius: 999px; background: #140F2E; border: 1px solid #3B2F6B; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #DDD2FF">{{ n.rank }}</span>
+<div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px">
+<h2 style="margin: 0; font-size: 15px; font-weight: 700; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis" title="{{ n.name }}">{{ n.name }}</h2>
+<span style="font-size: 12.5px; color: #B9B2DA; white-space: nowrap; overflow: hidden; text-overflow: ellipsis" title="{{ n.why }}"><strong style="color: #4ADE80">{{ n.ticket }}</strong> · {{ n.why }}</span>
 </div>
-<button class="ghost" onClick="{{ n.toggleFav }}" aria-label="{{ n.favLabel }}" aria-pressed="{{ n.fav }}" style="width: 44px; height: 44px; border-radius: 999px; border: 1px solid #3B2F6B; background: transparent; color: #F5C542; cursor: pointer; display: flex; align-items: center; justify-content: center">
-<svg width="20" height="20" viewBox="0 0 24 24" fill="{{ n.starFill }}" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+<button class="ghost" onClick="{{ n.toggleFav }}" aria-label="{{ n.favLabel }}" aria-pressed="{{ n.fav }}" style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 999px; border: 1px solid #3B2F6B; background: transparent; color: #F5C542; cursor: pointer; display: flex; align-items: center; justify-content: center">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="{{ n.starFill }}" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
 </button>
 </div>
-<h2 style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.3">{{ n.name }}</h2>
-<div style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1">
-<span style="font-size: 20px; font-weight: 700; color: #4ADE80">Ticket {{ n.ticket }}</span>
-<span style="font-size: 14px; color: #D6D0F0">{{ n.why }}</span>
-</div>
-<div style="display: flex; flex-direction: column; gap: 8px">
-<button class="btn" onClick="{{ n.openAtelie }}" aria-expanded="{{ n.atOpen }}" aria-controls="atelie" style="min-height: 48px; padding: 0 20px; border: {{ n.atBorder }}; border-radius: 999px; background: linear-gradient(135deg, #7C3AED, #DB2777); color: #FFFFFF; font-size: 15px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 10px 26px rgba(219,39,119,0.35)">
-<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9zM5 2l.6 1.4L7 4l-1.4.6L5 6l-.6-1.4L3 4l1.4-.6z"></path></svg>
-<span>{{ n.atLabel }}</span>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
+<button class="btn" onClick="{{ n.openAtelie }}" aria-expanded="{{ n.atOpen }}" aria-controls="atelie" style="min-height: 40px; padding: 0 10px; border: {{ n.atBorder }}; border-radius: 999px; background: linear-gradient(135deg, #7C3AED, #DB2777); color: #FFFFFF; font-size: 13px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px">
+<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z"></path></svg>
+<span>{{ n.atShort }}</span>
 </button>
-<button class="ghost" onClick="{{ n.openRadar }}" aria-controls="radar" style="min-height: 46px; padding: 0 18px; border-radius: 999px; border: 1px solid {{ n.radarBorder }}; background: {{ n.radarBg }}; color: #FFFFFF; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px">
-<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM21 21l-4.3-4.3"></path></svg>
-<span>{{ n.radarLabel }}</span>
+<button class="ghost" onClick="{{ n.openRadar }}" aria-controls="radar" style="min-height: 40px; padding: 0 10px; border-radius: 999px; border: 1px solid {{ n.radarBorder }}; background: {{ n.radarBg }}; color: #FFFFFF; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px">
+<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM21 21l-4.3-4.3"></path></svg>
+<span>{{ n.radarShort }}</span>
 </button>
 </div>
 </article>
@@ -3553,10 +3548,12 @@ class Component extends DCLogic {
         copyMeta: function () { self.copyText(metaKey, metaPrompt); },
         atOpen: atI === i,
         atLabel: atI === i ? 'Ateliê aberto abaixo ↓' : 'Criar site com IA',
+        atShort: atI === i ? 'Aberto abaixo ↓' : 'Criar site',
         atBorder: atI === i ? '2px solid #FFE7B3' : '0',
         openAtelie: function () { self.openAtelie(i); },
         openRadar: function () { self.openRadar(i); },
         radarLabel: st.radarOpen && (st.radarQ || {}).niche === 'card:' + i ? 'Radar aberto abaixo ↓' : 'Encontrar empresas sem site',
+        radarShort: st.radarOpen && (st.radarQ || {}).niche === 'card:' + i ? 'Aberto abaixo ↓' : 'Achar empresas',
         radarBorder: st.radarOpen && (st.radarQ || {}).niche === 'card:' + i ? '#7DD3FC' : 'rgba(125,211,252,0.5)',
         radarBg: st.radarOpen && (st.radarQ || {}).niche === 'card:' + i ? 'rgba(14,165,233,0.22)' : 'rgba(14,165,233,0.08)',
         toggleFav: function () {
@@ -3637,6 +3634,8 @@ class Component extends DCLogic {
       swatches: swatches,
       rootClass: rootClass,
       pitchLangs: pitchLangs,
+      pitchLangValue: pl,
+      onPitchLang: function (e) { self.save({ pitchLang: e.target.value, copied: '' }); },
       noNichos: nichos.length === 0,
       nq: st.nq,
       onNq: function (e) { self.setState({ nq: e.target.value }); },
