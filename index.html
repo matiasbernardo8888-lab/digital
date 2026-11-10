@@ -1118,6 +1118,7 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 <span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 15px">Avisar no celular quando vender</strong><span style="font-size: 12px; color: {{ cfg.notifInk }}">{{ cfg.notifStatus }}</span></span>
 <span aria-hidden="true" style="width: 48px; height: 28px; border-radius: 999px; background: {{ cfg.notifTrack }}; position: relative; flex-shrink: 0; transition: background .2s"><span style="position: absolute; top: 3px; left: {{ cfg.notifKnob }}; width: 22px; height: 22px; border-radius: 999px; background: #FFFFFF; transition: left .2s"></span></span>
 </button>
+<sc-if value="{{ cfg.isOwner }}" hint-placeholder-val="{{ true }}">
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap">
 <strong style="font-size: 14px">Moeda na notificação</strong>
 <div role="group" aria-label="Moeda" style="display: flex; padding: 4px; gap: 4px; border-radius: 999px; border: 1px solid #3B2F6B; background: #0D0A26">
@@ -1164,11 +1165,14 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 <span style="display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px">Som de venda (“cha-ching”)</strong><span style="font-size: 12px; color: #B9B2DA">Toca com o SORA aberto. Com o app fechado, o celular usa o som de notificação dele.</span></span>
 <span aria-hidden="true" style="width: 48px; height: 28px; border-radius: 999px; background: {{ cfg.soundTrack }}; position: relative; flex-shrink: 0"><span style="position: absolute; top: 3px; left: {{ cfg.soundKnob }}; width: 22px; height: 22px; border-radius: 999px; background: #FFFFFF; transition: left .2s"></span></span>
 </button>
+</sc-if>
 <sc-if value="{{ cfg.needPerm }}" hint-placeholder-val="{{ false }}">
 <button class="btn" onClick="{{ cfg.askPerm }}" style="height: 48px; padding: 0 18px; border: 0; border-radius: 999px; background: #2563EB; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer">🔔 Permitir no celular</button>
 </sc-if>
+<sc-if value="{{ cfg.isOwner }}" hint-placeholder-val="{{ true }}">
 <button class="btn" onClick="{{ cfg.testNotif }}" style="align-self: flex-start; height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: linear-gradient(135deg, #7C3AED, #DB2777); color: #FFFFFF; font-size: 14px; font-weight: 700; cursor: pointer">Testar notificação</button>
-<span style="font-size: 12px; color: #B9B2DA; line-height: 1.5">Dispara quando você marca uma venda como <strong style="color: #FFFFFF">Pago</strong> em Vendas, ou no botão de teste. Deixe o SORA aberto até todas caírem. No iPhone, primeiro adicione o SORA à tela de início (Safari → Compartilhar → Adicionar à Tela de Início) e ative por lá.</span>
+</sc-if>
+<span style="font-size: 12px; color: #B9B2DA; line-height: 1.5">Dispara quando você marca uma venda como <strong style="color: #FFFFFF">Pago</strong> em Vendas. No iPhone, primeiro adicione o SORA à tela de início (Safari → Compartilhar → Adicionar à Tela de Início) e ative por lá.</span>
 </div>
 
 <div style="background: #140F2E; border: 1px solid #3B2F6B; border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
@@ -1246,6 +1250,7 @@ class Component extends DCLogic {
       showSettings: false,
       logoMsg: '',
       notifMsg: '',
+      isOwner: false,
       saleToast: null
     };
     this.DEFAULTS = JSON.stringify(base);
@@ -1339,6 +1344,7 @@ class Component extends DCLogic {
 
   componentDidMount() {
     var self = this;
+    this.checkOwner();
     this.revKeyFn = function (e) {
       if (e.ctrlKey || e.metaKey || e.altKey || e.repeat) return;
       var t = e.target, tag = t && t.tagName;
@@ -1349,7 +1355,6 @@ class Component extends DCLogic {
       else if (k === 'j' && n > 0) self.save({ revAdj: n - 1 });
     };
     window.addEventListener('keydown', this.revKeyFn);
-    if (this.state.agency && this.state.agency.notifIcon) this.applyAppIcon(this.state.agency.notifIcon);
     var motion = this.state.agency.motion !== false;
     if (!motion) {
       this.setState({ typed: this.PHRASE.length });
@@ -3112,6 +3117,21 @@ class Component extends DCLogic {
   notifPerm() {
     try { return ('Notification' in window) ? Notification.permission : 'unsupported'; } catch (e) { return 'unsupported'; }
   }
+  checkOwner() {
+    // Só a conta do dono vê as configurações avançadas de notificação.
+    var self = this, tries = 0;
+    var go = function () {
+      var c = window.soraAuth;
+      if (!c) { if (++tries < 40) self.ownerT = setTimeout(go, 250); return; }
+      c.auth.getSession().then(function (r) {
+        var em = r && r.data && r.data.session && r.data.session.user && r.data.session.user.email || '';
+        var own = String(em).trim().toLowerCase() === 'matiasbernardo8888@gmail.com';
+        self.setState({ isOwner: own });
+        if (own && self.state.agency && self.state.agency.notifIcon) self.applyAppIcon(self.state.agency.notifIcon);
+      }).catch(function () {});
+    };
+    go();
+  }
   applyAppIcon(src) {
     // No iPhone a notificação usa o ícone do app da tela de início. Com logo própria, o ícone do app passa a ser essa logo
     // (vale para quem adicionar o SORA à tela de início depois de enviar a logo, neste aparelho).
@@ -3184,7 +3204,8 @@ class Component extends DCLogic {
   notifSteps() { return [1, 2, 3, 5, 10, 15, 20, 30, 45, 60, 90, 120, 180, 300, 600]; }
   notifTimeLabel(sec) { return sec < 60 ? sec + ' s' : (sec % 60 ? Math.floor(sec / 60) + ' min ' + (sec % 60) + ' s' : (sec / 60) + ' min'); }
   saleNotify(sale) {
-    var self = this, ag = this.state.agency, n = Math.min(50, Math.max(1, +ag.notifQty || 1));
+    var self = this, own = !!this.state.isOwner, ag = own ? this.state.agency : { notifOn: true, notifSound: this.state.agency.notifSound, notifCur: 'BRL' };
+    var n = Math.min(50, Math.max(1, +ag.notifQty || 1));
     var gap = Math.max(1, +ag.notifGap || 2) * 1000, wait = Math.max(0, +ag.notifDelay || 0) * 1000;
     var rawV = String(ag.notifValue || ''), fixed = this.num(rawV.indexOf(',') !== -1 ? rawV.replace(/\./g, '').replace(',', '.') : rawV), brl = ag.notifCur === 'BRL', rate = this.num(this.state.rate) || 0;
     var v = fixed > 0 ? fixed : this.num(sale.valor) * (brl ? rate : 1);
@@ -3722,6 +3743,7 @@ class Component extends DCLogic {
       toggleSound: function () { self.setIn('agency', 'notifSound', ag.notifSound === false); },
       qtyUp: function () { self.setIn('agency', 'notifQty', Math.min(50, (+ag.notifQty || 1) + 1)); },
       qtyDown: function () { self.setIn('agency', 'notifQty', Math.max(1, (+ag.notifQty || 1) - 1)); },
+      isOwner: !!st.isOwner,
       needPerm: self.notifPerm() !== 'granted' && !(self.isIOS() && !self.isInstalled()),
       askPerm: function () { if (!ag.notifOn) self.setIn('agency', 'notifOn', true); self.askNotifPerm(); },
       testNotif: function () { self.saleNotify({ valor: '176,87' }); },
