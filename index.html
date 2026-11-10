@@ -109,7 +109,7 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 <div class="{{ rootClass }}" translate="no" style="min-height: 100vh; display: flex; background: #07051A; color: #FFFFFF; font-family: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.5">
 <sc-if value="{{ saleToast.show }}" hint-placeholder-val="{{ false }}">
 <div role="status" aria-live="polite" class="sale-toast" style="position: fixed; top: calc(12px + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); z-index: 60; width: min(420px, calc(100% - 24px)); display: flex; gap: 12px; align-items: center; padding: 12px 14px; border-radius: 20px; background: rgba(28,22,64,0.96); border: 1px solid rgba(167,139,250,0.55); box-shadow: 0 18px 48px rgba(3,2,14,0.7), 0 0 24px rgba(124,58,237,0.35); backdrop-filter: blur(12px)">
-<img src="./assets/daa6d48dad01a913a3a12fa358ef8fc8.webp" alt="" style="width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0">
+<img src="{{ saleToast.icon }}" alt="" style="width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0; object-fit: cover">
 <span style="display: flex; flex-direction: column; gap: 2px; min-width: 0; flex-grow: 1"><span style="display: flex; justify-content: space-between; gap: 8px"><strong style="font-size: 15px">{{ saleToast.title }}</strong><span style="font-size: 11px; color: #B9B2DA; white-space: nowrap">SORA · agora</span></span><span style="font-size: 13px; color: #D6D0F0; white-space: pre-line">{{ saleToast.body }}</span></span>
 </div>
 </sc-if>
@@ -1114,13 +1114,27 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 <div style="background: #140F2E; border: 1px solid #3B2F6B; border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 14px">
 <h3 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #C9B8FF">Notificação de venda aprovada</h3>
 <button role="switch" aria-checked="{{ cfg.notifOn }}" onClick="{{ cfg.toggleNotif }}" style="display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 14px; border: 1px solid #3B2F6B; background: #0D0A26; color: #FFFFFF; cursor: pointer; text-align: left">
-<img src="./assets/daa6d48dad01a913a3a12fa358ef8fc8.webp" alt="" style="width: 42px; height: 42px; border-radius: 11px; flex-shrink: 0; box-shadow: 0 0 14px rgba(124,58,237,0.6)">
+<img src="{{ cfg.notifIconSrc }}" alt="" style="width: 42px; height: 42px; object-fit: cover; border-radius: 11px; flex-shrink: 0; box-shadow: 0 0 14px rgba(124,58,237,0.6)">
 <span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 15px">Avisar no celular quando vender</strong><span style="font-size: 12px; color: {{ cfg.notifInk }}">{{ cfg.notifStatus }}</span></span>
 <span aria-hidden="true" style="width: 48px; height: 28px; border-radius: 999px; background: {{ cfg.notifTrack }}; position: relative; flex-shrink: 0; transition: background .2s"><span style="position: absolute; top: 3px; left: {{ cfg.notifKnob }}; width: 22px; height: 22px; border-radius: 999px; background: #FFFFFF; transition: left .2s"></span></span>
 </button>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap">
+<strong style="font-size: 14px">Moeda na notificação</strong>
+<div role="group" aria-label="Moeda" style="display: flex; padding: 4px; gap: 4px; border-radius: 999px; border: 1px solid #3B2F6B; background: #0D0A26">
+<button onClick="{{ cfg.curBRL }}" aria-pressed="{{ cfg.isBRL }}" style="height: 38px; padding: 0 16px; border: 0; border-radius: 999px; background: {{ cfg.brlBg }}; color: #FFFFFF; font-size: 14px; font-weight: 700; cursor: pointer">R$ Real</button>
+<button onClick="{{ cfg.curEUR }}" aria-pressed="{{ cfg.isEUR }}" style="height: 38px; padding: 0 16px; border: 0; border-radius: 999px; background: {{ cfg.eurBg }}; color: #FFFFFF; font-size: 14px; font-weight: 700; cursor: pointer">€ Euro</button>
+</div>
+</div>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap">
+<span style="display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px">Logo da notificação</strong><span style="font-size: 12px; color: #B9B2DA">{{ cfg.notifIconMsg }}</span></span>
+<div style="display: flex; gap: 6px; flex-wrap: wrap">
+<label class="ghost" style="display: inline-flex; align-items: center; height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid #3B2F6B; color: #FFFFFF; font-size: 14px; font-weight: 600; cursor: pointer">Enviar logo<input type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" onChange="{{ cfg.onNotifIcon }}" style="position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none"></label>
+<sc-if value="{{ cfg.hasNotifIcon }}" hint-placeholder-val="{{ false }}"><button class="ghost" onClick="{{ cfg.clearNotifIcon }}" style="height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid #3B2F6B; background: transparent; color: #D6D0F0; font-size: 14px; cursor: pointer">Voltar ao SORA</button></sc-if>
+</div>
+</div>
 <label style="display: flex; flex-direction: column; gap: 6px">
-<span style="display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px; color: #FFFFFF">Valor de cada venda (€)</strong><span style="font-size: 12px; color: #B9B2DA">Aparece na notificação. Deixe vazio para usar o valor registrado na venda.</span></span>
-<span style="position: relative; display: flex; align-items: center"><span aria-hidden="true" style="position: absolute; left: 14px; color: #B9B2DA; font-weight: 700">€</span><input type="text" inputmode="decimal" placeholder="176,87" value="{{ cfg.notifValue }}" onInput="{{ cfg.onNotifValue }}" style="height: 46px; width: 100%; padding: 0 14px 0 34px; border-radius: 12px; border: 1px solid #3B2F6B; background: #0D0A26; color: #FFFFFF; font-size: 16px; font-weight: 700"></span>
+<span style="display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px; color: #FFFFFF">Valor de cada venda ({{ cfg.curSym }})</strong><span style="font-size: 12px; color: #B9B2DA">Aparece na notificação. Deixe vazio para usar o valor registrado na venda.</span></span>
+<span style="position: relative; display: flex; align-items: center"><span aria-hidden="true" style="position: absolute; left: 14px; color: #B9B2DA; font-weight: 700">{{ cfg.curSym }}</span><input type="text" inputmode="decimal" placeholder="176,87" value="{{ cfg.notifValue }}" onInput="{{ cfg.onNotifValue }}" style="height: 46px; width: 100%; padding: 0 14px 0 42px; border-radius: 12px; border: 1px solid #3B2F6B; background: #0D0A26; color: #FFFFFF; font-size: 16px; font-weight: 700"></span>
 </label>
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap">
 <span style="display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px">Quantidade de notificações</strong><span style="font-size: 12px; color: #B9B2DA">Quantas caem a cada venda aprovada.</span></span>
@@ -3129,16 +3143,17 @@ class Component extends DCLogic {
   saleNotify(sale) {
     var self = this, ag = this.state.agency, n = Math.min(50, Math.max(1, +ag.notifQty || 1));
     var gap = Math.max(1, +ag.notifGap || 2) * 1000, wait = Math.max(0, +ag.notifDelay || 0) * 1000;
-    var rawV = String(ag.notifValue || ''), fixed = this.num(rawV.indexOf(',') !== -1 ? rawV.replace(/\./g, '').replace(',', '.') : rawV), v = fixed > 0 ? fixed : this.num(sale.valor);
+    var rawV = String(ag.notifValue || ''), fixed = this.num(rawV.indexOf(',') !== -1 ? rawV.replace(/\./g, '').replace(',', '.') : rawV), brl = ag.notifCur === 'BRL', rate = this.num(this.state.rate) || 0;
+    var v = fixed > 0 ? fixed : this.num(sale.valor) * (brl ? rate : 1);
     var title = 'Venda aprovada!';
-    var body = 'Valor: € ' + this.money(v > 0 ? v : 0);
+    var body = 'Valor: ' + (brl ? 'R$ ' : '€ ') + this.money(v > 0 ? v : 0);
     // silent: o próprio iPhone/Android não toca o “tum” dele; quem toca é o som de venda do SORA.
-    var opts = { body: body, icon: '/icons/notify-192.png', badge: '/icons/badge-96.png', silent: true, data: { url: '/' } };
+    var opts = { body: body, icon: ag.notifIcon || '/icons/notify-192.png', badge: '/icons/badge-96.png', silent: true, data: { url: '/' } };
     clearTimeout(self.notifRunT); (self.notifTimers || []).forEach(clearTimeout); self.notifTimers = [];
     var showOne = function (i) {
       var o = Object.assign({}, opts, { tag: 'sora-venda-' + Date.now() + '-' + i });
       if (ag.notifSound !== false) self.saleChime(false);
-      self.setState({ saleToast: { title: title, body: body } });
+      self.setState({ saleToast: { title: title, body: body, icon: ag.notifIcon || '' } });
       clearTimeout(self.saleToastT); self.saleToastT = setTimeout(function () { self.setState({ saleToast: null }); }, Math.min(3800, gap));
       if (self.notifPerm() !== 'granted') return;
       var plain = function () { try { new Notification(title, o); } catch (e) {} };
@@ -3669,6 +3684,25 @@ class Component extends DCLogic {
       qtyDown: function () { self.setIn('agency', 'notifQty', Math.max(1, (+ag.notifQty || 1) - 1)); },
       testNotif: function () { self.saleNotify({ valor: '176,87' }); },
       notifValue: ag.notifValue || '',
+      isBRL: ag.notifCur === 'BRL', isEUR: ag.notifCur !== 'BRL', curSym: ag.notifCur === 'BRL' ? 'R$' : '€',
+      brlBg: ag.notifCur === 'BRL' ? 'linear-gradient(135deg, #7C3AED, #DB2777)' : 'transparent', eurBg: ag.notifCur !== 'BRL' ? 'linear-gradient(135deg, #7C3AED, #DB2777)' : 'transparent',
+      curBRL: function () { self.setIn('agency', 'notifCur', 'BRL'); }, curEUR: function () { self.setIn('agency', 'notifCur', 'EUR'); },
+      notifIconSrc: ag.notifIcon || './assets/daa6d48dad01a913a3a12fa358ef8fc8.webp', hasNotifIcon: !!ag.notifIcon,
+      notifIconMsg: st.notifIconMsg || (ag.notifIcon ? 'Usando a sua logo.' : 'Usando a logo do SORA. Envie a sua (PNG/SVG quadrado).'),
+      clearNotifIcon: function () { self.setIn('agency', 'notifIcon', ''); self.setState({ notifIconMsg: '' }); },
+      onNotifIcon: function (e) {
+        var f = e.target.files && e.target.files[0]; e.target.value = '';
+        if (!f || !/^image\//.test(f.type)) { self.setState({ notifIconMsg: 'Escolha uma imagem PNG, JPG, WEBP ou SVG.' }); return; }
+        var url = URL.createObjectURL(f), img = new Image();
+        img.onload = function () {
+          var c = document.createElement('canvas'); c.width = c.height = 192; var x = c.getContext('2d');
+          var k = Math.max(192 / img.width, 192 / img.height), w = img.width * k, h = img.height * k;
+          x.drawImage(img, (192 - w) / 2, (192 - h) / 2, w, h); URL.revokeObjectURL(url);
+          self.setIn('agency', 'notifIcon', c.toDataURL('image/png')); self.setState({ notifIconMsg: '' });
+        };
+        img.onerror = function () { self.setState({ notifIconMsg: 'Não consegui abrir essa imagem.' }); };
+        img.src = url;
+      },
       onNotifValue: function (e) { self.setIn('agency', 'notifValue', e.target.value.replace(/[^0-9.,]/g, '')); },
       notifGap: self.notifTimeLabel(Math.max(1, +ag.notifGap || 2)), notifDelay: (+ag.notifDelay || 0) ? self.notifTimeLabel(+ag.notifDelay) : 'Na hora',
       gapUp: function () { var L = self.notifSteps(), c = Math.max(1, +ag.notifGap || 2); self.setIn('agency', 'notifGap', L.filter(function (x) { return x > c; })[0] || L[L.length - 1]); },
@@ -3888,7 +3922,7 @@ class Component extends DCLogic {
       openSettings: function () { self.setState({ showSettings: true }); },
       closeSettings: function () { self.setState({ showSettings: false, confirmReset: false }); },
       logo: st.agency.logo,
-      saleToast: st.saleToast ? Object.assign({ show: true }, st.saleToast) : { show: false, title: '', body: '' },
+      saleToast: st.saleToast ? Object.assign({ show: true }, st.saleToast, { icon: st.saleToast.icon || './assets/daa6d48dad01a913a3a12fa358ef8fc8.webp' }) : { show: false, title: '', body: '', icon: './assets/daa6d48dad01a913a3a12fa358ef8fc8.webp' },
       hasLogo: !!st.agency.logo,
       noLogo: !st.agency.logo,
       logoMsg: st.logoMsg,
