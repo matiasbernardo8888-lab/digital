@@ -1119,11 +1119,27 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 <span aria-hidden="true" style="width: 48px; height: 28px; border-radius: 999px; background: {{ cfg.notifTrack }}; position: relative; flex-shrink: 0; transition: background .2s"><span style="position: absolute; top: 3px; left: {{ cfg.notifKnob }}; width: 22px; height: 22px; border-radius: 999px; background: #FFFFFF; transition: left .2s"></span></span>
 </button>
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap">
-<span style="display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px">Quantidade de notificações por venda</strong><span style="font-size: 12px; color: #B9B2DA">Cada venda aprovada dispara essa quantidade, uma atrás da outra.</span></span>
+<span style="display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px">Quantidade de notificações</strong><span style="font-size: 12px; color: #B9B2DA">Quantas caem a cada venda aprovada.</span></span>
 <div style="display: flex; align-items: center; gap: 6px">
-<button class="ghost" onClick="{{ cfg.qtyDown }}" aria-label="Menos notificações" style="width: 44px; height: 44px; border-radius: 999px; border: 1px solid #3B2F6B; background: transparent; color: #FFFFFF; font-size: 20px; cursor: pointer">−</button>
-<strong style="min-width: 40px; text-align: center; font-size: 20px">{{ cfg.notifQty }}</strong>
-<button class="ghost" onClick="{{ cfg.qtyUp }}" aria-label="Mais notificações" style="width: 44px; height: 44px; border-radius: 999px; border: 1px solid #3B2F6B; background: transparent; color: #FFFFFF; font-size: 20px; cursor: pointer">+</button>
+<button class="ghost" onClick="{{ cfg.qtyDown }}" aria-label="Diminuir quantidade" style="width: 44px; height: 44px; border-radius: 999px; border: 1px solid #3B2F6B; background: transparent; color: #FFFFFF; font-size: 20px; cursor: pointer">−</button>
+<strong style="min-width: 76px; text-align: center; font-size: 17px; white-space: nowrap">{{ cfg.notifQty }}</strong>
+<button class="ghost" onClick="{{ cfg.qtyUp }}" aria-label="Aumentar quantidade" style="width: 44px; height: 44px; border-radius: 999px; border: 1px solid #3B2F6B; background: transparent; color: #FFFFFF; font-size: 20px; cursor: pointer">+</button>
+</div>
+</div>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap">
+<span style="display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px">Tempo entre uma e outra</strong><span style="font-size: 12px; color: #B9B2DA">Intervalo entre cada notificação.</span></span>
+<div style="display: flex; align-items: center; gap: 6px">
+<button class="ghost" onClick="{{ cfg.gapDown }}" aria-label="Diminuir intervalo" style="width: 44px; height: 44px; border-radius: 999px; border: 1px solid #3B2F6B; background: transparent; color: #FFFFFF; font-size: 20px; cursor: pointer">−</button>
+<strong style="min-width: 76px; text-align: center; font-size: 17px; white-space: nowrap">{{ cfg.notifGap }}</strong>
+<button class="ghost" onClick="{{ cfg.gapUp }}" aria-label="Aumentar intervalo" style="width: 44px; height: 44px; border-radius: 999px; border: 1px solid #3B2F6B; background: transparent; color: #FFFFFF; font-size: 20px; cursor: pointer">+</button>
+</div>
+</div>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap">
+<span style="display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px">Começar depois de</strong><span style="font-size: 12px; color: #B9B2DA">Espera antes da primeira cair.</span></span>
+<div style="display: flex; align-items: center; gap: 6px">
+<button class="ghost" onClick="{{ cfg.delayDown }}" aria-label="Diminuir espera" style="width: 44px; height: 44px; border-radius: 999px; border: 1px solid #3B2F6B; background: transparent; color: #FFFFFF; font-size: 20px; cursor: pointer">−</button>
+<strong style="min-width: 76px; text-align: center; font-size: 17px; white-space: nowrap">{{ cfg.notifDelay }}</strong>
+<button class="ghost" onClick="{{ cfg.delayUp }}" aria-label="Aumentar espera" style="width: 44px; height: 44px; border-radius: 999px; border: 1px solid #3B2F6B; background: transparent; color: #FFFFFF; font-size: 20px; cursor: pointer">+</button>
 </div>
 </div>
 <button role="switch" aria-checked="{{ cfg.soundOn }}" onClick="{{ cfg.toggleSound }}" style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; border-radius: 14px; border: 1px solid #3B2F6B; background: transparent; color: #FFFFFF; cursor: pointer; text-align: left">
@@ -1131,7 +1147,7 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 <span aria-hidden="true" style="width: 48px; height: 28px; border-radius: 999px; background: {{ cfg.soundTrack }}; position: relative; flex-shrink: 0"><span style="position: absolute; top: 3px; left: {{ cfg.soundKnob }}; width: 22px; height: 22px; border-radius: 999px; background: #FFFFFF; transition: left .2s"></span></span>
 </button>
 <button class="btn" onClick="{{ cfg.testNotif }}" style="align-self: flex-start; height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: linear-gradient(135deg, #7C3AED, #DB2777); color: #FFFFFF; font-size: 14px; font-weight: 700; cursor: pointer">Testar notificação</button>
-<span style="font-size: 12px; color: #B9B2DA; line-height: 1.5">Dispara quando uma venda muda para <strong style="color: #FFFFFF">Pago</strong>. No iPhone, primeiro adicione o SORA à tela de início (Safari → Compartilhar → Adicionar à Tela de Início) e ative por lá.</span>
+<span style="font-size: 12px; color: #B9B2DA; line-height: 1.5">Dispara quando você marca uma venda como <strong style="color: #FFFFFF">Pago</strong> em Vendas, ou no botão de teste. Deixe o SORA aberto até todas caírem. No iPhone, primeiro adicione o SORA à tela de início (Safari → Compartilhar → Adicionar à Tela de Início) e ative por lá.</span>
 </div>
 
 <div style="background: #140F2E; border: 1px solid #3B2F6B; border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
@@ -3104,26 +3120,29 @@ class Component extends DCLogic {
       a.volume = 1; var p = a.play(); if (p && p.catch) p.catch(function () {});
     } catch (e) {}
   }
-  saleNotify(sale, test) {
-    var self = this, ag = this.state.agency, n = Math.min(10, Math.max(1, +ag.notifQty || 1));
-    var v = this.num(sale.valor), rate = this.num(this.state.rate) || 0;
-    var brl = v > 0 && rate > 0 ? 'R$ ' + this.money(v * rate) : '';
-    var valTxt = brl ? brl + ' (€ ' + this.money(v) + ')' : (v > 0 ? '€ ' + this.money(v) : '');
-    var title = test ? 'Venda aprovada! (teste)' : 'Venda aprovada! 💜';
-    var body = (sale.nome || 'Site') + (sale.cliente ? ' — ' + sale.cliente : '') + (valTxt ? '\nValor: ' + valTxt : '');
-    var opts = { body: body, icon: '/icons/notify-192.png', badge: '/icons/badge-96.png', vibrate: [90, 50, 90, 50, 160], renotify: true, data: { url: '/' } };
+  notifSteps() { return [1, 2, 3, 5, 10, 15, 20, 30, 45, 60, 90, 120, 180, 300, 600]; }
+  notifTimeLabel(sec) { return sec < 60 ? sec + ' s' : (sec % 60 ? Math.floor(sec / 60) + ' min ' + (sec % 60) + ' s' : (sec / 60) + ' min'); }
+  saleNotify(sale) {
+    var self = this, ag = this.state.agency, n = Math.min(50, Math.max(1, +ag.notifQty || 1));
+    var gap = Math.max(1, +ag.notifGap || 2) * 1000, wait = Math.max(0, +ag.notifDelay || 0) * 1000;
+    var v = this.num(sale.valor);
+    var title = 'Venda aprovada!';
+    var body = 'Valor: € ' + this.money(v > 0 ? v : 0);
+    // silent: o próprio iPhone/Android não toca o “tum” dele; quem toca é o som de venda do SORA.
+    var opts = { body: body, icon: '/icons/notify-192.png', badge: '/icons/badge-96.png', silent: true, data: { url: '/' } };
+    clearTimeout(self.notifRunT); (self.notifTimers || []).forEach(clearTimeout); self.notifTimers = [];
     var showOne = function (i) {
       var o = Object.assign({}, opts, { tag: 'sora-venda-' + Date.now() + '-' + i });
       if (ag.notifSound !== false) self.saleChime(false);
-      self.setState({ saleToast: { title: title, body: body, n: i + 1, total: n } });
-      clearTimeout(self.saleToastT); self.saleToastT = setTimeout(function () { self.setState({ saleToast: null }); }, 3800);
+      self.setState({ saleToast: { title: title, body: body } });
+      clearTimeout(self.saleToastT); self.saleToastT = setTimeout(function () { self.setState({ saleToast: null }); }, Math.min(3800, gap));
       if (self.notifPerm() !== 'granted') return;
       var plain = function () { try { new Notification(title, o); } catch (e) {} };
       if (navigator.serviceWorker && navigator.serviceWorker.getRegistration) {
         navigator.serviceWorker.getRegistration().then(function (reg) { if (reg && reg.showNotification) reg.showNotification(title, o); else plain(); }).catch(plain);
       } else plain();
     };
-    var go = function () { for (var i = 0; i < n; i++) (function (k) { setTimeout(function () { showOne(k); }, k * 1100); })(i); };
+    var go = function () { for (var i = 0; i < n; i++) (function (k) { self.notifTimers.push(setTimeout(function () { showOne(k); }, wait + k * gap)); })(i); };
     if (self.notifPerm() === 'default') {
       try { Notification.requestPermission().then(function () { self.setState({ notifMsg: '' }); go(); }); return; } catch (e) {}
     }
@@ -3136,7 +3155,7 @@ class Component extends DCLogic {
   setSale(id, field, value) {
     if (field === 'status' && value === 'Pago') {
       var prev = this.state.sales.filter(function (s) { return s.id === id; })[0];
-      if (prev && prev.status !== 'Pago' && this.state.agency.notifOn) this.saleNotify(prev, false);
+      if (prev && prev.status !== 'Pago' && this.state.agency.notifOn) this.saleNotify(prev);
     }
     this.save({
       sales: this.state.sales.map(function (s) {
@@ -3636,15 +3655,20 @@ class Component extends DCLogic {
       brandHeader: !!ag.brandHeader, spaceBg: ag.spaceBg !== false, motion: ag.motion !== false,
       onOwner: function (e) { self.setIn('agency', 'owner', e.target.value); },
       onContact: function (e) { self.setIn('agency', 'contact', e.target.value); },
-      notifOn: !!ag.notifOn, soundOn: ag.notifSound !== false, notifQty: Math.min(10, Math.max(1, +ag.notifQty || 1)),
+      notifOn: !!ag.notifOn, soundOn: ag.notifSound !== false, notifQty: Math.min(50, Math.max(1, +ag.notifQty || 1)),
       notifStatus: self.notifStatusText(), notifInk: ag.notifOn && self.notifPerm() === 'granted' ? '#86EFAC' : '#B9B2DA',
       notifTrack: ag.notifOn ? 'linear-gradient(135deg, #7C3AED, #DB2777)' : '#3B2F6B', notifKnob: ag.notifOn ? '23px' : '3px',
       soundTrack: ag.notifSound !== false ? 'linear-gradient(135deg, #7C3AED, #DB2777)' : '#3B2F6B', soundKnob: ag.notifSound !== false ? '23px' : '3px',
       toggleNotif: function () { self.toggleNotif(); },
       toggleSound: function () { self.setIn('agency', 'notifSound', ag.notifSound === false); },
-      qtyUp: function () { self.setIn('agency', 'notifQty', Math.min(10, (+ag.notifQty || 1) + 1)); },
+      qtyUp: function () { self.setIn('agency', 'notifQty', Math.min(50, (+ag.notifQty || 1) + 1)); },
       qtyDown: function () { self.setIn('agency', 'notifQty', Math.max(1, (+ag.notifQty || 1) - 1)); },
-      testNotif: function () { self.saleNotify({ nome: 'Site de teste', cliente: 'Cliente exemplo', valor: '176,87' }, true); },
+      testNotif: function () { self.saleNotify({ valor: '176,87' }); },
+      notifGap: self.notifTimeLabel(Math.max(1, +ag.notifGap || 2)), notifDelay: (+ag.notifDelay || 0) ? self.notifTimeLabel(+ag.notifDelay) : 'Na hora',
+      gapUp: function () { var L = self.notifSteps(), c = Math.max(1, +ag.notifGap || 2); self.setIn('agency', 'notifGap', L.filter(function (x) { return x > c; })[0] || L[L.length - 1]); },
+      gapDown: function () { var L = self.notifSteps(), c = Math.max(1, +ag.notifGap || 2); self.setIn('agency', 'notifGap', L.filter(function (x) { return x < c; }).pop() || 1); },
+      delayUp: function () { var L = [0].concat(self.notifSteps()), c = +ag.notifDelay || 0; self.setIn('agency', 'notifDelay', L.filter(function (x) { return x > c; })[0] || L[L.length - 1]); },
+      delayDown: function () { var L = [0].concat(self.notifSteps()), c = +ag.notifDelay || 0; self.setIn('agency', 'notifDelay', L.filter(function (x) { return x < c; }).pop() || 0); },
       onBrandHeader: function (e) { self.setIn('agency', 'brandHeader', e.target.checked); },
       onSpaceBg: function (e) { self.setIn('agency', 'spaceBg', e.target.checked); },
       onMotion: function (e) { self.setIn('agency', 'motion', e.target.checked); },
