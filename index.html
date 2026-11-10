@@ -1349,6 +1349,7 @@ class Component extends DCLogic {
       else if (k === 'j' && n > 0) self.save({ revAdj: n - 1 });
     };
     window.addEventListener('keydown', this.revKeyFn);
+    if (this.state.agency && this.state.agency.notifIcon) this.applyAppIcon(this.state.agency.notifIcon);
     var motion = this.state.agency.motion !== false;
     if (!motion) {
       this.setState({ typed: this.PHRASE.length });
@@ -3111,6 +3112,25 @@ class Component extends DCLogic {
   notifPerm() {
     try { return ('Notification' in window) ? Notification.permission : 'unsupported'; } catch (e) { return 'unsupported'; }
   }
+  applyAppIcon(src) {
+    // No iPhone a notificação usa o ícone do app da tela de início. Com logo própria, o ícone do app passa a ser essa logo
+    // (vale para quem adicionar o SORA à tela de início depois de enviar a logo, neste aparelho).
+    try {
+      var head = document.head, abs = location.origin + '/';
+      var at = head.querySelector('link[rel="apple-touch-icon"]');
+      if (!at) { at = document.createElement('link'); at.rel = 'apple-touch-icon'; head.appendChild(at); }
+      at.href = src || '/icons/apple-touch-icon.png';
+      var mf = head.querySelector('link[rel="manifest"]');
+      if (!mf) return;
+      if (!this.baseManifest) this.baseManifest = mf.getAttribute('href');
+      if (!src) { mf.setAttribute('href', this.baseManifest); return; }
+      var m = { id: '/', name: 'SORA', short_name: 'SORA', start_url: abs + '?app=1', scope: abs, display: 'standalone', background_color: '#07051A', theme_color: '#07051A',
+        icons: [{ src: src, sizes: '256x256', type: 'image/png', purpose: 'any' }] };
+      if (this.manifestUrl) URL.revokeObjectURL(this.manifestUrl);
+      this.manifestUrl = URL.createObjectURL(new Blob([JSON.stringify(m)], { type: 'application/manifest+json' }));
+      mf.setAttribute('href', this.manifestUrl);
+    } catch (e) {}
+  }
   isIOS() { var u = navigator.userAgent || ''; return /iPhone|iPad|iPod/.test(u) || (/Macintosh/.test(u) && navigator.maxTouchPoints > 1); }
   isInstalled() { try { return window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; } catch (e) { return false; } }
   notifStatusText() {
@@ -3710,17 +3730,19 @@ class Component extends DCLogic {
       brlBg: ag.notifCur === 'BRL' ? 'linear-gradient(135deg, #7C3AED, #DB2777)' : 'transparent', eurBg: ag.notifCur !== 'BRL' ? 'linear-gradient(135deg, #7C3AED, #DB2777)' : 'transparent',
       curBRL: function () { self.setIn('agency', 'notifCur', 'BRL'); }, curEUR: function () { self.setIn('agency', 'notifCur', 'EUR'); },
       notifIconSrc: ag.notifIcon || './assets/daa6d48dad01a913a3a12fa358ef8fc8.webp', hasNotifIcon: !!ag.notifIcon,
-      notifIconMsg: st.notifIconMsg || (ag.notifIcon ? 'Usando a sua logo.' : 'Usando a logo do SORA. Envie a sua (PNG/SVG quadrado).'),
-      clearNotifIcon: function () { self.setIn('agency', 'notifIcon', ''); self.setState({ notifIconMsg: '' }); },
+      notifIconMsg: st.notifIconMsg || (ag.notifIcon ? 'Usando a sua logo. No iPhone: envie pelo Safari e depois adicione à tela de início.' : 'Usando a logo do SORA. Envie a sua (PNG/SVG quadrado).'),
+      clearNotifIcon: function () { self.setIn('agency', 'notifIcon', ''); self.applyAppIcon(''); self.setState({ notifIconMsg: '' }); },
       onNotifIcon: function (e) {
         var f = e.target.files && e.target.files[0]; e.target.value = '';
         if (!f || !/^image\//.test(f.type)) { self.setState({ notifIconMsg: 'Escolha uma imagem PNG, JPG, WEBP ou SVG.' }); return; }
         var url = URL.createObjectURL(f), img = new Image();
         img.onload = function () {
-          var c = document.createElement('canvas'); c.width = c.height = 192; var x = c.getContext('2d');
-          var k = Math.max(192 / img.width, 192 / img.height), w = img.width * k, h = img.height * k;
-          x.drawImage(img, (192 - w) / 2, (192 - h) / 2, w, h); URL.revokeObjectURL(url);
-          self.setIn('agency', 'notifIcon', c.toDataURL('image/png')); self.setState({ notifIconMsg: '' });
+          var Z = 256, c = document.createElement('canvas'); c.width = c.height = Z; var x = c.getContext('2d');
+          x.fillStyle = '#FFFFFF'; x.fillRect(0, 0, Z, Z);
+          var k = Math.max(Z / img.width, Z / img.height), w = img.width * k, h = img.height * k;
+          x.drawImage(img, (Z - w) / 2, (Z - h) / 2, w, h); URL.revokeObjectURL(url);
+          var du = c.toDataURL('image/png');
+          self.setIn('agency', 'notifIcon', du); self.applyAppIcon(du); self.setState({ notifIconMsg: '' });
         };
         img.onerror = function () { self.setState({ notifIconMsg: 'Não consegui abrir essa imagem.' }); };
         img.src = url;
