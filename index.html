@@ -1164,6 +1164,9 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 <span style="display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px">Som de venda (“cha-ching”)</strong><span style="font-size: 12px; color: #B9B2DA">Toca com o SORA aberto. Com o app fechado, o celular usa o som de notificação dele.</span></span>
 <span aria-hidden="true" style="width: 48px; height: 28px; border-radius: 999px; background: {{ cfg.soundTrack }}; position: relative; flex-shrink: 0"><span style="position: absolute; top: 3px; left: {{ cfg.soundKnob }}; width: 22px; height: 22px; border-radius: 999px; background: #FFFFFF; transition: left .2s"></span></span>
 </button>
+<sc-if value="{{ cfg.needPerm }}" hint-placeholder-val="{{ false }}">
+<button class="btn" onClick="{{ cfg.askPerm }}" style="height: 48px; padding: 0 18px; border: 0; border-radius: 999px; background: #2563EB; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer">🔔 Permitir no celular</button>
+</sc-if>
 <button class="btn" onClick="{{ cfg.testNotif }}" style="align-self: flex-start; height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: linear-gradient(135deg, #7C3AED, #DB2777); color: #FFFFFF; font-size: 14px; font-weight: 700; cursor: pointer">Testar notificação</button>
 <span style="font-size: 12px; color: #B9B2DA; line-height: 1.5">Dispara quando você marca uma venda como <strong style="color: #FFFFFF">Pago</strong> em Vendas, ou no botão de teste. Deixe o SORA aberto até todas caírem. No iPhone, primeiro adicione o SORA à tela de início (Safari → Compartilhar → Adicionar à Tela de Início) e ative por lá.</span>
 </div>
@@ -3108,26 +3111,46 @@ class Component extends DCLogic {
   notifPerm() {
     try { return ('Notification' in window) ? Notification.permission : 'unsupported'; } catch (e) { return 'unsupported'; }
   }
+  isIOS() { var u = navigator.userAgent || ''; return /iPhone|iPad|iPod/.test(u) || (/Macintosh/.test(u) && navigator.maxTouchPoints > 1); }
+  isInstalled() { try { return window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; } catch (e) { return false; } }
   notifStatusText() {
     var on = !!this.state.agency.notifOn, p = this.notifPerm();
     if (this.state.notifMsg) return this.state.notifMsg;
     if (!on) return 'Desligado';
-    if (p === 'granted') return 'Ligado neste aparelho';
-    if (p === 'denied') return 'Bloqueado — libere as notificações do SORA nas configurações do celular';
-    if (p === 'unsupported') return 'Este navegador não mostra notificações. No iPhone, abra pelo app da tela de início';
-    return 'Toque para permitir as notificações';
+    if (this.isIOS() && !this.isInstalled()) return 'No iPhone só funciona pelo app: adicione o SORA à tela de início e abra por lá';
+    if (p === 'granted') return 'Ligado — as notificações caem no celular';
+    if (p === 'denied') return 'Bloqueado — libere as notificações do SORA nos Ajustes do celular';
+    if (p === 'unsupported') return 'Este navegador não mostra notificações no celular';
+    return 'Falta permitir — toque em “Permitir no celular”';
+  }
+  askNotifPerm() {
+    var self = this;
+    self.saleChime(true);
+    if (self.notifPerm() !== 'default') { self.setState({ notifMsg: '' }); return; }
+    try {
+      var r = Notification.requestPermission(function () { self.setState({ notifMsg: '' }); });
+      if (r && r.then) r.then(function () { self.setState({ notifMsg: '' }); self.forceUpdate(); });
+    } catch (e) {}
   }
   toggleNotif() {
     var self = this, on = !!this.state.agency.notifOn;
+    if (on && self.notifPerm() === 'default') { self.askNotifPerm(); return; }
     if (on) { self.setIn('agency', 'notifOn', false); self.setState({ notifMsg: '' }); return; }
     self.setIn('agency', 'notifOn', true);
-    self.saleChime(true);
-    if (self.notifPerm() === 'default') {
-      try {
-        Notification.requestPermission().then(function () { self.setState({ notifMsg: '' }); });
-      } catch (e) {}
-    }
-    self.setState({ notifMsg: '' });
+    self.askNotifPerm();
+  }
+  osNotify(title, o) {
+    // Mostra no próprio celular (central de notificações). Se o aparelho recusar alguma opção, tenta de novo só com o básico.
+    var self = this, basic = { body: o.body, icon: '/icons/notify-192.png', tag: o.tag, data: o.data };
+    var fail = function (e) { self.setState({ notifMsg: 'O celular recusou a notificação' + (e && e.message ? ': ' + e.message : '') }); };
+    var viaPlain = function (opts) { try { new Notification(title, opts); return true; } catch (e) { return false; } };
+    var sw = navigator.serviceWorker;
+    if (!sw) { if (!viaPlain(o) && !viaPlain(basic)) fail(); return; }
+    var timer = new Promise(function (res) { setTimeout(function () { res(null); }, 2500); });
+    Promise.race([sw.ready, timer]).then(function (reg) {
+      if (!reg || !reg.showNotification) { if (!viaPlain(o) && !viaPlain(basic)) fail(); return; }
+      return reg.showNotification(title, o).catch(function () { return reg.showNotification(title, basic); }).catch(fail);
+    }).catch(fail);
   }
   saleChime(silentUnlock) {
     // Som de caixa registradora (cha-ching): gaveta, sino forte, segundo toque e moedas.
@@ -3156,10 +3179,7 @@ class Component extends DCLogic {
       self.setState({ saleToast: { title: title, body: body, icon: ag.notifIcon || '' } });
       clearTimeout(self.saleToastT); self.saleToastT = setTimeout(function () { self.setState({ saleToast: null }); }, Math.min(3800, gap));
       if (self.notifPerm() !== 'granted') return;
-      var plain = function () { try { new Notification(title, o); } catch (e) {} };
-      if (navigator.serviceWorker && navigator.serviceWorker.getRegistration) {
-        navigator.serviceWorker.getRegistration().then(function (reg) { if (reg && reg.showNotification) reg.showNotification(title, o); else plain(); }).catch(plain);
-      } else plain();
+      self.osNotify(title, o);
     };
     var go = function () { for (var i = 0; i < n; i++) (function (k) { self.notifTimers.push(setTimeout(function () { showOne(k); }, wait + k * gap)); })(i); };
     if (self.notifPerm() === 'default') {
@@ -3682,6 +3702,8 @@ class Component extends DCLogic {
       toggleSound: function () { self.setIn('agency', 'notifSound', ag.notifSound === false); },
       qtyUp: function () { self.setIn('agency', 'notifQty', Math.min(50, (+ag.notifQty || 1) + 1)); },
       qtyDown: function () { self.setIn('agency', 'notifQty', Math.max(1, (+ag.notifQty || 1) - 1)); },
+      needPerm: self.notifPerm() !== 'granted' && !(self.isIOS() && !self.isInstalled()),
+      askPerm: function () { if (!ag.notifOn) self.setIn('agency', 'notifOn', true); self.askNotifPerm(); },
       testNotif: function () { self.saleNotify({ valor: '176,87' }); },
       notifValue: ag.notifValue || '',
       isBRL: ag.notifCur === 'BRL', isEUR: ag.notifCur !== 'BRL', curSym: ag.notifCur === 'BRL' ? 'R$' : '€',
