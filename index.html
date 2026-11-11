@@ -123,7 +123,7 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 <img src="{{ logo }}" alt="" style="width: 40px; height: 40px; object-fit: contain; border-radius: 8px">
 </sc-if>
 <sc-if value="{{ brand.standard }}" hint-placeholder-val="{{ true }}">
-<img src="./assets/735b751b68951b8ffc28e4ca16cb02a9.webp" alt="" style="width: 46px; height: 46px; object-fit: contain; filter: drop-shadow(0 0 8px rgba(124,58,237,0.7))">
+<img src="./assets/daa6d48dad01a913a3a12fa358ef8fc8.webp" alt="" style="width: 46px; height: 46px; object-fit: contain; filter: drop-shadow(0 0 8px rgba(124,58,237,0.7))">
 </sc-if>
 <span style="font-family: Cinzel, Georgia, serif; font-size: 22px; font-weight: 700; letter-spacing: {{ brand.spacing }}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{ brand.name }}</span>
 </div>
@@ -3751,7 +3751,7 @@ class Component extends DCLogic {
       isBRL: ag.notifCur === 'BRL', isEUR: ag.notifCur !== 'BRL', curSym: ag.notifCur === 'BRL' ? 'R$' : '€',
       brlBg: ag.notifCur === 'BRL' ? 'linear-gradient(135deg, #7C3AED, #DB2777)' : 'transparent', eurBg: ag.notifCur !== 'BRL' ? 'linear-gradient(135deg, #7C3AED, #DB2777)' : 'transparent',
       curBRL: function () { self.setIn('agency', 'notifCur', 'BRL'); }, curEUR: function () { self.setIn('agency', 'notifCur', 'EUR'); },
-      notifIconSrc: ag.notifIcon || './assets/735b751b68951b8ffc28e4ca16cb02a9.webp', hasNotifIcon: !!ag.notifIcon,
+      notifIconSrc: ag.notifIcon || './assets/daa6d48dad01a913a3a12fa358ef8fc8.webp', hasNotifIcon: !!ag.notifIcon,
       notifIconMsg: st.notifIconMsg || (ag.notifIcon ? 'Usando a sua logo. No iPhone: envie pelo Safari e depois adicione à tela de início.' : 'Usando a logo do SORA. Envie a sua (PNG/SVG quadrado).'),
       clearNotifIcon: function () { self.setIn('agency', 'notifIcon', ''); self.applyAppIcon(''); self.setState({ notifIconMsg: '' }); },
       onNotifIcon: function (e) {
@@ -3988,7 +3988,7 @@ class Component extends DCLogic {
       openSettings: function () { self.setState({ showSettings: true }); },
       closeSettings: function () { self.setState({ showSettings: false, confirmReset: false }); },
       logo: st.agency.logo,
-      saleToast: st.saleToast ? Object.assign({ show: true }, st.saleToast, { icon: st.saleToast.icon || './assets/735b751b68951b8ffc28e4ca16cb02a9.webp' }) : { show: false, title: '', body: '', icon: './assets/735b751b68951b8ffc28e4ca16cb02a9.webp' },
+      saleToast: st.saleToast ? Object.assign({ show: true }, st.saleToast, { icon: st.saleToast.icon || './assets/daa6d48dad01a913a3a12fa358ef8fc8.webp' }) : { show: false, title: '', body: '', icon: './assets/daa6d48dad01a913a3a12fa358ef8fc8.webp' },
       hasLogo: !!st.agency.logo,
       noLogo: !st.agency.logo,
       logoMsg: st.logoMsg,
