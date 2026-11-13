@@ -621,7 +621,10 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 <a href="{{ ld.tel }}" style="font-size: 16px; font-weight: 700; color: #FFFFFF; text-decoration: none">☎ {{ ld.phone }}</a>
 </sc-if>
 <sc-if value="{{ ld.noPhone }}" hint-placeholder-val="{{ false }}">
-<span style="font-size: 13px; color: #B9B2DA">O Google não mostra telefone desta empresa.</span>
+<span style="font-size: 13px; color: #B9B2DA">Não encontramos telefone desta empresa.</span>
+</sc-if>
+<sc-if value="{{ ld.hasEmail }}" hint-placeholder-val="{{ false }}">
+<a href="{{ ld.emailHref }}" style="font-size: 15px; font-weight: 700; color: #FFFFFF; text-decoration: none; overflow-wrap: anywhere">✉ {{ ld.email }}</a>
 </sc-if>
 <div style="display: flex; flex-wrap: wrap; gap: 8px">
 <sc-for list="{{ ld.contacts }}" as="cx" hint-placeholder-count="2">
@@ -642,6 +645,15 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 <a href="{{ ld.msg.waHref }}" target="_blank" rel="noopener noreferrer" style="flex: 1 1 180px; min-height: 44px; padding: 0 14px; border-radius: 999px; background: #16A34A; color: #FFFFFF; font-size: 14px; font-weight: 800; text-decoration: none; display: inline-flex; align-items: center; justify-content: center">Enviar no WhatsApp</a>
 </sc-if>
 <button onClick="{{ ld.msg.copy }}" style="flex: 1 1 160px; min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid #4ADE80; background: {{ ld.msg.copyBg }}; color: #FFFFFF; font-size: 14px; font-weight: 800; cursor: pointer">{{ ld.msg.copyLabel }}</button>
+<sc-if value="{{ ld.msg.hasSms }}" hint-placeholder-val="{{ false }}">
+<a href="{{ ld.msg.smsHref }}" style="flex: 1 1 160px; min-height: 44px; padding: 0 14px; border-radius: 999px; color: #FFFFFF; font-size: 14px; font-weight: 800; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; border: 1px solid #38BDF8; background: rgba(14,165,233,0.2)">Enviar por SMS</a>
+</sc-if>
+<sc-if value="{{ ld.msg.hasMail }}" hint-placeholder-val="{{ false }}">
+<a href="{{ ld.msg.mailHref }}" style="flex: 1 1 160px; min-height: 44px; padding: 0 14px; border-radius: 999px; color: #FFFFFF; font-size: 14px; font-weight: 800; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; border: 1px solid #A78BFA; background: rgba(124,58,237,0.25)">Enviar por e-mail</a>
+</sc-if>
+<sc-if value="{{ ld.msg.hasMessenger }}" hint-placeholder-val="{{ false }}">
+<a href="{{ ld.msg.messengerHref }}" onClick="{{ ld.msg.copy }}" target="_blank" rel="noopener noreferrer" style="flex: 1 1 160px; min-height: 44px; padding: 0 14px; border-radius: 999px; color: #FFFFFF; font-size: 14px; font-weight: 800; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; border: 1px solid #60A5FA; background: rgba(37,99,235,0.2)">Copiar e abrir Messenger</a>
+</sc-if>
 <sc-if value="{{ ld.msg.hasInsta }}" hint-placeholder-val="{{ false }}">
 <a href="{{ ld.msg.instaHref }}" onClick="{{ ld.msg.copyInsta }}" target="_blank" rel="noopener noreferrer" style="flex: 1 1 160px; min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid #F472B6; color: #FFFFFF; font-size: 14px; font-weight: 800; text-decoration: none; display: inline-flex; align-items: center; justify-content: center">Copiar e abrir Instagram</a>
 </sc-if>
@@ -2009,7 +2021,7 @@ class Component extends DCLogic {
     var lang = { BR: 'pt-BR', PT: 'pt-PT', ES: 'es', MX: 'es', AR: 'es', CL: 'es', CO: 'es', UY: 'es', PE: 'es', US: 'en', GB: 'en', IE: 'en', CA: 'en', AU: 'en', FR: 'fr', BE: 'fr', LU: 'fr', IT: 'it', DE: 'de', AT: 'de', CH: 'de', NL: 'nl' }[entry.country] || 'en';
     var t = T[lang];
     var name = String(ld.name || '').replace(/\s*\(exemplo\)$/, '');
-    return { lang: t[0], text: t[1].replace('{INTRO}', this.pitchIntro(lang)).replace('{EMP}', name).replace('{CID}', entry.city || '') };
+    return { code: lang, lang: t[0], text: t[1].replace('{INTRO}', this.pitchIntro(lang)).replace('{EMP}', name).replace('{CID}', entry.city || '') };
   }
   radarContacts(ld, entry) {
     // Resultados antigos (sem "contacts") ganham os contatos a partir do telefone.
@@ -2021,13 +2033,30 @@ class Component extends DCLogic {
   }
   radarContactList(ld, entry) {
     var c = this.radarContacts(ld, entry), list = [];
-    if (c.whatsapp) list.push({ label: 'WhatsApp', href: c.whatsapp, bg: 'rgba(22,163,74,0.85)', border: '#22C55E' });
-    if (c.instagram) list.push({ label: 'Instagram', href: c.instagram, bg: 'linear-gradient(135deg, #DB2777, #F59E0B)', border: '#F472B6' });
-    if (c.facebook) list.push({ label: 'Facebook', href: c.facebook, bg: 'rgba(37,99,235,0.85)', border: '#60A5FA' });
-    if (c.linktree) list.push({ label: 'Linktree', href: c.linktree, bg: 'rgba(22,163,74,0.35)', border: '#4ADE80' });
-    if (c.tiktok) list.push({ label: 'TikTok', href: c.tiktok, bg: 'rgba(15,15,25,0.9)', border: '#A78BFA' });
-    if (c.email) list.push({ label: 'E-mail', href: c.email, bg: 'rgba(124,58,237,0.35)', border: '#A78BFA' });
-    if (!c.instagram) list.push({ label: 'Procurar Instagram', href: 'https://www.google.com/search?q=' + encodeURIComponent(String(ld.name || '').replace(/\s*\(exemplo\)$/, '') + ' ' + (entry ? entry.city : '') + ' instagram'), bg: 'transparent', border: 'rgba(244,114,182,0.6)' });
+    var nm = String(ld.name || '').replace(/\s*\(exemplo\)$/, ''), city = entry ? entry.city : '';
+    var google = function (extra) { return 'https://www.google.com/search?q=' + encodeURIComponent('"' + nm + '" ' + city + ' ' + extra); };
+    var add = function (label, href, bg, border) { if (href) list.push({ label: label, href: href, bg: bg, border: border }); };
+    var mob = c.mobile || '', mobDigits = String(mob).replace(/\D/g, '');
+    var smsNum = c.tel ? c.tel.replace(/^tel:/, '') : '';
+    add('WhatsApp', c.whatsapp, 'rgba(22,163,74,0.85)', '#22C55E');
+    add('SMS', smsNum ? 'sms:' + smsNum : '', 'rgba(14,165,233,0.35)', '#38BDF8');
+    if (mob && mobDigits.length >= 8 && 'tel:' + (/^\s*\+/.test(mob) ? '+' : '') + mobDigits !== c.tel) {
+      add('Celular ' + mob, 'tel:' + (/^\s*\+/.test(mob) ? '+' : '') + mobDigits, 'transparent', '#3B2F6B');
+      add('SMS celular', 'sms:' + (/^\s*\+/.test(mob) ? '+' : '') + mobDigits, 'rgba(14,165,233,0.35)', '#38BDF8');
+    }
+    add('E-mail', c.email, 'rgba(124,58,237,0.35)', '#A78BFA');
+    add('Instagram', c.instagram, 'linear-gradient(135deg, #DB2777, #F59E0B)', '#F472B6');
+    add('Facebook', c.facebook, 'rgba(37,99,235,0.85)', '#60A5FA');
+    add('Messenger', c.facebook && /facebook\.com\/(?!profile\.php)([^/?#]+)/.exec(c.facebook) ? 'https://m.me/' + /facebook\.com\/([^/?#]+)/.exec(c.facebook)[1] : '', 'rgba(37,99,235,0.45)', '#60A5FA');
+    add('Telegram', c.telegram, 'rgba(14,165,233,0.6)', '#38BDF8');
+    add('LinkedIn', c.linkedin, 'rgba(10,102,194,0.85)', '#60A5FA');
+    add('TikTok', c.tiktok, 'rgba(15,15,25,0.9)', '#A78BFA');
+    add('YouTube', c.youtube, 'rgba(220,38,38,0.75)', '#F87171');
+    add('X / Twitter', c.twitter, 'rgba(15,15,25,0.9)', '#A78BFA');
+    add('Linktree', c.linktree, 'rgba(22,163,74,0.35)', '#4ADE80');
+    if (!c.email) add('Procurar e-mail', google('email OR e-mail OR contato'), 'transparent', 'rgba(167,139,250,0.6)');
+    if (!c.instagram) add('Procurar Instagram', google('instagram'), 'transparent', 'rgba(244,114,182,0.6)');
+    if (!c.facebook) add('Procurar Facebook', google('facebook'), 'transparent', 'rgba(96,165,250,0.6)');
     return list;
   }
   buildRadar(st, nDefs, nNames) {
@@ -2072,6 +2101,8 @@ class Component extends DCLogic {
           reviewsLabel: ld.reviews == null ? '' : (ld.reviews || 0) + ((ld.reviews || 0) === 1 ? ' avaliação' : ' avaliações'),
           hasPhone: !!ld.phone, noPhone: !ld.phone, phone: ld.phone || '',
           tel: (self.radarContacts(ld, entry).tel) || '#',
+          hasEmail: !!self.radarContacts(ld, entry).email, emailHref: self.radarContacts(ld, entry).email || '#',
+          email: String(self.radarContacts(ld, entry).email || '').replace(/^mailto:/, ''),
           contacts: self.radarContactList(ld, entry),
           gen: function () { self.openAtelieLead(ld, entry); },
           msg: (function () {
@@ -2086,6 +2117,9 @@ class Component extends DCLogic {
               toggle: function () { self.setState({ radarMsg: open ? '' : key, copied: '' }); },
               hasWa: !!c.whatsapp, waHref: c.whatsapp ? c.whatsapp + '?text=' + encodeURIComponent(pitch.text) : '#',
               hasInsta: !!c.instagram, instaHref: c.instagram || '#',
+              hasSms: !!c.tel, smsHref: c.tel ? 'sms:' + c.tel.replace(/^tel:/, '') + '?&body=' + encodeURIComponent(pitch.text) : '#',
+              hasMail: !!c.email, mailHref: c.email ? c.email + '?subject=' + encodeURIComponent(({ 'pt-BR': 'Criei um site grátis para a {EMP}', 'pt-PT': 'Criei um site gratuito para a {EMP}', es: 'Creé una web gratis para {EMP}', en: 'I built a free website for {EMP}', fr: 'J’ai créé un site gratuit pour {EMP}', it: 'Ho creato un sito gratuito per {EMP}', nl: 'Ik heb een gratis website gemaakt voor {EMP}', de: 'Ich habe eine kostenlose Website für {EMP} erstellt' }[pitch.code] || 'Criei um site grátis para a {EMP}').replace('{EMP}', String(ld.name || '').replace(/\s*\(exemplo\)$/, ''))) + '&body=' + encodeURIComponent(pitch.text) : '#',
+              hasMessenger: !!(c.facebook && /facebook\.com\/(?!profile\.php)[^/?#]+/.test(c.facebook)), messengerHref: c.facebook && /facebook\.com\/([^/?#]+)/.exec(c.facebook) ? 'https://m.me/' + /facebook\.com\/([^/?#]+)/.exec(c.facebook)[1] : '#',
               copyLabel: copied ? '✓ Mensagem copiada' : 'Copiar mensagem',
               copyBg: copied ? '#16A34A' : 'transparent',
               copy: function () { self.copyText(key, pitch.text); },

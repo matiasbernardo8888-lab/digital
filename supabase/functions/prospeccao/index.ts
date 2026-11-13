@@ -348,7 +348,10 @@ export function buildOsmLeads(els: any[], city: string, niche: string) {
     if (t['brand:wikidata'] || t.brand) continue // rede/franquia: quase sempre tem site
     if (t.disused || t['disused:shop'] || t.opening_hours === 'closed') continue
     const sites = [t.website, t['contact:website'], t.url].filter(Boolean)
-    const social: [string, string][] = ([['instagram', t['contact:instagram'] || t.instagram], ['facebook', t['contact:facebook'] || t.facebook], ['tiktok', t['contact:tiktok']]] as [string, string][]).filter((x) => x[1])
+    const social: [string, string][] = ([
+      ['instagram', t['contact:instagram'] || t.instagram], ['facebook', t['contact:facebook'] || t.facebook], ['tiktok', t['contact:tiktok'] || t.tiktok],
+      ['linkedin', t['contact:linkedin'] || t.linkedin], ['youtube', t['contact:youtube'] || t.youtube], ['twitter', t['contact:twitter'] || t['contact:x'] || t.twitter],
+    ] as [string, string][]).filter((x) => x[1])
     const realSite = sites.find((u: string) => !socialKind(u))
     if (realSite) continue // TEM site: descarta
     const phone = t.phone || t['contact:phone'] || t['contact:mobile'] || t.mobile || ''
@@ -356,7 +359,16 @@ export function buildOsmLeads(els: any[], city: string, niche: string) {
     const c = contactsFor(firstPhone, sites[0] || '')
     for (const [k, sv] of social) c[k] = /^https?:\/\//i.test(sv) ? sv : /\./.test(sv) ? 'https://' + sv : `https://www.${k}.com/${String(sv).replace(/^@/, '')}`
     if (t['contact:whatsapp']) { const d = String(t['contact:whatsapp']).replace(/\D/g, ''); if (d.length >= 8) c.whatsapp = 'https://wa.me/' + d }
-    if (t.email || t['contact:email']) c.email = 'mailto:' + (t.email || t['contact:email'])
+    const mail = String(t.email || t['contact:email'] || '').split(/[;,\s]+/).find((m: string) => /^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(m))
+    if (mail) c.email = 'mailto:' + mail
+    const mob = String(t['contact:mobile'] || t.mobile || '').split(';')[0].trim()
+    if (mob && mob !== firstPhone) {
+      c.mobile = mob
+      const md = mob.replace(/\D/g, '')
+      if (!c.whatsapp && md.length >= 8 && /^\+/.test(mob)) c.whatsapp = 'https://wa.me/' + md
+    }
+    const tg = String(t['contact:telegram'] || t.telegram || '').trim()
+    if (tg) c.telegram = /^https?:\/\//i.test(tg) ? tg : 'https://t.me/' + tg.replace(/^@/, '')
     const addr = [[t['addr:street'], t['addr:housenumber']].filter(Boolean).join(', '), t['addr:postcode'], t['addr:city'] || city].filter(Boolean).join(' - ')
     const lat = el.lat ?? el.center?.lat, lon = el.lon ?? el.center?.lon
     leads.push({
