@@ -339,6 +339,8 @@ export async function osmLeads(city: string, country: string, niche: string, doF
   return buildOsmLeads(els, city, niche)
 }
 
+const MAX_LEADS = 300
+
 // Transforma elementos com tags do OpenStreetMap em leads (usado pelo Overpass e pela Geoapify).
 export function buildOsmLeads(els: any[], city: string, niche: string) {
   const leads = []
@@ -383,11 +385,11 @@ export function buildOsmLeads(els: any[], city: string, niche: string) {
       osmUrl: `https://www.openstreetmap.org/${el.type}/${el.id}`,
       lat, lon,
       niche: niche === 'custom' ? 'custom' : osmNiche(t, niche),
-      score: (firstPhone ? 4 : 0) + (social.length ? 2 : 0) + (t['addr:street'] ? 1 : 0),
+      score: (el.region ? 0 : 10) + (firstPhone ? 4 : 0) + (social.length ? 2 : 0) + (t['addr:street'] ? 1 : 0),
     })
   }
   leads.sort((a, b) => b.score - a.score)
-  return { leads: leads.slice(0, 40).map(({ score, ...l }) => l), analyzed: els.length }
+  return { leads: leads.slice(0, MAX_LEADS).map(({ score, ...l }) => l), analyzed: els.length }
 }
 
 // ---------- Geoapify (grátis, sem cartão; dados do OpenStreetMap) ----------
@@ -446,48 +448,58 @@ async function geoGet(key: string, path: string, params: Record<string, string>,
   if (!r.ok) throw new Error(`Geoapify ${r.status}: ${JSON.stringify(data).slice(0, 200)}`)
   return data
 }
-async function geoCity(key: string, city: string, country: string, doFetch: typeof fetch): Promise<string> {
+async function geoCity(key: string, city: string, country: string, doFetch: typeof fetch): Promise<{ id: string, lat: number, lon: number }> {
   const c = COUNTRIES[country] || COUNTRIES.BR
   for (const type of ['city', '']) {
     const p: Record<string, string> = { text: city, filter: `countrycode:${country.toLowerCase()}`, lang: c.lang.slice(0, 2), limit: '1', format: 'json' }
     if (type) p.type = type
     const d: any = await geoGet(key, '/v1/geocode/search', p, doFetch)
-    const id = d?.results?.[0]?.place_id
-    if (id) return id
+    const r0 = d?.results?.[0]
+    if (r0?.place_id) return { id: r0.place_id, lat: r0.lat, lon: r0.lon }
   }
-  return ''
+  return { id: '', lat: 0, lon: 0 }
 }
 export async function geoLeads(key: string, city: string, country: string, niche: string, doFetch: typeof fetch, term = '') {
   const filters = osmFilters(niche, term)
   if (!filters.length) return { leads: [], analyzed: 0, noFilter: true }
-  const placeId = await geoCity(key, city, country, doFetch)
-  if (!placeId) return { leads: [], analyzed: 0, noCity: true }
+  const place = await geoCity(key, city, country, doFetch)
+  if (!place.id) return { leads: [], analyzed: 0, noCity: true }
   const c = COUNTRIES[country] || COUNTRIES.BR
   const cats = geoCatsFor(filters)
   const seen = new Set<string>()
   const els: any[] = []
   let ok = 0, lastErr = ''
-  await Promise.all(cats.map(async (cat) => {
-    try {
-      const d: any = await geoGet(key, '/v2/places', { categories: cat, filter: `place:${placeId}`, limit: '500', lang: c.lang.slice(0, 2) }, doFetch)
-      ok++
-      for (const f of d.features || []) {
-        const p = f.properties || {}
-        const raw = p.datasource?.raw || {}
-        const uid = String(raw.osm_id || p.place_id)
-        if (seen.has(uid)) continue
-        const tags: Record<string, any> = { ...raw, name: raw.name || p.name }
-        if (!tags['addr:street'] && p.street) tags['addr:street'] = p.street
-        if (!tags['addr:housenumber'] && p.housenumber) tags['addr:housenumber'] = p.housenumber
-        if (!tags['addr:postcode'] && p.postcode) tags['addr:postcode'] = p.postcode
-        if (!tags['addr:city'] && p.city) tags['addr:city'] = p.city
-        if (!filters.some((fl) => tagMatch(tags, fl))) continue
-        seen.add(uid)
-        const type = raw.osm_type === 'w' ? 'way' : raw.osm_type === 'r' ? 'relation' : 'node'
-        els.push({ type, id: raw.osm_id || p.place_id, lat: p.lat, lon: p.lon, tags })
+  // Busca em páginas de 500 (até 3 por categoria) para não perder empresas em cidades grandes.
+  const scan = async (filter: string, region: boolean) => {
+    await Promise.all(cats.map(async (cat) => {
+      for (let page = 0; page < 3; page++) {
+        try {
+          const d: any = await geoGet(key, '/v2/places', { categories: cat, filter, limit: '500', offset: String(page * 500), lang: c.lang.slice(0, 2) }, doFetch)
+          ok++
+          const feats = d.features || []
+          for (const f of feats) {
+            const p = f.properties || {}
+            const raw = p.datasource?.raw || {}
+            const uid = String(raw.osm_id || p.place_id)
+            if (seen.has(uid)) continue
+            const tags: Record<string, any> = { ...raw, name: raw.name || p.name }
+            if (!tags['addr:street'] && p.street) tags['addr:street'] = p.street
+            if (!tags['addr:housenumber'] && p.housenumber) tags['addr:housenumber'] = p.housenumber
+            if (!tags['addr:postcode'] && p.postcode) tags['addr:postcode'] = p.postcode
+            if (!tags['addr:city'] && p.city) tags['addr:city'] = p.city
+            if (!filters.some((fl) => tagMatch(tags, fl))) continue
+            seen.add(uid)
+            const type = raw.osm_type === 'w' ? 'way' : raw.osm_type === 'r' ? 'relation' : 'node'
+            els.push({ type, id: raw.osm_id || p.place_id, lat: p.lat, lon: p.lon, tags, region })
+          }
+          if (feats.length < 500) break
+        } catch (e) { lastErr = String(e); break }
       }
-    } catch (e) { lastErr = String(e) }
-  }))
+    }))
+  }
+  await scan(`place:${place.id}`, false)
+  // Poucos resultados dentro da cidade: amplia para a região (25 km em volta: bairros e cidades vizinhas).
+  if (buildOsmLeads(els, city, niche).leads.length < 120 && place.lat && place.lon) await scan(`circle:${place.lon},${place.lat},25000`, true)
   if (!ok) throw new Error(lastErr || 'Geoapify sem resposta')
   return buildOsmLeads(els, city, niche)
 }

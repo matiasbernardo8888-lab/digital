@@ -664,6 +664,9 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 </article>
 </sc-for>
 </div>
+<sc-if value="{{ radar.hasMore }}" hint-placeholder-val="{{ false }}">
+<button class="ghost" onClick="{{ radar.showMore }}" style="align-self: center; min-height: 48px; padding: 0 22px; border-radius: 999px; border: 1px solid #7C3AED; background: rgba(124,58,237,0.18); color: #FFFFFF; font-size: 15px; font-weight: 800; cursor: pointer">{{ radar.moreLabel }}</button>
+</sc-if>
 </sc-if>
 </section>
 </sc-if>
@@ -1952,7 +1955,7 @@ class Component extends DCLogic {
     if (city.length < 2) { self.setState({ radarError: 'Digite a cidade antes de procurar.', radarCityBad: true }); return; }
     var key = [q.country, city.toLowerCase(), q.niche].join('|');
     var cache = st.radarCache || {};
-    if (!force && cache[key]) { self.setState({ radarView: key, radarError: '' }); return; }
+    if (!force && cache[key]) { self.setState({ radarView: key, radarError: '', radarShow: 24 }); return; }
     var msgs = ['Varrendo ' + city + '…', 'Analisando as empresas da região…', 'Verificando quem não tem site…', 'Separando os leads quentes…'];
     var step = 0;
     self.setState({ radarBusy: { city: city, step: 0, msgs: msgs }, radarError: '', radarCityBad: false });
@@ -1968,9 +1971,9 @@ class Component extends DCLogic {
         var lds = (data.leads || []).map(function (l) { return String(q.niche).indexOf('card:') === 0 ? Object.assign({}, l, { niche: q.niche }) : l; });
         all[key] = { country: q.country, city: city, niche: q.niche, leads: lds, analyzed: data.analyzed || 0, mock: !!data.mock, preview: !!data.preview, source: data.source || 'google', at: Date.now() };
         var keys = Object.keys(all).sort(function (a, b) { return all[b].at - all[a].at; });
-        keys.slice(8).forEach(function (k) { delete all[k]; });
+        keys.slice(5).forEach(function (k) { delete all[k]; });
         self.save({ radarCache: all });
-        self.setState({ radarBusy: null, radarView: key });
+        self.setState({ radarBusy: null, radarView: key, radarShow: 24 });
       }, wait);
     };
     var client = window.soraAuth;
@@ -2094,7 +2097,11 @@ class Component extends DCLogic {
       r.potential = 'Potencial de ' + fmt(n * price) + ' se fechar tudo a ' + fmt(price) + ' cada';
       var dt = new Date(entry.at);
       r.meta = 'Analisamos ' + entry.analyzed + ' empresas ' + (entry.source === 'osm' ? 'no OpenStreetMap' : 'no Google') + ' · resultado salvo em ' + dt.toLocaleDateString('pt-BR') + ' ' + dt.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-      r.leads = entry.leads.map(function (ld) {
+      var shown = Math.max(24, +st.radarShow || 24);
+      r.hasMore = n > shown;
+      r.moreLabel = 'Mostrar mais empresas (' + Math.min(24, n - shown) + ' de ' + (n - shown) + ' restantes)';
+      r.showMore = function () { self.setState({ radarShow: shown + 24 }); };
+      r.leads = entry.leads.slice(0, shown).map(function (ld) {
         return {
           name: ld.name, address: ld.address, mapsUrl: ld.mapsUrl, nicheLabel: nicheLabel(ld.niche),
           ratingLabel: ld.rating ? String(ld.rating.toFixed ? ld.rating.toFixed(1) : ld.rating).replace('.', ',') + ' ★' : (ld.reviews == null ? '' : 'Sem nota'),
@@ -2128,7 +2135,7 @@ class Component extends DCLogic {
           })()
         };
       });
-    } else { r.leads = []; r.counter = ''; r.potential = ''; r.meta = ''; }
+    } else { r.leads = []; r.counter = ''; r.potential = ''; r.meta = ''; r.hasMore = false; r.moreLabel = ''; r.showMore = function () {}; }
     return r;
   }
   openAtelie(i) {
