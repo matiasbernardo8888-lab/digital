@@ -7,6 +7,18 @@
     {
       "source": "/s/:slug",
       "destination": "/ver.html"
+    },
+    {
+      "source": "/termos",
+      "destination": "/termos.html"
+    },
+    {
+      "source": "/privacidade",
+      "destination": "/privacidade.html"
+    },
+    {
+      "source": "/cookies",
+      "destination": "/cookies.html"
     }
   ],
   "headers": [

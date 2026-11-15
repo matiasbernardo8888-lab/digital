@@ -15,9 +15,9 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
 <script>if('serviceWorker' in navigator)window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){})});</script>
 <title>Entrar | Sora</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;500;600;700&display=swap">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"></script>
+<link rel="stylesheet" href="/fonts/fonts.css">
+<script src="vendor/supabase.js"></script>
+<script src="/legal.js" defer></script>
 <script src="auth.js"></script>
 <style>
   *{box-sizing:border-box}
@@ -47,6 +47,10 @@
   .msg.ok{background:rgba(34,197,94,.14);color:#BDF5CF}
   .link{background:none;border:0;padding:0;color:#C9B8FF;font:14px inherit;font-family:inherit;text-decoration:underline;cursor:pointer;align-self:flex-start}
   [hidden]{display:none !important}
+  .terms{flex-direction:row;align-items:flex-start;gap:10px;font-size:13px;line-height:1.5;color:#D6D0F0;cursor:pointer}
+  .terms input{width:20px;height:20px;margin:1px 0 0;flex-shrink:0;accent-color:#7C3AED}
+  .legal{margin:0;font-size:12.5px;line-height:1.5;color:#8C84B4;text-align:center}
+  .terms a,.legal a{color:#C9B8FF}
 </style>
 </head>
 <body data-page="login">
@@ -79,6 +83,7 @@
       <li data-r="sym">• Um símbolo (ex.: ! @ # $ %)</li>
     </ul>
     <label>Confirmar senha<input name="confirm" type="password" autocomplete="new-password" required maxlength="72"></label>
+    <label class="terms"><input name="aceite" type="checkbox" required><span>Li e aceito os <a href="/termos" target="_blank" rel="noopener">Termos de Uso</a> e a <a href="/privacidade" target="_blank" rel="noopener">Política de Privacidade</a>.</span></label>
     <button class="primary" type="submit">Criar conta</button>
   </form>
 
@@ -87,6 +92,7 @@
     <label>Confirmar nova senha<input name="confirm" type="password" autocomplete="new-password" required maxlength="72"></label>
     <button class="primary" type="submit">Salvar nova senha</button>
   </form>
+  <p class="legal">Ao entrar, você concorda com os <a href="/termos">Termos de Uso</a> e a <a href="/privacidade">Política de Privacidade</a>. <a href="/cookies">Cookies</a></p>
 </main>
 
 <script>
@@ -175,8 +181,9 @@
     if (!EMAIL_RE.test(email)) { show('E-mail inválido'); return; }
     if (!strong(pass)) { show('A senha precisa ter 8+ caracteres, uma maiúscula, um número e um símbolo.'); return; }
     if (pass !== f.confirm.value) { show('As senhas não coincidem'); return; }
+    if (!f.aceite.checked) { show('Para criar a conta, aceite os Termos de Uso e a Política de Privacidade.'); return; }
     clear(); busy(f, true, 'Criando conta…');
-    sb.auth.signUp({ email: email, password: pass, options: { emailRedirectTo: baseUrl + 'login.html' } }).then(function (r) {
+    sb.auth.signUp({ email: email, password: pass, options: { emailRedirectTo: baseUrl + 'login.html', data: { aceite_termos: '2026-11-15', aceite_em: new Date().toISOString() } } }).then(function (r) {
       busy(f, false);
       if (r.error && r.error.code === 'weak_password') { show('Essa senha é fraca ou já apareceu em vazamentos. Escolha outra.'); return; }
       if (r.error && r.error.status === 429) { show('Muitas tentativas. Aguarde alguns minutos e tente novamente.'); return; }
