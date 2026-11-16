@@ -1149,8 +1149,9 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap">
 <strong style="font-size: 14px">Moeda na notificação</strong>
 <div role="group" aria-label="Moeda" style="display: flex; padding: 4px; gap: 4px; border-radius: 999px; border: 1px solid #3B2F6B; background: #0D0A26">
-<button onClick="{{ cfg.curBRL }}" aria-pressed="{{ cfg.isBRL }}" style="height: 38px; padding: 0 16px; border: 0; border-radius: 999px; background: {{ cfg.brlBg }}; color: #FFFFFF; font-size: 14px; font-weight: 700; cursor: pointer">R$ Real</button>
-<button onClick="{{ cfg.curEUR }}" aria-pressed="{{ cfg.isEUR }}" style="height: 38px; padding: 0 16px; border: 0; border-radius: 999px; background: {{ cfg.eurBg }}; color: #FFFFFF; font-size: 14px; font-weight: 700; cursor: pointer">€ Euro</button>
+<button onClick="{{ cfg.curBRL }}" aria-pressed="{{ cfg.isBRL }}" style="height: 38px; padding: 0 14px; border: 0; border-radius: 999px; background: {{ cfg.brlBg }}; color: #FFFFFF; font-size: 14px; font-weight: 700; cursor: pointer">R$ Real</button>
+<button onClick="{{ cfg.curEUR }}" aria-pressed="{{ cfg.isEUR }}" style="height: 38px; padding: 0 14px; border: 0; border-radius: 999px; background: {{ cfg.eurBg }}; color: #FFFFFF; font-size: 14px; font-weight: 700; cursor: pointer">€ Euro</button>
+<button onClick="{{ cfg.curUSD }}" aria-pressed="{{ cfg.isUSD }}" style="height: 38px; padding: 0 14px; border: 0; border-radius: 999px; background: {{ cfg.usdBg }}; color: #FFFFFF; font-size: 14px; font-weight: 700; cursor: pointer">US$ Dólar</button>
 </div>
 </div>
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap">
@@ -1160,9 +1161,15 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 <sc-if value="{{ cfg.hasNotifIcon }}" hint-placeholder-val="{{ false }}"><button class="ghost" onClick="{{ cfg.clearNotifIcon }}" style="height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid #3B2F6B; background: transparent; color: #D6D0F0; font-size: 14px; cursor: pointer">Voltar ao SORA</button></sc-if>
 </div>
 </div>
+<sc-if value="{{ cfg.isUSD }}" hint-placeholder-val="{{ false }}">
+<label style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap">
+<span style="display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px; color: #FFFFFF">Cotação do dólar</strong><span style="font-size: 12px; color: #B9B2DA">Usada só quando o valor fica vazio (converte o valor da venda em euro).</span></span>
+<span style="display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: #D6D0F0">1 € = US$<input type="text" inputmode="decimal" value="{{ cfg.usdRate }}" onInput="{{ cfg.onUsdRate }}" aria-label="Cotação: quantos dólares vale 1 euro" style="width: 84px; height: 44px; padding: 0 10px; border-radius: 12px; border: 1px solid #3B2F6B; background: #0D0A26; color: #FFFFFF; font-size: 16px; font-weight: 700"></span>
+</label>
+</sc-if>
 <label style="display: flex; flex-direction: column; gap: 6px">
 <span style="display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px; color: #FFFFFF">Valor de cada venda ({{ cfg.curSym }})</strong><span style="font-size: 12px; color: #B9B2DA">Aparece na notificação. Deixe vazio para usar o valor registrado na venda.</span></span>
-<span style="position: relative; display: flex; align-items: center"><span aria-hidden="true" style="position: absolute; left: 14px; color: #B9B2DA; font-weight: 700">{{ cfg.curSym }}</span><input type="text" inputmode="decimal" placeholder="176,87" value="{{ cfg.notifValue }}" onInput="{{ cfg.onNotifValue }}" style="height: 46px; width: 100%; padding: 0 14px 0 42px; border-radius: 12px; border: 1px solid #3B2F6B; background: #0D0A26; color: #FFFFFF; font-size: 16px; font-weight: 700"></span>
+<span style="position: relative; display: flex; align-items: center"><span aria-hidden="true" style="position: absolute; left: 14px; color: #B9B2DA; font-weight: 700">{{ cfg.curSym }}</span><input type="text" inputmode="decimal" placeholder="176,87" value="{{ cfg.notifValue }}" onInput="{{ cfg.onNotifValue }}" style="height: 46px; width: 100%; padding: 0 14px 0 54px; border-radius: 12px; border: 1px solid #3B2F6B; background: #0D0A26; color: #FFFFFF; font-size: 16px; font-weight: 700"></span>
 </label>
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap">
 <span style="display: flex; flex-direction: column; gap: 2px"><strong style="font-size: 14px">Quantidade de notificações</strong><span style="font-size: 12px; color: #B9B2DA">Quantas caem a cada venda aprovada.</span></span>
@@ -3311,10 +3318,10 @@ class Component extends DCLogic {
     var self = this, own = !!this.state.isOwner, ag = own ? this.state.agency : { notifOn: true, notifSound: this.state.agency.notifSound, notifCur: 'BRL' };
     var n = Math.min(50, Math.max(1, +ag.notifQty || 1));
     var gap = Math.max(1, +ag.notifGap || 2) * 1000, wait = Math.max(0, +ag.notifDelay || 0) * 1000;
-    var rawV = String(ag.notifValue || ''), fixed = this.num(rawV.indexOf(',') !== -1 ? rawV.replace(/\./g, '').replace(',', '.') : rawV), brl = ag.notifCur === 'BRL', rate = this.num(this.state.rate) || 0;
-    var v = fixed > 0 ? fixed : this.num(sale.valor) * (brl ? rate : 1);
+    var rawV = String(ag.notifValue || ''), fixed = this.num(rawV.indexOf(',') !== -1 ? rawV.replace(/\./g, '').replace(',', '.') : rawV), brl = ag.notifCur === 'BRL', usd = ag.notifCur === 'USD', rate = this.num(this.state.rate) || 0, usdRate = this.num(ag.usdRate) || 1.1;
+    var v = fixed > 0 ? fixed : this.num(sale.valor) * (brl ? rate : usd ? usdRate : 1);
     var title = 'Venda aprovada!';
-    var body = 'Valor: ' + (brl ? 'R$ ' : '€ ') + this.money(v > 0 ? v : 0);
+    var body = 'Valor: ' + (brl ? 'R$ ' : usd ? 'US$ ' : '€ ') + this.money(v > 0 ? v : 0);
     // silent: o próprio iPhone/Android não toca o “tum” dele; quem toca é o som de venda do SORA.
     var opts = { body: body, icon: ag.notifIcon || '/icons/notify-192.png', badge: '/icons/badge-96.png', silent: true, data: { url: '/' } };
     clearTimeout(self.notifRunT); (self.notifTimers || []).forEach(clearTimeout); self.notifTimers = [];
@@ -3852,9 +3859,14 @@ class Component extends DCLogic {
       askPerm: function () { if (!ag.notifOn) self.setIn('agency', 'notifOn', true); self.askNotifPerm(); },
       testNotif: function () { self.saleNotify({ valor: '176,87' }); },
       notifValue: ag.notifValue || '',
-      isBRL: ag.notifCur === 'BRL', isEUR: ag.notifCur !== 'BRL', curSym: ag.notifCur === 'BRL' ? 'R$' : '€',
-      brlBg: ag.notifCur === 'BRL' ? 'linear-gradient(135deg, #7C3AED, #DB2777)' : 'transparent', eurBg: ag.notifCur !== 'BRL' ? 'linear-gradient(135deg, #7C3AED, #DB2777)' : 'transparent',
-      curBRL: function () { self.setIn('agency', 'notifCur', 'BRL'); }, curEUR: function () { self.setIn('agency', 'notifCur', 'EUR'); },
+      isBRL: ag.notifCur === 'BRL', isUSD: ag.notifCur === 'USD', isEUR: ag.notifCur !== 'BRL' && ag.notifCur !== 'USD',
+      curSym: ag.notifCur === 'BRL' ? 'R$' : ag.notifCur === 'USD' ? 'US$' : '€',
+      brlBg: ag.notifCur === 'BRL' ? 'linear-gradient(135deg, #7C3AED, #DB2777)' : 'transparent',
+      usdBg: ag.notifCur === 'USD' ? 'linear-gradient(135deg, #7C3AED, #DB2777)' : 'transparent',
+      eurBg: ag.notifCur !== 'BRL' && ag.notifCur !== 'USD' ? 'linear-gradient(135deg, #7C3AED, #DB2777)' : 'transparent',
+      curBRL: function () { self.setIn('agency', 'notifCur', 'BRL'); }, curEUR: function () { self.setIn('agency', 'notifCur', 'EUR'); }, curUSD: function () { self.setIn('agency', 'notifCur', 'USD'); },
+      usdRate: ag.usdRate || '1,10',
+      onUsdRate: function (e) { self.setIn('agency', 'usdRate', e.target.value.replace(/[^0-9.,]/g, '')); },
       notifIconSrc: ag.notifIcon || './assets/daa6d48dad01a913a3a12fa358ef8fc8.webp', hasNotifIcon: !!ag.notifIcon,
       notifIconMsg: st.notifIconMsg || (ag.notifIcon ? 'Usando a sua logo. No iPhone: envie pelo Safari e depois adicione à tela de início.' : 'Usando a logo do SORA. Envie a sua (PNG/SVG quadrado).'),
       clearNotifIcon: function () { self.setIn('agency', 'notifIcon', ''); self.applyAppIcon(''); self.setState({ notifIconMsg: '' }); },
