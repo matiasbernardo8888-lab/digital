@@ -43,6 +43,17 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 .sora .ghost:hover{background:rgba(255,255,255,.08)}
 .sora .card{transition:border-color .2s ease,transform .2s ease}
 .sora .lift:hover{border-color:#7C3AED;transform:translateY(-2px)}
+/* Vidro (estilo "liquid glass") só nas barras e nos botões */
+.sora .glass-bar{background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.03)),rgba(20,15,48,.55)!important;-webkit-backdrop-filter:blur(22px) saturate(180%)!important;backdrop-filter:blur(22px) saturate(180%)!important;border-color:rgba(255,255,255,.16)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.22),inset 0 -1px 0 rgba(255,255,255,.04),0 18px 44px rgba(3,2,14,.45)!important}
+.sora .sale-toast.glass-bar{background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.03)),rgba(24,18,56,.84)!important}
+.sora header.glass-bar{border-top:0!important;border-left:0!important;border-right:0!important;box-shadow:inset 0 -1px 0 rgba(255,255,255,.10),0 10px 30px rgba(3,2,14,.35)!important}
+.sora .glass-bar[style*="background: #1F8F4E"]{background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.04)),rgba(31,143,78,.62)!important}
+.sora .btn,.sora .ghost,.sora button[style*="border-radius: 999px"],.sora a[style*="border-radius: 999px"][href]{-webkit-backdrop-filter:blur(16px) saturate(170%);backdrop-filter:blur(16px) saturate(170%);box-shadow:inset 0 1px 0 rgba(255,255,255,.34),inset 0 -1px 1px rgba(255,255,255,.08),0 6px 18px rgba(3,2,14,.32)!important;isolation:isolate;overflow:hidden}
+.sora :is(.btn,.ghost,button[style*="border-radius: 999px"],a[style*="border-radius: 999px"][href]):not([style*="position: fixed"]):not([style*="position: absolute"]){position:relative}
+.sora :is(.btn,.ghost,button[style*="border-radius: 999px"],a[style*="border-radius: 999px"][href])::before{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(180deg,rgba(255,255,255,.26) 0%,rgba(255,255,255,.07) 46%,rgba(255,255,255,0) 54%,rgba(255,255,255,.05) 100%);pointer-events:none;z-index:-1}
+.sora :is(.btn,.ghost,button[style*="border-radius: 999px"],a[style*="border-radius: 999px"][href])[style*="background: transparent"]{background-color:rgba(255,255,255,.07)!important;border-color:rgba(255,255,255,.2)!important}
+.sora :is(.btn,.ghost,button[style*="border-radius: 999px"],a[style*="border-radius: 999px"][href]):active{transform:scale(.97)}
+@media (prefers-reduced-transparency:reduce){.sora .glass-bar{background:rgba(20,15,48,.97)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}}
 .sale-toast{animation:soraToast .45s cubic-bezier(.2,.8,.2,1.2) both}@keyframes soraToast{from{opacity:0;transform:translate(-50%,-24px) scale(.96)}to{opacity:1;transform:translate(-50%,0) scale(1)}}
 .sora .screen{animation:soraIn .35s cubic-bezier(.2,.7,.2,1) both}
 @keyframes soraIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
@@ -109,7 +120,7 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 </helmet>
 <div class="{{ rootClass }}" translate="no" style="min-height: 100vh; display: flex; background: #07051A; color: #FFFFFF; font-family: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.5">
 <sc-if value="{{ saleToast.show }}" hint-placeholder-val="{{ false }}">
-<div role="status" aria-live="polite" class="sale-toast" style="position: fixed; top: calc(12px + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); z-index: 60; width: min(420px, calc(100% - 24px)); display: flex; gap: 12px; align-items: center; padding: 12px 14px; border-radius: 20px; background: rgba(28,22,64,0.96); border: 1px solid rgba(167,139,250,0.55); box-shadow: 0 18px 48px rgba(3,2,14,0.7), 0 0 24px rgba(124,58,237,0.35); backdrop-filter: blur(12px)">
+<div role="status" aria-live="polite" class="sale-toast glass-bar" style="position: fixed; top: calc(12px + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); z-index: 60; width: min(420px, calc(100% - 24px)); display: flex; gap: 12px; align-items: center; padding: 12px 14px; border-radius: 20px; background: rgba(28,22,64,0.96); border: 1px solid rgba(167,139,250,0.55); box-shadow: 0 18px 48px rgba(3,2,14,0.7), 0 0 24px rgba(124,58,237,0.35); backdrop-filter: blur(12px)">
 <img src="{{ saleToast.icon }}" alt="" style="width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0; object-fit: cover">
 <span style="display: flex; flex-direction: column; gap: 2px; min-width: 0; flex-grow: 1"><span style="display: flex; justify-content: space-between; gap: 8px"><strong style="font-size: 15px">{{ saleToast.title }}</strong><span style="font-size: 11px; color: #B9B2DA; white-space: nowrap">SORA · agora</span></span><span style="font-size: 13px; color: #D6D0F0; white-space: pre-line">{{ saleToast.body }}</span></span>
 </div>
@@ -118,7 +129,7 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 
 <div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column">
 
-<header style="display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 24px; border-bottom: 1px solid rgba(59,47,107,0.7); background: rgba(14,10,36,0.55); backdrop-filter: blur(14px); position: sticky; top: 0; z-index: 5">
+<header class="glass-bar" style="display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 24px; border-bottom: 1px solid rgba(59,47,107,0.7); background: rgba(14,10,36,0.55); backdrop-filter: blur(14px); position: sticky; top: 0; z-index: 5">
 <div style="display: flex; align-items: center; gap: 10px">
 <sc-if value="{{ brand.custom }}" hint-placeholder-val="{{ false }}">
 <img src="{{ logo }}" alt="" style="width: 40px; height: 40px; object-fit: contain; border-radius: 8px">
@@ -1047,7 +1058,7 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 
 <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
 <button onClick="{{ closeMenu }}" aria-label="Fechar menu" style="position: fixed; inset: 0; z-index: 19; border: 0; background: rgba(6,4,20,0.45); cursor: default"></button>
-<nav class="screen" aria-label="Navegação principal" style="position: fixed; left: 16px; bottom: 88px; z-index: 21; width: 230px; padding: 10px; border-radius: 22px; background: rgba(28,22,64,0.96); backdrop-filter: blur(16px); border: 1px solid rgba(160,130,255,0.4); box-shadow: 0 18px 48px rgba(3,8,24,0.65); display: flex; flex-direction: column; gap: 6px">
+<nav class="screen glass-bar" aria-label="Navegação principal" style="position: fixed; left: 16px; bottom: 88px; z-index: 21; width: 230px; padding: 10px; border-radius: 22px; background: rgba(28,22,64,0.96); backdrop-filter: blur(16px); border: 1px solid rgba(160,130,255,0.4); box-shadow: 0 18px 48px rgba(3,8,24,0.65); display: flex; flex-direction: column; gap: 6px">
 <sc-for list="{{ nav }}" as="item" hint-placeholder-count="4">
 <button class="ghost" onClick="{{ item.go }}" style="display: flex; align-items: center; gap: 12px; height: 48px; padding: 0 14px; border: 0; border-radius: 14px; cursor: pointer; font-size: 15px; font-weight: 600; text-align: left; background: {{ item.bg }}; color: {{ item.color }}">
 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ item.icon }}"></path></svg>
@@ -1111,7 +1122,7 @@ a{color:#C9B8FF}a:hover{color:#FFFFFF}
 </sc-if>
 
 <sc-if value="{{ toastOn }}" hint-placeholder-val="{{ false }}">
-<div role="status" class="screen" style="position: fixed; left: 50%; bottom: 96px; transform: translateX(-50%); z-index: 40; padding: 12px 20px; border-radius: 999px; background: #1F8F4E; color: #FFFFFF; font-size: 14px; font-weight: 700; box-shadow: 0 12px 32px rgba(3,8,24,0.55); white-space: nowrap">{{ toast }}</div>
+<div role="status" class="screen glass-bar" style="position: fixed; left: 50%; bottom: 96px; transform: translateX(-50%); z-index: 40; padding: 12px 20px; border-radius: 999px; background: #1F8F4E; color: #FFFFFF; font-size: 14px; font-weight: 700; box-shadow: 0 12px 32px rgba(3,8,24,0.55); white-space: nowrap">{{ toast }}</div>
 </sc-if>
 
 <sc-if value="{{ showSettings }}" hint-placeholder-val="{{ false }}">
