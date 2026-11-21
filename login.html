@@ -15,9 +15,9 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
 <script>if('serviceWorker' in navigator)window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){})});</script>
 <title>Entrar | Sora</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@700;800&family=Inter:wght@400;500;600;700&display=swap">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"></script>
+<link rel="stylesheet" href="/fonts/fonts.css">
+<script src="vendor/supabase.js"></script>
+<script src="/legal.js" defer></script>
 <script src="auth.js"></script>
 <style>
   *{box-sizing:border-box}
@@ -47,10 +47,10 @@
   .msg.ok{background:rgba(34,197,94,.14);color:#BDF5CF}
   .link{background:none;border:0;padding:0;color:#7FE3F5;font:14px inherit;font-family:inherit;text-decoration:underline;cursor:pointer;align-self:flex-start}
   [hidden]{display:none !important}
-  .terms{flex-direction:row;align-items:flex-start;gap:10px;font-size:13px;line-height:1.5;color:#D6D0F0;cursor:pointer}
-  .terms input{width:20px;height:20px;margin:1px 0 0;flex-shrink:0;accent-color:#7C3AED}
-  .legal{margin:0;font-size:12.5px;line-height:1.5;color:#8C84B4;text-align:center}
-  .terms a,.legal a{color:#C9B8FF}
+  .terms{flex-direction:row;align-items:flex-start;gap:10px;font-size:13px;line-height:1.5;color:#CDD4DD;cursor:pointer}
+  .terms input{width:20px;height:20px;margin:1px 0 0;flex-shrink:0;accent-color:#0A7898}
+  .legal{margin:0;font-size:12.5px;line-height:1.5;color:#7E8896;text-align:center}
+  .terms a,.legal a{color:#7FE3F5}
 </style>
 </head>
 <body data-page="login">
