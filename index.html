@@ -258,7 +258,7 @@ a{color:#7FE3F5}a:hover{color:#FFFFFF}
 <span style="font-size: 14px; font-weight: 600; letter-spacing: 0.04em; color: #D9E2EA">{{ greeting }}</span>
 <h1 style="margin: 0; font-size: 40px; font-weight: 700; letter-spacing: -0.02em; text-shadow: 0 0 36px rgba(14,165,200,0.55)">Dashboard</h1>
 <p style="margin: 0; color: #CDD4DD; font-size: 16px">Escolha como deseja utilizar a plataforma</p>
-<p aria-label="Aqui quem faz a mágica é você." style="margin: 8px 0 0; min-height: 1.6em; font-size: 19px; font-weight: 600; color: #BFEFF8; text-shadow: 0 2px 12px rgba(6,9,13,0.9)"><span aria-hidden="true">{{ typedText }}</span><span class="magic-caret" aria-hidden="true"></span></p>
+<p aria-label="Aqui quem constrói o futuro é você." style="margin: 8px 0 0; min-height: 1.6em; font-size: 19px; font-weight: 600; color: #BFEFF8; text-shadow: 0 2px 12px rgba(6,9,13,0.9)"><span aria-hidden="true">{{ typedText }}</span><span class="magic-caret" aria-hidden="true"></span></p>
 </div>
 <div class="magic-mascot" onMouseEnter="{{ magicHoverOn }}" onMouseLeave="{{ magicHoverOff }}" onTouchStart="{{ magicHoverTap }}" aria-hidden="true">
 <img src="./assets/78e385febe9a0d750398940ef8da0f82.webp" alt="" loading="lazy" decoding="async" width="640" height="534" style="display: block; width: 100%; height: auto; filter: drop-shadow(0 0 22px rgba(56,217,245,0.28)) drop-shadow(0 18px 26px rgba(0,0,0,0.55))">
@@ -1326,7 +1326,7 @@ class Component extends DCLogic {
       }
     } catch (e) {}
     base.typed = 0;
-    this.PHRASE = 'Aqui quem faz a mágica é você.';
+    this.PHRASE = 'Aqui quem constrói o futuro é você.';
     var suits = ['\u2660\uFE0E', '\u2665\uFE0E', '\u2666\uFE0E', '\u2663\uFE0E'];
     var ranks = ['A', 'K', 'Q', 'J', '10', '9', '7', 'A', 'K', 'Q', 'J', '8', '5', '3', '2'];
     this.magicCards = ranks.map(function (r, i) {
